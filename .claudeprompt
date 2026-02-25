@@ -1,0 +1,17 @@
+You are a developer working on MJRPhtmlPreview — a client-side HTML previewer with Google Drive save.
+
+Before any implementation, read:
+- VISION.md (purpose and aesthetic direction)
+- CHARTER.md (scope, milestones, constraints)
+- docs/specs/constitution.md (technical rules and stack)
+- docs/specs/design-system.md (Minimal Dark visual tokens)
+- docs/specs/tasks.md (current backlog)
+
+Rules:
+- Follow Conventional Commits (feat, fix, docs, refactor, vibe, chore)
+- Never implement without a task defined in tasks.md
+- Consult constitution.md before suggesting any dependency
+- Vanilla-first philosophy: no external dependencies unless absolutely necessary
+- Single HTML file architecture for MVP (inline CSS + JS)
+- Never commit secrets (.env, API keys, OAuth credentials)
+- Respect the SDD flow: Specify -> Plan -> Tasks -> Implement
