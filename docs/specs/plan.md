@@ -20,9 +20,13 @@
 - [x] Request secundária através de método PATCH/PUT para escrever a String da UI para o corpo do File no Drive.
 - [x] Implementação de Botão Secundário: Download do layout em `.pdf` (via API nativa `print()`).
 
-## M3: Polish - ATUAL
+## M3: Polish - CONCLUÍDO
 - [x] Adicionar feature "Clear Code" (Já implementado na toolbar).
-- [ ] Implementar Download para `.png`/`.jpeg` através da inclusão de conversor canvas externo (`html2canvas`).
-- [ ] Feedback tátil e micro-interações via transições CSS.
-- [ ] Modo claro / Dark mode Toggle para a área do Iframe.
-- [ ] (Opcional) Syntax Highlighting minimalista no Code Editor se não prejudicar performance.
+- [x] Implementar Download para `.png`/`.jpeg` através da inclusão de conversor canvas externo (`html2canvas`).
+- [x] Feedback tátil e micro-interações via transições CSS.
+
+## M4: Markdown & Extended Render (Novo) - ATUAL
+- [ ] Injetar Biblioteca de Parser Markdown (`marked.js`).
+- [ ] Injetar Biblioteca de Fluxogramas Mermaid (`mermaid.js`).
+- [ ] Atualizar o Listener do `textarea` para verificar a presença de Tags base e fazer um "If/Else" (Se tiver cara de HTML renderiza direto, se aparentar Markdown -> Passa pelo motor `marked` antes).
+- [ ] Construir lógica para detectar os blocos de código com a tag `mermaid`, invocar o SVG via `mermaid.run()` e substituir o nó no output limpo.
