@@ -16,25 +16,20 @@ function initExportButtons(htmlInput, previewFrame) {
     const btnPdf = document.getElementById('btnPdf');
     const btnPng = document.getElementById('btnPng');
 
-    // Download HTML (renders Markdown to HTML if needed)
+    // Download (HTML as .html, Markdown as .md)
     btnDownload.addEventListener('click', () => {
-        const raw = htmlInput.value;
-        if (!raw.trim()) { alert("The editor is empty. Paste some content first!"); return; }
+        const content = htmlInput.value;
+        if (!content.trim()) { alert("The editor is empty. Paste some content first!"); return; }
 
-        // If input is Markdown, download the rendered HTML with styles
-        let content;
-        if (detectInputType(raw) === 'markdown') {
-            const parsedHtml = marked.parse(raw);
-            content = '<!DOCTYPE html>\n<html>\n<head><meta charset="UTF-8">\n<title>Preview</title>\n</head>\n<body>\n' + wrapWithMdStyles(parsedHtml) + '\n</body>\n</html>';
-        } else {
-            content = raw;
-        }
+        const isMarkdown = detectInputType(content) === 'markdown';
+        const mimeType = isMarkdown ? 'text/markdown' : 'text/html';
+        const ext = isMarkdown ? 'md' : 'html';
 
-        const blob = new Blob([content], { type: 'text/html' });
+        const blob = new Blob([content], { type: mimeType });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `preview_${generateTimestamp()}.html`;
+        a.download = `preview_${generateTimestamp()}.${ext}`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
