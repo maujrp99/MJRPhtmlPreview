@@ -12,17 +12,17 @@
 - [x] Implementação Logic JS: Data-binding do textarea para o atributo `srcdoc` do iframe.
 - [x] Implementação Logic JS: Serviço FileExporter para construção do Blob HTML `.html` e trigger do download (suporte Obsidian Vault).
 
-## M2: Drive Integration - ATUAL
-- [ ] Incluir bibliotecas do Google Identity Services (`gsi/client`) e Google APIs (`api.js`) no `index.html`.
-- [ ] Ponto de integração OAuth 2.0 Client (necessita de `CLIENT_ID` e `APP_ID` do Console de Nuvem).
-- [ ] Construção do Service Google Picker UI para seleção de pastas.
-- [ ] Escrita das rotinas da API GDrive para enviar Blob file (Create Object vazio) persistindo os metadados.
-- [ ] Request secundária através de método PATCH/PUT para escrever a String da UI para o corpo do File no Drive.
-- [ ] Implementação de Botão Secundário: Download do layout em `.pdf` (via API nativa `print()`).
+## M2: Drive Integration - CONCLUÍDO
+- [x] Incluir bibliotecas do Google Identity Services (`gsi/client`) e Google APIs (`api.js`) no `index.html`.
+- [x] Ponto de integração OAuth 2.0 Client (necessita de `CLIENT_ID` e `APP_ID` do Console de Nuvem).
+- [x] Construção do Service Google Picker UI para seleção de pastas.
+- [x] Escrita das rotinas da API GDrive para enviar Blob file (Create Object vazio) persistindo os metadados.
+- [x] Request secundária através de método PATCH/PUT para escrever a String da UI para o corpo do File no Drive.
+- [x] Implementação de Botão Secundário: Download do layout em `.pdf` (via API nativa `print()`).
 
-## M3: Polish
-- Adicionar feature "Clear Code".
-- Feedback tátil e micro-interações via transições CSS.
-- Modo claro / Dark mode Toggle para a área do Iframe.
-- (Opcional) Syntax Highlighting minimalista no Code Editor se não prejudicar performance.
-- Implementar Download para `.png`/`.jpeg` através da inclusão de conversor canvas externo (adequando o zero-dependency manifesto).
+## M3: Polish - ATUAL
+- [x] Adicionar feature "Clear Code" (Já implementado na toolbar).
+- [ ] Implementar Download para `.png`/`.jpeg` através da inclusão de conversor canvas externo (`html2canvas`).
+- [ ] Feedback tátil e micro-interações via transições CSS.
+- [ ] Modo claro / Dark mode Toggle para a área do Iframe.
+- [ ] (Opcional) Syntax Highlighting minimalista no Code Editor se não prejudicar performance.

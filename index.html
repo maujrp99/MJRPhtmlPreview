@@ -9,6 +9,7 @@
     <script src="config.js"></script>
     <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
     <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Fonts: Inter for UI, JetBrains Mono for Code -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -222,6 +223,14 @@
                         </svg>
                         PDF
                     </button>
+                    <!-- PNG Action -->
+                    <button class="btn-ghost" id="btnPng" title="Save as Image (PNG)">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path
+                                d="M19,19H5V5H19M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M13.96,12.29L11.21,15.83L9.25,13.47L6.5,17H17.5L13.96,12.29Z" />
+                        </svg>
+                        PNG
+                    </button>
                     <!-- M1 Core Action -->
                     <button class="btn-primary" id="btnDownload" title="Download to local vault">
                         <svg class="icon" viewBox="0 0 24 24">
@@ -249,6 +258,7 @@
         const btnClear = document.getElementById('btnClear');
         const btnDownload = document.getElementById('btnDownload');
         const btnPdf = document.getElementById('btnPdf');
+        const btnPng = document.getElementById('btnPng');
         const btnDrive = document.getElementById('btnDrive'); // Imported the remaining button
 
         // Google API Integration State
@@ -351,6 +361,56 @@
             // The browser's print dialog will handle the "Save as PDF" functionality
             previewFrame.contentWindow.focus();
             previewFrame.contentWindow.print();
+        });
+
+        // Logic: Save as Image (PNG)
+        btnPng.addEventListener('click', async () => {
+            const content = htmlInput.value;
+            if (!content.trim()) {
+                alert("The editor is empty. Paste some HTML first!");
+                return;
+            }
+
+            try {
+                // UI Loading feedback
+                const origIcon = btnPng.innerHTML;
+                btnPng.innerHTML = "Wait...";
+
+                // Since iframe is loaded via srcdoc and we have 'allow-same-origin', we can access its DOM
+                const iframeDoc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+
+                // Invoke html2canvas on the iframe's body (cross-origin images within the iframe might taint the canvas)
+                const canvas = await html2canvas(iframeDoc.body, {
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: null
+                });
+
+                const imgData = canvas.toDataURL('image/png');
+
+                // Generate Timestamp
+                const now = new Date();
+                const timestamp = now.getFullYear().toString() +
+                    String(now.getMonth() + 1).padStart(2, '0') +
+                    String(now.getDate()).padStart(2, '0') + '_' +
+                    String(now.getHours()).padStart(2, '0') +
+                    String(now.getMinutes()).padStart(2, '0');
+
+                // Virtual Link trick
+                const a = document.createElement('a');
+                a.href = imgData;
+                a.download = `preview_${timestamp}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                // Revert icon
+                btnPng.innerHTML = origIcon;
+            } catch (err) {
+                console.error("Error generating PNG:", err);
+                alert("Failed to generate PNG image. Ensure your HTML content doesn't use blocked cross-origin imagery.");
+                btnPng.innerHTML = origIcon;
+            }
         });
 
         // Logic: Google Drive Integration Workflow (Auth -> Picker -> Upload)
