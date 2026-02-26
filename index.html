@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MJRPhtmlPreview</title>
-    <!-- Google API Config & Scripts -->
-    <script src="config.js"></script>
+    <!-- Google API Scripts (BYOK) -->
     <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
     <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -195,6 +194,78 @@
                 border-bottom: 2px solid var(--accent-cyan);
             }
         }
+
+        /* Settings Modal (BYOK) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(13, 17, 23, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-panel);
+            padding: 24px;
+            width: 480px;
+            max-width: 90%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content h2 {
+            font-size: 1.25rem;
+            color: var(--text-primary);
+        }
+
+        .modal-content p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-input {
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 10px 12px;
+            border-radius: var(--radius-btn);
+            font-family: var(--font-code);
+            font-size: 0.8rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 8px;
+        }
     </style>
 </head>
 
@@ -204,7 +275,15 @@
         <!-- Editor Left / Top -->
         <section class="editor-panel">
             <div class="toolbar">
-                <div class="toolbar-title">MJRPhtmlPreview</div>
+                <div class="toolbar-title" style="display:flex; align-items:center; gap:8px;">
+                    MJRPhtmlPreview
+                    <button class="btn-ghost" id="btnSettings" title="API Settings (BYOK)" style="padding:4px;">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path
+                                d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
+                        </svg>
+                    </button>
+                </div>
                 <div class="toolbar-actions">
                     <button class="btn-ghost" id="btnClear" title="Clear Code">Clear</button>
                     <!-- Google Drive Action -->
@@ -251,6 +330,38 @@
         </section>
     </main>
 
+    <!-- Settings Modal (BYOK) -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal-content">
+            <h2>API Settings (BYOK)</h2>
+            <p>We respect your privacy. Your keys are saved securely in your browser's <code>localStorage</code> and are
+                never sent to our servers. Only the Google Identity Provider verifies these tokens.</p>
+
+            <div class="form-group">
+                <label for="inpClientId">OAuth 2.0 Client ID</label>
+                <input type="text" id="inpClientId" class="form-input" placeholder="123456...apps.googleusercontent.com"
+                    spellcheck="false" autocomplete="off">
+            </div>
+
+            <div class="form-group">
+                <label for="inpApiKey">Google API Key</label>
+                <input type="password" id="inpApiKey" class="form-input" placeholder="AIzaSy..." spellcheck="false"
+                    autocomplete="off">
+            </div>
+
+            <div class="form-group">
+                <label for="inpAppId">App ID (Numbers before the dash in Client ID)</label>
+                <input type="text" id="inpAppId" class="form-input" placeholder="123456" spellcheck="false"
+                    autocomplete="off">
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-ghost" id="btnCancelSettings">Close</button>
+                <button class="btn-primary" id="btnSaveSettings">Save Keys locally</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // DOM Elements
         const htmlInput = document.getElementById('htmlInput');
@@ -261,43 +372,88 @@
         const btnPng = document.getElementById('btnPng');
         const btnDrive = document.getElementById('btnDrive'); // Imported the remaining button
 
-        // Google API Integration State
+        // Settings Elements
+        const btnSettings = document.getElementById('btnSettings');
+        const settingsModal = document.getElementById('settingsModal');
+        const btnSaveSettings = document.getElementById('btnSaveSettings');
+        const btnCancelSettings = document.getElementById('btnCancelSettings');
+        const inpClientId = document.getElementById('inpClientId');
+        const inpApiKey = document.getElementById('inpApiKey');
+        const inpAppId = document.getElementById('inpAppId');
+
+        // Google API & BYOK State
+        let GOOGLE_CONFIG = JSON.parse(localStorage.getItem('mjrp_google_keys')) || { CLIENT_ID: '', API_KEY: '', APP_ID: '' };
         let tokenClient;
         let accessToken = null;
-        let gapiInited = false;
-        let gisInited = false;
+        let gapiScriptLoaded = false;
+        let gisScriptLoaded = false;
+        let authClientInited = false;
+        let pickerInited = false;
 
-        // Callback from Google API script
-        function gapiLoaded() {
-            gapi.load('client:picker', initializeGapiClient);
-        }
+        // Callback from Google Scripts
+        function gapiLoaded() { gapiScriptLoaded = true; tryInitGoogle(); }
+        function gisLoaded() { gisScriptLoaded = true; tryInitGoogle(); }
 
-        async function initializeGapiClient() {
-            await gapi.client.init({
-                apiKey: GOOGLE_CONFIG.API_KEY,
-                discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
-            });
-            gapiInited = true;
-            maybeEnableDrive();
-        }
+        async function tryInitGoogle() {
+            if (!GOOGLE_CONFIG.CLIENT_ID || !GOOGLE_CONFIG.API_KEY || GOOGLE_CONFIG.CLIENT_ID.length < 5) return;
 
-        // Callback from Google Identity Services script
-        function gisLoaded() {
-            tokenClient = google.accounts.oauth2.initTokenClient({
-                client_id: GOOGLE_CONFIG.CLIENT_ID,
-                scope: 'https://www.googleapis.com/auth/drive.file',
-                callback: '', // defined dynamically at request time
-            });
-            gisInited = true;
-            maybeEnableDrive();
+            // Init GIS Auth Client
+            if (gisScriptLoaded && !authClientInited) {
+                tokenClient = google.accounts.oauth2.initTokenClient({
+                    client_id: GOOGLE_CONFIG.CLIENT_ID,
+                    scope: 'https://www.googleapis.com/auth/drive.file',
+                    callback: '',
+                });
+                authClientInited = true;
+            }
+
+            // Init GAPI Picker
+            if (gapiScriptLoaded && !pickerInited) {
+                gapi.load('client:picker', async () => {
+                    await gapi.client.init({
+                        apiKey: GOOGLE_CONFIG.API_KEY,
+                        discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
+                    });
+                    pickerInited = true;
+                    maybeEnableDrive();
+                });
+            } else {
+                maybeEnableDrive();
+            }
         }
 
         function maybeEnableDrive() {
-            if (gapiInited && gisInited && GOOGLE_CONFIG.CLIENT_ID.length > 5) {
+            if (authClientInited && pickerInited) {
                 btnDrive.disabled = false;
                 btnDrive.title = "Save to Google Drive Folder";
             }
         }
+
+        // --- Settings Modal Logic ---
+        btnSettings.addEventListener('click', () => {
+            inpClientId.value = GOOGLE_CONFIG.CLIENT_ID || '';
+            inpApiKey.value = GOOGLE_CONFIG.API_KEY || '';
+            inpAppId.value = GOOGLE_CONFIG.APP_ID || '';
+            settingsModal.style.display = 'flex';
+        });
+
+        btnCancelSettings.addEventListener('click', () => {
+            settingsModal.style.display = 'none';
+        });
+
+        btnSaveSettings.addEventListener('click', () => {
+            GOOGLE_CONFIG = {
+                CLIENT_ID: inpClientId.value.trim(),
+                API_KEY: inpApiKey.value.trim(),
+                APP_ID: inpAppId.value.trim()
+            };
+            localStorage.setItem('mjrp_google_keys', JSON.stringify(GOOGLE_CONFIG));
+            settingsModal.style.display = 'none';
+            tryInitGoogle();
+        });
+
+        // Trigger on load
+        tryInitGoogle();
 
         // Core Default state if cleared
         const EMPTY_PREVIEW = "<style>body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;height:95vh;color:#8b949e;margin:0;}</style><div>Waiting for HTML input...</div>";

@@ -1,18 +1,19 @@
-# Tasks: Milestone 3 (Polish)
+# Tasks: Milestone 3.5 (BYOK Settings)
 
 **Status**: In Progress
 **Date**: 2026-02-25
 **Plan Reference**: docs/specs/plan.md
 
-## Pre-Implementation
-- [x] Specs, stories and plan for M3 (PNG support).
+## Implementation: Settings UI
+- [x] Criar ícone de engrenagem "⚙️ Settings" ao lado do título ou actions da Toolbar.
+- [x] Criar estrutura em HTML (escondida por padrão) para o Modal Overlay contendo:
+  - Input para `CLIENT_ID`
+  - Input para `API_KEY`
+  - Input para `APP_ID`
+  - Botão "Save Settings" e botão "Close/Cancel".
+- [x] Estilizar o modal usando os design-tokens já existentes (`--bg-surface`, `--accent-green`, etc).
 
-## Implementation: Export to PNG
-- [x] Injetar a biblioteca externa `html2canvas` (`<script>`) no `index.html`, pois captura de pixels do DOM não é nativa da engine JS de forma leve.
-- [x] Adicionar um botão de Imagem (`<button id="btnPng">`) na Toolbar (Style: `.btn-ghost` ao lado do PDF).
-- [x] Interceptar clique para construir a base 64 rodando o `html2canvas()` internamente no `contentDocument.body` do iframe.
-- [x] Extrair base64 e forçar download como arquivo `preview_[timestamp].png`.
-
-## Verification & Documentation
-- [x] Teste lógico do download PNG validando renderizações com CSS.
-- [ ] Fazer Commit.
+## Implementation: Storage Logic
+- [x] Ao salvar, pegar os values dos inputs e persistir no `localStorage.setItem('mjrp_goolge_keys', JSON)`.
+- [x] Ajustar o fluxo inicial de página (`onload`): buscar no localStorage, e se as chaves existirem, hidratar a variável `GOOGLE_CONFIG` globalmente e dar Load no script do GSI.
+- [x] Deletar a dependência do arquivo `config.js` externo e remover sua tag de import do Head do HTML.
