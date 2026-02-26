@@ -1,11 +1,21 @@
 # Tasks: M4 — Markdown & Mermaid Render
 
-> **Status**: 🟡 AWAITING APPROVAL
+> **Status**: ✅ APPROVED (2026-02-26 20:23) — Includes modularization
 > **Date**: 2026-02-26
 > **Spec**: docs/specs/m4/spec.md (APPROVED)
 > **Plan**: docs/specs/m4/plan.md (APPROVED)
 
 ---
+
+## Step 0: Modularization (Refactoring)
+- [ ] Criar pasta `js/` na raiz do projeto.
+- [ ] Extrair lógica do Google Drive (OAuth, Picker, Upload) para `js/drive.js`.
+- [ ] Extrair lógica de Exports (Download, PDF, PNG) para `js/export.js`.
+- [ ] Extrair lógica de Preview (detectInputType, injectBaseHref, BYOK settings) para `js/preview.js`.
+- [ ] Criar `js/app.js` como bootstrap (DOM refs, event listeners, init).
+- [ ] Remover `<script>` inline do `index.html`, substituir por `<script src="js/...">` tags.
+- [ ] Testar que TODAS as funcionalidades existentes continuam operando.
+- [ ] Commit: `refactor: modularize JS into separate files`
 
 ## Step 1: CDN Scripts
 - [ ] Adicionar `<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>` no `<head>` do `index.html`, logo após o script do `html2canvas`.
