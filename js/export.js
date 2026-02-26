@@ -16,10 +16,19 @@ function initExportButtons(htmlInput, previewFrame) {
     const btnPdf = document.getElementById('btnPdf');
     const btnPng = document.getElementById('btnPng');
 
-    // Download HTML
+    // Download HTML (renders Markdown to HTML if needed)
     btnDownload.addEventListener('click', () => {
-        const content = htmlInput.value;
-        if (!content.trim()) { alert("The editor is empty. Paste some HTML first!"); return; }
+        const raw = htmlInput.value;
+        if (!raw.trim()) { alert("The editor is empty. Paste some content first!"); return; }
+
+        // If input is Markdown, download the rendered HTML with styles
+        let content;
+        if (detectInputType(raw) === 'markdown') {
+            const parsedHtml = marked.parse(raw);
+            content = '<!DOCTYPE html>\n<html>\n<head><meta charset="UTF-8">\n<title>Preview</title>\n</head>\n<body>\n' + wrapWithMdStyles(parsedHtml) + '\n</body>\n</html>';
+        } else {
+            content = raw;
+        }
 
         const blob = new Blob([content], { type: 'text/html' });
         const url = URL.createObjectURL(blob);
