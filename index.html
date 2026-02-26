@@ -195,6 +195,42 @@
             }
         }
 
+        /* Fullscreen Preview Mode */
+        main.fullscreen-preview {
+            grid-template-columns: 1fr;
+        }
+
+        main.fullscreen-preview .editor-panel {
+            display: none;
+        }
+
+        .btn-toggle-view {
+            background: transparent;
+            color: var(--accent-cyan);
+            border: 1px solid var(--accent-cyan);
+            font-size: 0.7rem;
+            padding: 4px 10px;
+        }
+
+        .btn-toggle-view:hover {
+            background: rgba(88, 166, 255, 0.1);
+        }
+
+        /* Preview toolbar (visible in fullscreen) */
+        .preview-toolbar {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 16px;
+            background-color: var(--bg-main);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        main.fullscreen-preview+.preview-toolbar-placeholder .preview-toolbar,
+        .preview-toolbar.visible {
+            display: flex;
+        }
+
         /* Settings Modal (BYOK) */
         .modal-overlay {
             position: fixed;
@@ -286,6 +322,8 @@
                 </div>
                 <div class="toolbar-actions">
                     <button class="btn-ghost" id="btnClear" title="Clear Code">Clear</button>
+                    <button class="btn-toggle-view" id="btnToggleView" title="Toggle Fullscreen Preview">⛶
+                        Preview</button>
                     <!-- Google Drive Action -->
                     <button class="btn-ghost" id="btnDrive" disabled title="Drive Integration Loading...">
                         <svg class="icon" viewBox="0 0 24 24">
@@ -325,6 +363,10 @@
 
         <!-- Preview Right / Bottom -->
         <section class="preview-panel">
+            <div class="preview-toolbar" id="previewToolbar">
+                <span style="font-size:0.8rem;color:var(--text-secondary);">Preview Mode</span>
+                <button class="btn-toggle-view" id="btnBackToEditor" title="Back to Editor">✏️ Editor</button>
+            </div>
             <iframe id="previewFrame" sandbox="allow-scripts allow-popups allow-same-origin allow-modals"
                 srcdoc="<style>body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;height:95vh;color:#8b949e;margin:0;}</style><div>Waiting for HTML input...</div>"></iframe>
         </section>
@@ -459,7 +501,7 @@
         const EMPTY_PREVIEW = "<style>body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;height:95vh;color:#8b949e;margin:0;}</style><div>Waiting for HTML input...</div>";
 
         // Logic: Real-time Data binding
-        const BASE_HREF = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+        const BASE_HREF = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1) + 'images/';
 
         function injectBaseHref(html) {
             // If the HTML already has a <base> tag, don't inject another
@@ -483,6 +525,22 @@
             htmlInput.value = '';
             previewFrame.srcdoc = EMPTY_PREVIEW;
             htmlInput.focus();
+        });
+
+        // Logic: Toggle Fullscreen Preview
+        const mainEl = document.querySelector('main');
+        const btnToggleView = document.getElementById('btnToggleView');
+        const btnBackToEditor = document.getElementById('btnBackToEditor');
+        const previewToolbar = document.getElementById('previewToolbar');
+
+        btnToggleView.addEventListener('click', () => {
+            mainEl.classList.add('fullscreen-preview');
+            previewToolbar.style.display = 'flex';
+        });
+
+        btnBackToEditor.addEventListener('click', () => {
+            mainEl.classList.remove('fullscreen-preview');
+            previewToolbar.style.display = 'none';
         });
 
         // Logic: Generates File and triggers browser Download
