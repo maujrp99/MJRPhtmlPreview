@@ -1,6 +1,6 @@
 # Specification: M4 — Markdown & Mermaid Render
 
-> **Status**: 🟡 AWAITING APPROVAL
+> **Status**: ✅ APPROVED (2026-02-26 20:09)
 > **Date**: 2026-02-26
 > **Author**: Antigravity
 > **Refs**: constitution.md, arch.md, design-system.md
