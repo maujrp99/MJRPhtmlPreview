@@ -26,3 +26,56 @@ Nesta sessão, foi instalada a estrutura completa do MJRP Framework no projeto `
 
 ### Dados-Chave para Referência
 - Total de Assets do Framework instalados: 22 Skills e 20 Workflows de processo na pasta `.agent`.
+
+---
+
+## Session: 2026-02-25 — Milestones M1 a M3.5 + Deploy (Full Build)
+
+> Date: 2026-02-25T20:00:00 → 2026-02-26T00:23:00 -03:00
+> Participants: mpedroso + Antigravity
+> Branch: dev → main (merged)
+> Duration: ~4 horas
+
+### Resumo Executivo
+Sessão maratona onde saímos do zero até o deploy completo de produção. Executamos o fluxo SDD integral: Discovery → Design → Architecture → Plan → Tasks → Implement → Deploy. Construímos um visualizador HTML client-side completo em um único `index.html` vanilla (sem backend, sem build tools).
+
+### O Que Foi Feito
+1. **M1 (MVP):** Implementado editor split-screen (textarea + iframe), live preview via `srcdoc`, download local `.html` via Blob, botão Clear. Design System "Minimal Dark" com JetBrains Mono + Inter.
+2. **M2 (Google Drive):** Integração OAuth 2.0 via GSI, Google Picker para seleção de pasta, upload multipart via fetch puro para Drive API v3.
+3. **M3 (Export):** Botão PDF via `contentWindow.print()` nativo. Botão PNG via `html2canvas` (com limitação conhecida para HTML dinâmico — documentada em `docs/debug-log.md`).
+4. **M3.5 (BYOK):** Arquitetura "Bring Your Own Keys" — modal de Settings com engrenagem ⚙️, credenciais salvas em `localStorage`, eliminação do `config.js` hardcoded.
+5. **Deploy:** GitHub Pages ativado na branch `main`. Resolvido problema de unrelated histories no merge `dev→main`. Site live em `https://maujrp99.github.io/MJRPhtmlPreview/`.
+6. **Docs (SDD):** Backfill do `spec.md` (estava vazio), atualização de `plan.md`, `tasks.md`, `story.md` a cada milestone.
+
+### Decisões Chave
+- **Single HTML File:** Toda a aplicação vive em `index.html` — CSS e JS inline. Sem frameworks, bundlers ou transpilers.
+- **BYOK over config.js:** Credenciais Google são injetadas pelo usuário via modal e salvas no `localStorage` do navegador. Nenhuma chave trafega pelo Git.
+- **html2canvas aceita como trade-off:** Biblioteca externa adicionada exclusivamente para captura PNG. Limitação conhecida com HTML dinâmico (canvas/charts).
+- **PDF via print() nativo:** Zero dependências adicionais — usa o diálogo de impressão do Chrome/Safari.
+- **M4 aprovada pelo Product Designer:** Markdown + Mermaid parser é o pivô natural do produto. Bibliotecas `marked.js` e `mermaid.js` via CDN.
+
+### Arquivos Modificados
+| Arquivo | Ação | Descrição |
+|---------|------|-----------|
+| `index.html` | Criado/Atualizado | Aplicação completa: UI, CSS, JS, Google Drive, BYOK Modal |
+| `docs/specs/spec.md` | Preenchido | Requisitos Funcionais (FR01-FR04) e NFRs retroativos |
+| `docs/specs/plan.md` | Atualizado | M1-M3 marcadas CONCLUÍDO, M4 planejada |
+| `docs/specs/tasks.md` | Atualizado | Tasks M3.5 (BYOK) completadas |
+| `docs/specs/story.md` | Atualizado | US-01 a US-05 com acceptance criteria |
+| `docs/debug-log.md` | Criado | Bug tracking: html2canvas + HTML dinâmico |
+| `.gitignore` | Atualizado | `config.js` adicionado ao ignore |
+| `config.js` | Deletado | Substituído pela arquitetura BYOK |
+
+### Pendências para Próxima Sessão
+1. **M4: Markdown & Mermaid** — Especificar tasks, injetar `marked.js` + `mermaid.js`, implementar detecção automática de sintaxe MD vs HTML no textarea, renderizar diagramas Mermaid como SVG inline.
+2. **Debug PNG:** Investigar alternativas ao `html2canvas` para HTMLs dinâmicos (ex: `dom-to-image`, ou abordagem com Puppeteer cloud function).
+3. **Polish UI:** Micro-animações, hover effects, possível dark/light toggle no iframe.
+
+### Contexto Técnico Rápido
+- **Stack:** Vanilla HTML/CSS/JS, single file `index.html`, zero build.
+- **Deploy:** GitHub Pages, branch `main`, URL: `https://maujrp99.github.io/MJRPhtmlPreview/`
+- **Google Cloud:** Projeto com Drive API + Picker API habilitadas. OAuth Client ID com origens `localhost:8000` e `maujrp99.github.io`. Test user: `maujrp@gmail.com`.
+- **Branches:** `dev` (desenvolvimento) → merge para `main` (produção/pages).
+- **Credenciais:** BYOK via `localStorage` key `mjrp_google_keys`.
+- **Design System:** Minimal Dark — tokens em `:root` CSS vars, fontes Inter + JetBrains Mono via Google Fonts CDN.
+
