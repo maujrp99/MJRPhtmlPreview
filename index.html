@@ -459,10 +459,23 @@
         const EMPTY_PREVIEW = "<style>body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;height:95vh;color:#8b949e;margin:0;}</style><div>Waiting for HTML input...</div>";
 
         // Logic: Real-time Data binding
+        const BASE_HREF = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+
+        function injectBaseHref(html) {
+            // If the HTML already has a <base> tag, don't inject another
+            if (/<base\s/i.test(html)) return html;
+            // If it has a <head>, inject inside it
+            if (/<head[^>]*>/i.test(html)) {
+                return html.replace(/<head[^>]*>/i, `$&<base href="${BASE_HREF}">`);
+            }
+            // Otherwise, prepend it
+            return `<base href="${BASE_HREF}">` + html;
+        }
+
         htmlInput.addEventListener('input', () => {
             const rawHTML = htmlInput.value;
-            // Update iframe srcdoc securely
-            previewFrame.srcdoc = rawHTML.trim() ? rawHTML : EMPTY_PREVIEW;
+            // Update iframe srcdoc securely, with base href for relative paths
+            previewFrame.srcdoc = rawHTML.trim() ? injectBaseHref(rawHTML) : EMPTY_PREVIEW;
         });
 
         // Logic: Clear Editor
