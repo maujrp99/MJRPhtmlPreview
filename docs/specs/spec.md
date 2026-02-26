@@ -32,6 +32,9 @@ Um visualizador rápido, "frictionless" e zero-dependências externas pesado par
 - **NFR02 [Segurança Mútua]:** O iframe alvo deve conter explicitamente a flag sandbox `allow-scripts allow-popups allow-same-origin allow-modals` bloqueando que HTML inseguro afete os tokens da M2 globais.
 - **NFR03 [Responsividade]:** O Layout Flex 50/50 Desktop deverá virar um empilhamento "Stack-Y" no mobile mantendo visado a área do editor.
 - **NFR04 [Data Storage BYOK]:** Nenhum dado de sessão do conteúdo HTML/MD colado será persistido. O uso de `localStorage` é ESTRITAMENTE reservado para salvar as Chaves de API de terceiros (BYOK) inseridas pelo usuário nas configurações, garantindo anonimato global.
+- **NFR05 [Fullscreen Preview]:** O sistema deve oferecer um modo de visualização fullscreen que esconde o editor e expande o preview para 100% da tela, com toggle bidirecional (Preview ↔ Editor).
+- **NFR06 [Base Href Injection]:** O sistema deve injetar automaticamente uma tag `<base href>` apontando para a pasta `/images/` no HTML colado antes de renderizar no iframe, permitindo resolução de caminhos relativos de imagem.
+- **NFR07 [Privacidade de Assets]:** Imagens e assets sensíveis NÃO devem ser commitados no repositório público. A pasta `images/` deve constar no `.gitignore`. Para uso em produção (GitHub Pages), imagens devem ser servidas via Google Drive thumbnail links com controle de acesso.
 
 ## 4. API & External Contracts
 ### Contract: Google Identity Services (GSI)
