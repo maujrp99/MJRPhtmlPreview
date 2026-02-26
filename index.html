@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MJRPhtmlPreview</title>
+    <!-- Google API Config & Scripts -->
+    <script src="config.js"></script>
+    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
     <!-- Fonts: Inter for UI, JetBrains Mono for Code -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -202,8 +206,8 @@
                 <div class="toolbar-title">MJRPhtmlPreview</div>
                 <div class="toolbar-actions">
                     <button class="btn-ghost" id="btnClear" title="Clear Code">Clear</button>
-                    <!-- Google Drive M2 Placeholder -->
-                    <button class="btn-ghost" id="btnDrive" disabled title="Drive Integration coming in M2">
+                    <!-- Google Drive Action -->
+                    <button class="btn-ghost" id="btnDrive" disabled title="Drive Integration Loading...">
                         <svg class="icon" viewBox="0 0 24 24">
                             <path
                                 d="M7.71,3.5L1.15,15L4.58,21L11.13,9.5M9.73,15L6.3,21H19.42L22.85,15M22.28,14L15.72,2.5H8.85L15.43,14H22.28Z" />
@@ -245,6 +249,45 @@
         const btnClear = document.getElementById('btnClear');
         const btnDownload = document.getElementById('btnDownload');
         const btnPdf = document.getElementById('btnPdf');
+        const btnDrive = document.getElementById('btnDrive'); // Imported the remaining button
+
+        // Google API Integration State
+        let tokenClient;
+        let accessToken = null;
+        let gapiInited = false;
+        let gisInited = false;
+
+        // Callback from Google API script
+        function gapiLoaded() {
+            gapi.load('client:picker', initializeGapiClient);
+        }
+
+        async function initializeGapiClient() {
+            await gapi.client.init({
+                apiKey: GOOGLE_CONFIG.API_KEY,
+                discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
+            });
+            gapiInited = true;
+            maybeEnableDrive();
+        }
+
+        // Callback from Google Identity Services script
+        function gisLoaded() {
+            tokenClient = google.accounts.oauth2.initTokenClient({
+                client_id: GOOGLE_CONFIG.CLIENT_ID,
+                scope: 'https://www.googleapis.com/auth/drive.file',
+                callback: '', // defined dynamically at request time
+            });
+            gisInited = true;
+            maybeEnableDrive();
+        }
+
+        function maybeEnableDrive() {
+            if (gapiInited && gisInited && GOOGLE_CONFIG.CLIENT_ID.length > 5) {
+                btnDrive.disabled = false;
+                btnDrive.title = "Save to Google Drive Folder";
+            }
+        }
 
         // Core Default state if cleared
         const EMPTY_PREVIEW = "<style>body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;height:95vh;color:#8b949e;margin:0;}</style><div>Waiting for HTML input...</div>";
@@ -309,6 +352,117 @@
             previewFrame.contentWindow.focus();
             previewFrame.contentWindow.print();
         });
+
+        // Logic: Google Drive Integration Workflow (Auth -> Picker -> Upload)
+        btnDrive.addEventListener('click', () => {
+            const content = htmlInput.value;
+            if (!content.trim()) {
+                alert("The editor is empty. Paste some HTML first!");
+                return;
+            }
+
+            tokenClient.callback = async (resp) => {
+                if (resp.error !== undefined) {
+                    throw (resp);
+                }
+                accessToken = resp.access_token;
+                createPicker();
+            };
+
+            // Solicita permissões de usuário ou reutiliza o token ativo sem Prompt se possível
+            if (accessToken === null) {
+                tokenClient.requestAccessToken({ prompt: 'consent' });
+            } else {
+                tokenClient.requestAccessToken({ prompt: '' });
+            }
+        });
+
+        function createPicker() {
+            // Permitir que o usuário escolha uma pasta para salvar
+            const view = new google.picker.DocsView(google.picker.ViewId.FOLDERS)
+                .setIncludeFolders(true)
+                .setSelectFolderEnabled(true);
+
+            const picker = new google.picker.PickerBuilder()
+                .enableFeature(google.picker.Feature.NAV_HIDDEN)
+                .setAppId(GOOGLE_CONFIG.APP_ID)
+                .setOAuthToken(accessToken)
+                .addView(view)
+                .setDeveloperKey(GOOGLE_CONFIG.API_KEY)
+                .setCallback(pickerCallback)
+                .build();
+
+            picker.setVisible(true);
+        }
+
+        async function pickerCallback(data) {
+            if (data[google.picker.Response.ACTION] === google.picker.Action.PICKED) {
+                const doc = data[google.picker.Response.DOCUMENTS][0];
+                const folderId = doc[google.picker.Document.ID];
+
+                await uploadHtmlToDrive(folderId);
+            }
+        }
+
+        async function uploadHtmlToDrive(folderId) {
+            btnDrive.innerHTML = "Saving...";
+
+            try {
+                const content = htmlInput.value;
+                const boundary = '-------314159265358979323846';
+                const delimiter = "\r\n--" + boundary + "\r\n";
+                const close_delim = "\r\n--" + boundary + "--";
+
+                // Generate timestamped filename
+                const now = new Date();
+                const filename = "preview_" + now.getFullYear() + String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0') + "_" + String(now.getHours()).padStart(2, '0') + String(now.getMinutes()).padStart(2, '0') + ".html";
+
+                // Construção Multipart Payload
+                const metadata = {
+                    name: filename,
+                    mimeType: 'text/html',
+                    parents: [folderId]
+                };
+
+                const multipartRequestBody =
+                    delimiter +
+                    'Content-Type: application/json\r\n\r\n' +
+                    JSON.stringify(metadata) +
+                    delimiter +
+                    'Content-Type: text/html\r\n\r\n' +
+                    content +
+                    close_delim;
+
+                // Execução do fetch puro para evitar complexidades de boundary do client library
+                const request = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + accessToken,
+                        'Content-Type': 'multipart/related; boundary="' + boundary + '"'
+                    },
+                    body: multipartRequestBody
+                });
+
+                const response = await request.json();
+
+                if (response.error) {
+                    throw new Error(response.error.message);
+                }
+
+                // UI Success state temporário
+                btnDrive.innerHTML = '<span style="color:var(--accent-green)">Saved!</span>';
+                setTimeout(() => {
+                    const icn = '<svg class="icon" viewBox="0 0 24 24"><path d="M7.71,3.5L1.15,15L4.58,21L11.13,9.5M9.73,15L6.3,21H19.42L22.85,15M22.28,14L15.72,2.5H8.85L15.43,14H22.28Z"/></svg>';
+                    btnDrive.innerHTML = icn + ' Save';
+                }, 3000);
+
+            } catch (error) {
+                console.error("Error uploading to Drive:", error);
+                alert("Failed to save to Drive. See console for details.");
+                const icn = '<svg class="icon" viewBox="0 0 24 24"><path d="M7.71,3.5L1.15,15L4.58,21L11.13,9.5M9.73,15L6.3,21H19.42L22.85,15M22.28,14L15.72,2.5H8.85L15.43,14H22.28Z"/></svg>';
+                btnDrive.innerHTML = icn + ' Save';
+            }
+        }
 
         // Initial setup
         htmlInput.focus();
