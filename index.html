@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +8,10 @@
     <!-- Fonts: Inter for UI, JetBrains Mono for Code -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
     <style>
         /* Minimal Dark Tokens */
         :root {
@@ -151,7 +154,8 @@
         .preview-panel {
             display: flex;
             flex-direction: column;
-            background-color: #ffffff; /* Must be pure white to prevent bleed */
+            background-color: #ffffff;
+            /* Must be pure white to prevent bleed */
             height: 100%;
         }
 
@@ -162,7 +166,7 @@
             height: 100%;
             background-color: #ffffff;
         }
-        
+
         .empty-state {
             display: flex;
             flex-direction: column;
@@ -180,6 +184,7 @@
                 grid-template-columns: 1fr;
                 grid-template-rows: 1fr 1fr;
             }
+
             .editor-panel {
                 border-right: none;
                 border-bottom: 2px solid var(--accent-cyan);
@@ -187,6 +192,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <main>
@@ -198,23 +204,37 @@
                     <button class="btn-ghost" id="btnClear" title="Clear Code">Clear</button>
                     <!-- Google Drive M2 Placeholder -->
                     <button class="btn-ghost" id="btnDrive" disabled title="Drive Integration coming in M2">
-                        <svg class="icon" viewBox="0 0 24 24"><path d="M7.71,3.5L1.15,15L4.58,21L11.13,9.5M9.73,15L6.3,21H19.42L22.85,15M22.28,14L15.72,2.5H8.85L15.43,14H22.28Z"/></svg>
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path
+                                d="M7.71,3.5L1.15,15L4.58,21L11.13,9.5M9.73,15L6.3,21H19.42L22.85,15M22.28,14L15.72,2.5H8.85L15.43,14H22.28Z" />
+                        </svg>
                         Save
+                    </button>
+                    <!-- PDF Print Action -->
+                    <button class="btn-ghost" id="btnPdf" title="Save as PDF">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path
+                                d="M18,3H6V7H18M19,12A1,1 0 0,1 18,11A1,1 0 0,1 19,10A1,1 0 0,1 20,11A1,1 0 0,1 19,12M16,19H8V14H16M19,8H5A3,3 0 0,0 2,11V17H6V21H18V17H22V11A3,3 0 0,0 19,8Z" />
+                        </svg>
+                        PDF
                     </button>
                     <!-- M1 Core Action -->
                     <button class="btn-primary" id="btnDownload" title="Download to local vault">
-                        <svg class="icon" viewBox="0 0 24 24"><path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/></svg>
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
+                        </svg>
                         Local
                     </button>
                 </div>
             </div>
-            
+
             <textarea id="htmlInput" placeholder="<!-- Paste your HTML here... -->" spellcheck="false"></textarea>
         </section>
 
         <!-- Preview Right / Bottom -->
         <section class="preview-panel">
-            <iframe id="previewFrame" sandbox="allow-scripts allow-popups allow-same-origin" srcdoc="<style>body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;height:95vh;color:#8b949e;margin:0;}</style><div>Waiting for HTML input...</div>"></iframe>
+            <iframe id="previewFrame" sandbox="allow-scripts allow-popups allow-same-origin allow-modals"
+                srcdoc="<style>body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;height:95vh;color:#8b949e;margin:0;}</style><div>Waiting for HTML input...</div>"></iframe>
         </section>
     </main>
 
@@ -224,6 +244,7 @@
         const previewFrame = document.getElementById('previewFrame');
         const btnClear = document.getElementById('btnClear');
         const btnDownload = document.getElementById('btnDownload');
+        const btnPdf = document.getElementById('btnPdf');
 
         // Core Default state if cleared
         const EMPTY_PREVIEW = "<style>body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;height:95vh;color:#8b949e;margin:0;}</style><div>Waiting for HTML input...</div>";
@@ -245,7 +266,7 @@
         // Logic: Generates File and triggers browser Download
         btnDownload.addEventListener('click', () => {
             const content = htmlInput.value;
-            
+
             if (!content.trim()) {
                 alert("The editor is empty. Paste some HTML first!");
                 return;
@@ -254,29 +275,44 @@
             // Create Blob with text/html MIME
             const blob = new Blob([content], { type: 'text/html' });
             const url = URL.createObjectURL(blob);
-            
+
             // Format Filename timestamp: preview_20260225_143000.html
             const now = new Date();
-            const timestamp = now.getFullYear().toString() + 
-                String(now.getMonth() + 1).padStart(2, '0') + 
-                String(now.getDate()).padStart(2, '0') + '_' + 
-                String(now.getHours()).padStart(2, '0') + 
+            const timestamp = now.getFullYear().toString() +
+                String(now.getMonth() + 1).padStart(2, '0') +
+                String(now.getDate()).padStart(2, '0') + '_' +
+                String(now.getHours()).padStart(2, '0') +
                 String(now.getMinutes()).padStart(2, '0');
-            
+
             // Virtual Link trick to force download
             const a = document.createElement('a');
             a.href = url;
             a.download = `preview_${timestamp}.html`;
             document.body.appendChild(a);
             a.click();
-            
+
             // Cleanup
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         });
-        
+
+        // Logic: Print / Save as PDF
+        btnPdf.addEventListener('click', () => {
+            const content = htmlInput.value;
+            if (!content.trim()) {
+                alert("The editor is empty. Paste some HTML first!");
+                return;
+            }
+
+            // Call native print API strictly on the iframe window
+            // The browser's print dialog will handle the "Save as PDF" functionality
+            previewFrame.contentWindow.focus();
+            previewFrame.contentWindow.print();
+        });
+
         // Initial setup
         htmlInput.focus();
     </script>
 </body>
+
 </html>

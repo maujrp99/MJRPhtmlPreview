@@ -1,10 +1,28 @@
 # Plan — MJRPhtmlPreview
 
-> This file will be populated during the Plan stage.
-> Maps the implementation strategy for each milestone.
+> Estratégia de implementação mapeada por Milestones. Trilha o "Como faremos".
 
-<!-- Sections to be filled:
-## M1: MVP (Paste + Preview + Local Save)
-## M2: Drive Integration
+## M1: MVP (Paste + Preview + Local Save) - CONCLUÍDO
+- [x] Initial Scaffold & Framework Setup (GitHub + Docs)
+- [x] Discovery & Ideation
+- [x] Design Flow & Wireframes Aprovados (Variant 2: Green Accent)
+- [x] Arquitetura System & Component Layout Planejado
+- [x] Implementação de Front-End HTML Base (`index.html` structure)
+- [x] Implementação Estilos Minimal Dark (CSS inline na tag `<style>`) e Layout Flexbox Responsivo.
+- [x] Implementação Logic JS: Data-binding do textarea para o atributo `srcdoc` do iframe.
+- [x] Implementação Logic JS: Serviço FileExporter para construção do Blob HTML `.html` e trigger do download (suporte Obsidian Vault).
+
+## M2: Drive Integration - ATUAL
+- [ ] Incluir bibliotecas do Google Identity Services (`gsi/client`) e Google APIs (`api.js`) no `index.html`.
+- [ ] Ponto de integração OAuth 2.0 Client (necessita de `CLIENT_ID` e `APP_ID` do Console de Nuvem).
+- [ ] Construção do Service Google Picker UI para seleção de pastas.
+- [ ] Escrita das rotinas da API GDrive para enviar Blob file (Create Object vazio) persistindo os metadados.
+- [ ] Request secundária através de método PATCH/PUT para escrever a String da UI para o corpo do File no Drive.
+- [ ] Implementação de Botão Secundário: Download do layout em `.pdf` (via API nativa `print()`).
+
 ## M3: Polish
--->
+- Adicionar feature "Clear Code".
+- Feedback tátil e micro-interações via transições CSS.
+- Modo claro / Dark mode Toggle para a área do Iframe.
+- (Opcional) Syntax Highlighting minimalista no Code Editor se não prejudicar performance.
+- Implementar Download para `.png`/`.jpeg` através da inclusão de conversor canvas externo (adequando o zero-dependency manifesto).
