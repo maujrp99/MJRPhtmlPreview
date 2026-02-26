@@ -1,6 +1,6 @@
 # Plan: M4 — Markdown & Mermaid Render
 
-> **Status**: 🟡 AWAITING APPROVAL
+> **Status**: ✅ APPROVED (2026-02-26 20:16)
 > **Date**: 2026-02-26
 > **Spec Reference**: docs/specs/m4/spec.md (APPROVED)
 
