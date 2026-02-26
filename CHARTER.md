@@ -20,7 +20,13 @@ AI-generated HTML (from Cowork, Claude Code, ChatGPT, etc.) needs to be previewe
 - Google OAuth2 authentication (personal + professional accounts)
 - Google Drive save with folder picker (Google Picker API)
 - Local download as .html file
+- Export to PDF (native print) and PNG (html2canvas)
+- BYOK (Bring Your Own Keys) — credenciais Google salvas no localStorage do browser
+- Fullscreen Preview mode (toggle para esconder editor)
+- Base Href injection para resolução de imagens relativas
 - Responsive layout (desktop-first, mobile-friendly)
+- Markdown rendering via marked.js (M4 — planejado)
+- Mermaid diagram rendering via mermaid.js (M4 — planejado)
 
 ### Out of Scope
 - HTML editing/IDE features (this is a viewer, not an editor)
@@ -34,11 +40,14 @@ AI-generated HTML (from Cowork, Claude Code, ChatGPT, etc.) needs to be previewe
 - **Builder**: Claude Cowork + Claude Code + Antigravity
 
 ## Roadmap (Milestones)
-| Milestone | Target | Description |
-|-----------|--------|-------------|
-| M1: MVP | Week 1 | Paste + Preview + Local Save |
-| M2: Drive Integration | Week 2 | OAuth2 + Picker + Drive Save |
-| M3: Polish | Week 3 | UX refinements, keyboard shortcuts, mobile |
+| Milestone | Target | Description | Status |
+|-----------|--------|-------------|--------|
+| M1: MVP | Week 1 | Paste + Preview + Local Save | ✅ Done |
+| M2: Drive Integration | Week 2 | OAuth2 + Picker + Drive Save + PDF Export | ✅ Done |
+| M3: Polish | Week 3 | PNG Export, Clear, micro-interactions | ✅ Done |
+| M3.5: BYOK | Week 3 | Settings modal, localStorage keys, remove config.js | ✅ Done |
+| Session 02/26 | Ad-hoc | Fullscreen Preview, Base Href, Image Privacy | ✅ Done |
+| M4: Markdown | Week 4 | marked.js + mermaid.js parser, auto-detect MD vs HTML | ⏳ Next |
 
 ## Risks and Constraints
 - **Google OAuth2 setup**: Requires Google Cloud Console project with Drive API and Picker API enabled. User must configure OAuth credentials.

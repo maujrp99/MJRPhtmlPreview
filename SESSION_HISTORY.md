@@ -79,3 +79,36 @@ Sessão maratona onde saímos do zero até o deploy completo de produção. Exec
 - **Credenciais:** BYOK via `localStorage` key `mjrp_google_keys`.
 - **Design System:** Minimal Dark — tokens em `:root` CSS vars, fontes Inter + JetBrains Mono via Google Fonts CDN.
 
+---
+
+## Session: 2026-02-26 — Fullscreen Preview, Base Href & Image Privacy
+
+> Date: 2026-02-26T15:58:00 → 2026-02-26T19:34:00 -03:00
+> Participants: mpedroso + Antigravity
+> Branch: dev → main (merged)
+> Duration: ~1 hora (com intervalo)
+
+### Resumo Executivo
+Sessão focada em 3 melhorias de UX e segurança: resolução de caminhos relativos de imagem no iframe via `<base href>`, modo Fullscreen Preview (toggle para esconder o editor), e migração de imagens para Google Drive Links (privacidade).
+
+### O Que Foi Feito
+1. **Base Href Injection:** Implementada função `injectBaseHref()` que insere automaticamente `<base href="...images/">` no HTML antes de renderizar no iframe. Resolve caminhos relativos de imagem sem que o usuário precise escrever o path completo.
+2. **Fullscreen Preview Mode:** Adicionado botão "⛶ Preview" (azul, na toolbar) que esconde o editor e expande o iframe para 100% da tela. Barra superior "✏️ Editor" permite voltar ao modo split.
+3. **Image Privacy:** Imagens removidas do repositório público. Pasta `images/` adicionada ao `.gitignore`. Estratégia definida: usar Google Drive thumbnail links (`drive.google.com/thumbnail?id=ID&sz=w1000`) para servir imagens com controle de acesso.
+4. **Organização de Assets:** Criada pasta `images/` local. Imagens LATAM renomeadas para nomes limpos (`status-report.png`, `the-road-ahead.png`).
+
+### Decisões Chave
+- **Base href aponta para `/images/`:** Permite que HTMLs colados usem apenas `src="filename.png"` sem path completo. Trade-off aceito: se o HTML tiver outros assets relativos fora de `/images/`, precisarão de path explícito.
+- **Google Drive como CDN privada (Opção B):** Imagens hospedadas no Drive com share link "Anyone with the link". URL transformada para thumbnail endpoint direto. Permite revogar acesso a qualquer momento.
+- **`images/` no `.gitignore`:** Imagens locais ficam no Mac para uso com `localhost`, mas nunca sobem para o GitHub público.
+
+### Arquivos Modificados
+| Arquivo | Ação | Descrição |
+|---------|------|-----------|
+| `index.html` | Atualizado | Base href injection, fullscreen toggle CSS + JS |
+| `.gitignore` | Atualizado | Adicionado `images/` |
+| `images/` | Criado local, removido do Git | Pasta local para assets protegidos |
+
+### Pendências para Próxima Sessão
+1. **M4: Markdown & Mermaid** — Ainda pendente: injetar `marked.js` + `mermaid.js`, detecção automática MD vs HTML.
+2. **Debug PNG:** Investigar alternativas ao `html2canvas` para HTML dinâmico.
