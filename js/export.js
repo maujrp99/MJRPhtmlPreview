@@ -24,16 +24,21 @@ function initExportButtons(htmlInput, previewFrame) {
         const isMarkdown = detectInputType(content) === 'markdown';
         const mimeType = isMarkdown ? 'text/markdown' : 'text/html';
         const ext = isMarkdown ? 'md' : 'html';
+        const filename = `preview_${generateTimestamp()}.${ext}`;
 
         const blob = new Blob([content], { type: mimeType });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
+        a.style.display = 'none';
         a.href = url;
-        a.download = `preview_${generateTimestamp()}.${ext}`;
+        a.download = filename;
         document.body.appendChild(a);
         a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        // Defer cleanup to let browser start the download
+        setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }, 100);
     });
 
     // PDF via native print
@@ -59,11 +64,14 @@ function initExportButtons(htmlInput, previewFrame) {
 
             const imgData = canvas.toDataURL('image/png');
             const a = document.createElement('a');
+            a.style.display = 'none';
             a.href = imgData;
             a.download = `preview_${generateTimestamp()}.png`;
             document.body.appendChild(a);
             a.click();
-            document.body.removeChild(a);
+            setTimeout(() => {
+                document.body.removeChild(a);
+            }, 100);
             btnPng.innerHTML = origIcon;
         } catch (err) {
             console.error("Error generating PNG:", err);
