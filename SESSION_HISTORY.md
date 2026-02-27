@@ -110,5 +110,65 @@ Sessão focada em 3 melhorias de UX e segurança: resolução de caminhos relati
 | `images/` | Criado local, removido do Git | Pasta local para assets protegidos |
 
 ### Pendências para Próxima Sessão
-1. **M4: Markdown & Mermaid** — Ainda pendente: injetar `marked.js` + `mermaid.js`, detecção automática MD vs HTML.
+1. ~~**M4: Markdown & Mermaid** — Concluído na sessão seguinte.~~
 2. **Debug PNG:** Investigar alternativas ao `html2canvas` para HTML dinâmico.
+
+---
+
+## Session: 2026-02-26/27 — M4 Markdown & Mermaid + Modularização
+
+> Date: 2026-02-26T20:00:00 → 2026-02-27T15:00:00 -03:00
+> Participants: mpedroso + Antigravity
+> Branch: dev → main (merged)
+> Duration: ~2 sessões (~4 horas total)
+
+### Resumo Executivo
+Completamos a Milestone 4 seguindo o SDD Protocol integral (Specify → Plan → Tasks → Implement). Além do Markdown/Mermaid, fizemos uma refatoração arquitetural significativa: modularizamos o JavaScript inline do `index.html` em 4 módulos separados. A sessão incluiu debugging de um problema de download causado por versão desatualizada do Chrome.
+
+### SDD Flow Executado
+1. **Spec** (`docs/specs/m4/spec.md`) — FR04.1 a FR04.4, NFRs, edge cases. APPROVED.
+2. **Plan** (`docs/specs/m4/plan.md`) — Pipeline dual, lazy loading, ASCII mockups. APPROVED.
+3. **Tasks** (`docs/specs/m4/tasks.md`) — 8 steps (0-8 incluindo modularização), 25 tasks. APPROVED.
+4. **Implement** — Código implementado, testado e deployed em GitHub Pages.
+
+### O que foi implementado
+| Feature | Arquivo | Detalhes |
+|---------|---------|---------|
+| JS Modularization | `js/*.js` | 4 módulos: app, preview, drive, export |
+| Markdown Rendering | `js/preview.js` | `marked.js` CDN + `detectInputType()` |
+| Mermaid Diagrams | `js/preview.js` | Lazy-loaded dentro do iframe |
+| MD Styling | `js/preview.js` | `wrapWithMdStyles()` — GitHub-like |
+| Smart Download | `js/export.js` | `.md` para Markdown, `.html` para HTML |
+| Script Load Order | `index.html` | CDN → modules → Google async (no head) |
+
+### Decisões Técnicas
+- **Modularização vanilla**: Sem ES modules/import, sem bundler. Apenas `<script src="">` tags no final do `<body>`.
+- **Mermaid lazy**: Carrega 1.5MB apenas se bloco mermaid detectado. Carrega **dentro do iframe** para isolamento.
+- **Script order fix**: CDN libs → app modules → Google async scripts. Evita `ReferenceError` em callbacks `onload`.
+- **DOMContentLoaded removido**: Desnecessário com scripts no final do body.
+
+### Bug Encontrado & Resolvido
+- **Sintoma**: Downloads com nomes UUID ao invés de `preview_*.html`.
+- **Investigação**: Criamos `test.html` minimal — mesmo bug. Isolou o problema ao browser.
+- **Causa raiz**: Chrome desatualizado. Após update do browser, downloads funcionaram normalmente.
+- **Lição**: Sempre verificar se o ambiente (browser, server) está atualizado antes de debugar o código.
+
+### Arquivos Alterados
+| Arquivo | Ação | Descrição |
+|---------|------|-----------|
+| `index.html` | Refatorado | 759 → 421 linhas (só HTML+CSS) |
+| `js/app.js` | Novo | Bootstrap e event wiring |
+| `js/preview.js` | Novo | Render pipeline MD/HTML + Mermaid |
+| `js/drive.js` | Novo | Google Drive OAuth/Picker/Upload + BYOK |
+| `js/export.js` | Novo | Download, PDF, PNG |
+| `docs/specs/m4/*` | Novo | spec.md, plan.md, tasks.md |
+| `docs/specs/arch.md` | Reescrito | Arquitetura modular documentada |
+| `CHARTER.md` | Atualizado | M4 ✅ Done |
+| `docs/specs/story.md` | Atualizado | US-10 ✅ Done |
+| `docs/specs/tasks.md` | Atualizado | M4 ✅ Done |
+| `docs/specs/plan.md` | Atualizado | M4 ✅ Concluído |
+
+### Pendências para Próxima Sessão
+1. **M5 (a definir)**: Possibilidades — syntax highlighting no editor, temas, keyboard shortcuts, templates.
+2. **Debug PNG**: html2canvas tem limitações com HTML dinâmico.
+3. **constitution.md**: Atualizar para refletir arquitetura modular (não é mais single-file).

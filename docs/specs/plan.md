@@ -25,8 +25,10 @@
 - [x] Implementar Download para `.png`/`.jpeg` através da inclusão de conversor canvas externo (`html2canvas`).
 - [x] Feedback tátil e micro-interações via transições CSS.
 
-## M4: Markdown & Extended Render (Novo) - ATUAL
-- [ ] Injetar Biblioteca de Parser Markdown (`marked.js`).
-- [ ] Injetar Biblioteca de Fluxogramas Mermaid (`mermaid.js`).
-- [ ] Atualizar o Listener do `textarea` para verificar a presença de Tags base e fazer um "If/Else" (Se tiver cara de HTML renderiza direto, se aparentar Markdown -> Passa pelo motor `marked` antes).
-- [ ] Construir lógica para detectar os blocos de código com a tag `mermaid`, invocar o SVG via `mermaid.run()` e substituir o nó no output limpo.
+## M4: Markdown & Extended Render + Modularization - CONCLUÍDO
+- [x] Modularizar JS inline em 4 arquivos (`js/app.js`, `js/drive.js`, `js/export.js`, `js/preview.js`).
+- [x] Injetar Biblioteca de Parser Markdown (`marked.js`).
+- [x] Injetar Biblioteca de Fluxogramas Mermaid (`mermaid.js`) — lazy-loaded no iframe.
+- [x] Atualizar o Listener do `textarea` com `detectInputType()` (If HTML → direto, if MD → `marked.parse()` antes).
+- [x] Construir lógica para detectar os blocos de código mermaid, invocar o SVG via `mermaid.run()` e substituir o nó no output.
+- [x] Download detecta tipo e salva `.md` ou `.html` conforme o input.

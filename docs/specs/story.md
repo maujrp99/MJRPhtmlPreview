@@ -72,9 +72,9 @@
 
 ### [US-10] Como desenvolvedor, eu quero colar texto em Markdown (incluindo diagramas Mermaid) e ver o resultado renderizado, sem precisar converter manualmente para HTML.
 **Acceptance Criteria:**
-- [ ] O sistema detecta automaticamente se o input é Markdown ou HTML.
-- [ ] Markdown é convertido para HTML via `marked.js` antes de ser injetado no iframe.
-- [ ] Blocos ````mermaid```` são renderizados como SVGs nativos via `mermaid.js`.
-- [ ] HTML puro continua funcionando sem alteração.
-**Priority:** High | **Milestone:** M4 | **Status:** ⏳ Pendente
+- [x] O sistema detecta automaticamente se o input é Markdown ou HTML.
+- [x] Markdown é convertido para HTML via `marked.js` antes de ser injetado no iframe.
+- [x] Blocos ````mermaid```` são renderizados como SVGs nativos via `mermaid.js` (lazy-loaded).
+- [x] HTML puro continua funcionando sem alteração.
+**Priority:** High | **Milestone:** M4 | **Status:** ✅ Done
 
