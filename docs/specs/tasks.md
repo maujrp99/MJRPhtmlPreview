@@ -111,12 +111,21 @@
 
 ---
 
-## Milestone 4: Markdown & Mermaid (Pendente)
-**Status**: Não iniciado | **Plan Ref**: docs/specs/plan.md
+## Milestone 4: Markdown & Mermaid ✅
+**Status**: Concluído | **Date**: 2026-02-27
+
+### Implementation: Modularization
+- [x] Extrair JS inline para 4 módulos: `js/app.js`, `js/drive.js`, `js/export.js`, `js/preview.js`.
+- [x] `index.html` reduzido de 759 → 421 linhas (HTML+CSS apenas).
+- [x] Script load order corrigido: CDN libs → app modules → Google async.
 
 ### Implementation: Markdown Parser
-- [ ] Injetar `marked.js` via CDN.
-- [ ] Injetar `mermaid.js` via CDN.
-- [ ] Detecção automática MD vs HTML no textarea.
-- [ ] Pipeline: Markdown → HTML → iframe srcdoc (com Mermaid SVG inline).
+- [x] Injetar `marked.js` via CDN.
+- [x] Mermaid.js via lazy-load dentro do iframe (não carrega se não tiver bloco mermaid).
+- [x] Detecção automática MD vs HTML (`detectInputType()`).
+- [x] Pipeline: Markdown → `marked.parse()` → `wrapWithMdStyles()` → iframe srcdoc.
+- [x] Mermaid: `renderMermaid()` substitui `<code class="language-mermaid">` por `<div class="mermaid">` + `mermaid.run()`.
+
+### Implementation: Download Type Detection
+- [x] Download salva `.md` para Markdown, `.html` para HTML.
 

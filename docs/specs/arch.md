@@ -1,26 +1,74 @@
 # Architecture — MJRPhtmlPreview
 
 > Documentação Arquitetural e Decisões Técnicas.
+> Última atualização: 2026-02-27 (M4 completa)
 
 ## System Overview
-Um visualizador de HTML client-side puramente estático (Single-page app contido em um único arquivo `index.html` na M1). Não utiliza um backend tradicional nem ferramentas de build (como Webpack ou Vite) inicialmente para garantir atrito zero e máxima simplicidade na distribuição.
+Um visualizador de HTML/Markdown client-side puramente estático. Single-page app sem backend, sem build tools, hospedado no GitHub Pages. Código modularizado em 4 arquivos JS vanilla.
+
+## File Structure
+```
+MJRPhtmlPreview/
+├── index.html          ← HTML + CSS (estrutura e estilo, 421 linhas)
+├── js/
+│   ├── app.js          ← Bootstrap, DOM refs, event wiring (50 linhas)
+│   ├── preview.js      ← Render pipeline: detect, parse, inject (153 linhas)
+│   ├── drive.js        ← Google OAuth, Picker, Upload, BYOK Settings (173 linhas)
+│   └── export.js       ← Download (.html/.md), PDF print, PNG capture (78 linhas)
+├── docs/specs/         ← SpecKit artifacts (spec, plan, tasks, stories)
+└── images/             ← Local dev images (gitignored)
+```
 
 ## Component Diagram
-- **UI Container**: Controlador de eventos DOM e layout flexbox/grid.
-- **Code Editor**: Um elemento `<textarea>` com escuta de evento de input contínuo.
-- **Preview Engine**: Um `<iframe sandbox="allow-scripts allow-popups">` que recebe conteúdo renderizado de forma isolada via o atributo `srcdoc`. Esta configuração abstrai a necessidade de comunicação baseada em URI e previne algumas restrições CORS.
-- **Toolbar Overlay**: Barra de botões com as ações de manipulação do estado (Limpar, Baixar Local).
-- **File Exporter**: Função JS que transforma o texto em um Blob (`text/html`) e orquestra o clique forçado numa tag `<a>` para simular download.
+- **UI Container** (`index.html`): Layout grid 50/50, CSS-only dark theme com tokens visuais.
+- **Code Editor**: `<textarea>` com escuta de evento `input` contínuo.
+- **Preview Engine** (`preview.js`): Iframe `sandbox="allow-scripts allow-popups allow-same-origin allow-modals"` que recebe conteúdo via `srcdoc`.
+- **Toolbar**: Barra de botões (Clear, Fullscreen, Drive Save, PDF, PNG, Local Download).
+- **Markdown Parser** (`preview.js`): Detecção automática MD vs HTML → marked.js → stylesheet inline → srcdoc.
+- **Mermaid Renderer** (`preview.js`): Lazy-loaded dentro do iframe quando blocos ```` ```mermaid ```` são detectados.
+- **File Exporter** (`export.js`): Download HTML/MD, PDF print, PNG via html2canvas.
+- **Drive Module** (`drive.js`): OAuth2 + Picker + Upload + BYOK Settings modal.
 
 ## Data Flow
-1. Usuário cola (ou digita) a string HTML no *Code Editor*.
-2. Event Listener de entrada no *Code Editor* atualiza o *Preview Engine* imediatamente (< 1 segundo).
-3. A String em memória (JS Vanilla) é injetada direto na prop `srcdoc` do Iframe.
-4. Iframe executa o layout painting nativamente.
-5. Em paralelo, clicar em "Download Local" pega a String HTML vigente, converte para Blob e baixa via link virtual no navegador para integração na Vault de notas locais.
+
+### HTML Pipeline (M1-M3):
+```
+textarea.value → injectBaseHref() → iframe.srcdoc
+```
+
+### Markdown Pipeline (M4):
+```
+textarea.value → detectInputType()
+  ├─ "html"     → injectBaseHref() → iframe.srcdoc
+  └─ "markdown" → marked.parse() → wrapWithMdStyles() → injectBaseHref() → iframe.srcdoc
+                                                           ↓
+                                                   initMermaidIfNeeded() (lazy, iframe.onload)
+```
+
+### Export Flow:
+```
+textarea.value → detectInputType()
+  ├─ "html"     → Blob(text/html) → download preview_YYYYMMDD.html
+  └─ "markdown" → Blob(text/markdown) → download preview_YYYYMMDD.md
+```
 
 ## API Integration Design
-(Espaço reservado para M2). A API de nuvem (Google Drive Auth + Picker) será isolada do renderizador front-end para modularidade. Até lá, a M1 possui 0 chamadas de rede externas.
+Google Drive integration via BYOK (Bring Your Own Keys):
+- Credenciais armazenadas no `localStorage` (nunca no Git).
+- `js/drive.js` encapsula OAuth2 (`gsi/client`), Picker API, e Upload (`multipart/related`).
+- Scripts Google carregam com `async defer` no final do `<body>`, após os módulos da app.
+
+## External Dependencies
+| Lib | CDN | Size | Purpose |
+|-----|-----|------|---------|
+| marked.js | jsdelivr | ~40KB | Markdown → HTML parser |
+| mermaid.js | jsdelivr | ~1.5MB | Diagrama → SVG (lazy-loaded) |
+| html2canvas | cdnjs | ~40KB | DOM → PNG capture |
+| Google GSI | google | ~30KB | OAuth2 authentication |
+| Google GAPI | google | ~50KB | Drive API + Picker |
 
 ## Security Architecture
-O ambiente sendo estrito pelo sandboxing do Iframe. Manipulações de script inseridos pelo usuário rodam apenas dentro da caixinha (Sandbox domain) não acessando localStorage nem cookies do domínio onde este index.html viver. Atributos recomendados no iframe: `sandbox="allow-scripts allow-same-origin"`.
+- Iframe sandboxed: `allow-scripts allow-popups allow-same-origin allow-modals`.
+- Scripts do usuário rodam isolados dentro do iframe sandbox.
+- API keys no `localStorage` (client-side only, nunca transmitidas ao nosso servidor — não temos servidor).
+- Mermaid.js carrega **dentro do iframe**, não no DOM principal da app.
