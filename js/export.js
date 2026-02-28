@@ -21,7 +21,8 @@ function initExportButtons(htmlInput, previewFrame) {
         const content = htmlInput.value;
         if (!content.trim()) { alert("The editor is empty. Paste some content first!"); return; }
 
-        const isMarkdown = detectInputType(content) === 'markdown';
+        const inputType = detectInputType(content);
+        const isMarkdown = inputType === 'markdown' || inputType === 'mermaid_raw';
         const mimeType = isMarkdown ? 'text/markdown' : 'text/html';
         const ext = isMarkdown ? 'md' : 'html';
         const filename = `preview_${generateTimestamp()}.${ext}`;

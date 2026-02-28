@@ -9,6 +9,11 @@ const BASE_HREF = window.location.href.substring(0, window.location.href.lastInd
 function detectInputType(text) {
     const trimmed = text.trim();
     if (!trimmed) return 'html';
+
+    // Check for raw Mermaid diagrams (user pasted just the diagram without markdown wrapper)
+    const mermaidStartPattern = /^(graph\s|flowchart\s|sequenceDiagram|gantt|classDiagram|stateDiagram|pie|erDiagram|journey|gitGraph|mindmap|timeline|quadrantChart)/i;
+    if (mermaidStartPattern.test(trimmed)) return 'mermaid_raw';
+
     // Check for common HTML block-level tags at the start
     const htmlStartPattern = /^(<\!DOCTYPE|<html|<head|<body|<div|<section|<table|<nav|<header|<footer|<main|<article|<style|<script|<link|<meta|<span|<p\s|<p>|<ul|<ol|<li|<form|<input|<button|<canvas|<svg)/i;
     if (htmlStartPattern.test(trimmed)) return 'html';
@@ -140,7 +145,13 @@ function renderPreview(raw, previewFrame) {
         previewFrame.srcdoc = injectBaseHref(raw);
     } else {
         // Markdown pipeline
-        const parsedHtml = marked.parse(raw);
+        let markdownContent = raw;
+        if (inputType === 'mermaid_raw') {
+            // Auto-wrap raw mermaid code in a markdown block so marked.js can parse it correctly
+            markdownContent = '```mermaid\n' + raw.trim() + '\n```';
+        }
+
+        const parsedHtml = marked.parse(markdownContent);
         const styled = wrapWithMdStyles(parsedHtml);
         previewFrame.srcdoc = injectBaseHref(styled);
 
