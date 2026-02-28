@@ -2,7 +2,7 @@
 // preview.js — Preview Engine (Base Href, Input Detection, Styles)
 // =============================================================
 
-const EMPTY_PREVIEW = "<style>body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;height:95vh;color:#8b949e;margin:0;}</style><div>Paste your HTML or Markdown here...</div>";
+const EMPTY_PREVIEW = "<style>body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;height:95vh;color:#8b949e;margin:0;}</style><div>Paste your HTML, Markdown or Mermaid here...</div>";
 const BASE_HREF = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1) + 'images/';
 
 // --- Input Type Detection (FR04.1) ---
