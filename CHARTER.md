@@ -1,22 +1,25 @@
 # MJRPhtmlPreview — Charter
 
 ## Title and Description
-**MJRPhtmlPreview** — A client-side web application for previewing HTML code and saving it to Google Drive or locally (Obsidian vault). Single-page app, no backend, zero dependencies beyond Google APIs.
+**MJRPhtmlPreview** — A client-side web application for loading/pasting HTML, previewing it with optional inline text editing, and saving to Google Drive or locally (Obsidian vault). Single-page app, no backend, zero dependencies beyond Google APIs.
 
 ## Justification (Business Case)
 AI-generated HTML (from Cowork, Claude Code, ChatGPT, etc.) needs to be previewed and archived. Currently there's no streamlined way to go from "clipboard HTML" to "organized file in Drive/vault." This tool closes that gap for personal productivity.
 
 ## Main Goals and Success Metrics
-- **Goal 1**: Paste HTML → see rendered preview in < 1 second
+- **Goal 1**: Load or paste HTML → see rendered preview in < 1 second
 - **Goal 2**: Save to Google Drive with folder picker in < 3 clicks
 - **Goal 3**: Save locally (download .html) for Obsidian vault in 1 click
+- **Goal 4**: Select and edit any text directly in the preview without touching HTML code
 - **Success metric**: Daily personal use without friction
 
 ## High-Level Scope
 
 ### In Scope
 - HTML paste area with syntax highlighting (optional)
+- **File picker to load .html/.htm/.md files from disk** (M5)
 - Real-time iframe preview
+- **Inline text editing in preview** — select any text and edit in-place (M5)
 - Google OAuth2 authentication (personal + professional accounts)
 - Google Drive save with folder picker (Google Picker API)
 - Local download as .html file
@@ -25,11 +28,11 @@ AI-generated HTML (from Cowork, Claude Code, ChatGPT, etc.) needs to be previewe
 - Fullscreen Preview mode (toggle para esconder editor)
 - Base Href injection para resolução de imagens relativas
 - Responsive layout (desktop-first, mobile-friendly)
-- Markdown rendering via marked.js (M4 — planejado)
-- Mermaid diagram rendering via mermaid.js (M4 — planejado)
+- Markdown rendering via marked.js (M4)
+- Mermaid diagram rendering via mermaid.js (M4)
 
 ### Out of Scope
-- HTML editing/IDE features (this is a viewer, not an editor)
+- Full HTML/IDE editing (adding/removing elements, changing styles, drag & drop — this is a viewer with light text editing, not a CMS)
 - Backend/server (fully client-side)
 - User accounts or databases
 - CSS/JS separate file support (single HTML only)
@@ -48,6 +51,7 @@ AI-generated HTML (from Cowork, Claude Code, ChatGPT, etc.) needs to be previewe
 | M3.5: BYOK | Week 3 | Settings modal, localStorage keys, remove config.js | ✅ Done |
 | Session 02/26 | Ad-hoc | Fullscreen Preview, Base Href, Image Privacy | ✅ Done |
 | M4: Markdown | Week 4 | marked.js + mermaid.js + JS modularization + auto-detect | ✅ Done |
+| M5: Load & Edit | Week 5 | File picker + inline text editing in preview | 🔲 Not Started |
 
 ## Risks and Constraints
 - **Google OAuth2 setup**: Requires Google Cloud Console project with Drive API and Picker API enabled. User must configure OAuth credentials.
