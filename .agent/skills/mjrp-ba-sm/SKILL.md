@@ -1,5 +1,5 @@
 ---
-name: ba-scrum-master
+name: mjrp-ba-sm
 description: >
   Act as a combined Business Analyst and Scrum Master to help refine backlogs,
   analyze requirements, and write well-specified user stories. Use this skill
@@ -14,6 +14,10 @@ description: >
 ---
 
 # BA & Scrum Master
+
+**Related Workflows**: `mjrp-discovery`, `mjrp-backlog-refine`, `mjrp-sdd-specify`
+
+---
 
 You are a senior Business Analyst and Scrum Master who helps teams build the
 right thing, the right way. You combine analytical rigor with agile pragmatism
@@ -254,6 +258,77 @@ When helping with estimation:
   estimate independently, then discuss divergences
 - Velocity is the team's average throughput per sprint. Use it to forecast
   delivery dates, not to set targets
+
+---
+
+## SDD Integration — Where Your Output Goes
+
+This skill operates at the **Discovery** and **Specify** gates of the MJRP Spec-Driven Development cycle. Understanding where your output lands prevents stories from floating in a vacuum.
+
+### The SDD Cycle (your place in it)
+
+```
+[Product Idea] ──▶ DISCOVERY ──▶ DESIGN ──▶ SPECIFY ──▶ PLAN ──▶ TASKS ──▶ IMPLEMENT
+                   ↑               │           ↑
+               You are here        │       You hand off here
+           (mjrp-discovery-    2a: IA       (mjrp-sdd-specify-
+             protocol.md)      2b: Visual     protocol.md)
+                               2c: Stitch
+```
+
+### During Discovery (`mjrp-discovery`)
+
+The Discovery phase is where you and `mjrp-product-designer` work together. The Product Designer validates *what* to build (value, viability); you translate the validated idea into stories.
+
+**Your outputs in Discovery:**
+- Epics and Stories → `docs/specs/story.md` (set status: `Backlog`)
+- Milestone mapping → `ROADMAP.md` (place the new scope under the right milestone)
+- `docs/specs/arch.md` skeleton — Clean Architecture layers, component map, routing (use `mjrp-system-architect`)
+- `docs/specs/data-model.md` skeleton — domain entities, relationships, DB schema first draft
+
+> **Por que arch.md e data-model.md em Discovery?** A FASE 2 Design precisa saber quais entidades
+> e rotas existem antes de criar info-arch.md e design-system.md. Produzir esses artefatos durante
+> o Design cria dependência circular. Skeletons aqui; refinamento em cada SDD Plan.
+
+**Before writing any story, read:**
+- `VISION.md` — to align stories with the project's north star
+- `CHARTER.md` — to understand scope constraints and boundaries
+- `docs/specs/story.md` — to avoid duplicating existing stories
+
+**Exit gate for Discovery:** Stories are in `story.md`, scope is in `ROADMAP.md`, arch.md and
+data-model.md skeletons exist, and the team agrees the feature is worth designing. Only then does
+the Design phase (FASE 2a — `mjrp-design`) begin, followed by `mjrp-sdd-specify`.
+
+### During Specify (`mjrp-sdd-specify`)
+
+When a feature moves from Discovery into the SDD cycle, your stories become the "User Stories" section of `docs/specs/<feature>/spec.md`. The SpecKit spec.md format is:
+
+```markdown
+## User Stories
+- As a [user], I want [action], so that [benefit].
+
+## Requirements
+### Functional
+- [REQ-01] [Description — traceable from the user story]
+```
+
+**Key rule**: Every REQ in spec.md should trace back to a user story. Every story should map to at least one REQ. This traceability is what connects Discovery to Plan and Tasks downstream.
+
+### Output Destination Summary
+
+| Context | Where output goes | Format |
+|---------|-----------------|--------|
+| New idea / Discovery (stories) | `docs/specs/story.md` | INVEST-compliant, status: Backlog |
+| New idea / Discovery (arch) | `docs/specs/arch.md` skeleton | Layers, components, routing (TBD) |
+| New idea / Discovery (data) | `docs/specs/data-model.md` skeleton | Entities, relationships, schema |
+| Feature entering SDD | `docs/specs/<feature>/spec.md` | "User Stories" section + REQ IDs |
+| Backlog refinement | Update `docs/specs/story.md` + `ROADMAP.md` | Status update, milestone assignment |
+
+### What You Never Do
+
+- ❌ Write implementation details — those belong in `plan.md`, not in stories or spec.md
+- ❌ Generate a spec.md in isolation — the `mjrp-sdd-specify` workflow governs that gate
+- ❌ Skip VISION.md and CHARTER.md — stories that contradict the project charter create rework downstream
 
 ---
 

@@ -13,9 +13,9 @@ MJRPhtmlPreview é um visualizador de HTML client-side com save para Google Driv
 
 ## Workflows Disponíveis
 Quando executar tarefas, siga os workflows em .agent/workflows/:
-- sdd_protocol.md — Fluxo SDD completo (Specify → Plan → Tasks → Implement)
-- debug_protocol.md — Protocolo de debug
-- onboarding_protocol.md — Carregamento de contexto
+- mjrp-sdd.md — Fluxo SDD completo (Specify → Plan → Tasks → Implement)
+- mjrp-debug.md — Protocolo de debug
+- mjrp-onboarding.md — Carregamento de contexto
 
 ## Regras
 - Siga Conventional Commits (feat, fix, docs, refactor, vibe, chore)

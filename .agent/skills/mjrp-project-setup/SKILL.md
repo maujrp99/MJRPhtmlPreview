@@ -19,7 +19,7 @@ description: >
 
 **Purpose**: Guide the initialization of a new software project (or the organization of an existing one) following the MJRP Vibe Coding Framework — creating the full folder structure, SpecKit artifacts, AI tool configurations, and governance setup.
 
-**Framework source**: The MJRP Proj Setup Framework lives at the user's local path. Ask the user for the framework path if not provided. The default location is `/Users/mpedroso/0.MyPetProjects/MJRPprojSetupFramework`.
+**Framework source**: The MJRP Proj Setup Framework lives at the user's local path. Ask the user for the framework path if not provided. The default location is `/Users/mpedroso/0.MyPetProjects/mjrpSetup`.
 
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: aesthetic-designer
+name: mjrp-aesthetic-designer
 description: >
   Master agent for extracting visual DNA and architecting distinct design systems 
   for websites, presentations, and infographics. Trigger when the user says:

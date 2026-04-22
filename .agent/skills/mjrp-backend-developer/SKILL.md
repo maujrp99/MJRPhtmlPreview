@@ -1,5 +1,5 @@
 ---
-name: Backend Developer
+name: mjrp-backend-developer
 description: >
   Use when IMPLEMENTING backend code: API design (REST and GraphQL), data
   modeling and migrations, authentication/authorization patterns, error handling
@@ -13,7 +13,7 @@ description: >
 
 **Purpose**: Teach an AI agent backend development best practices — from API design to security, ensuring the server layer is robust, secure, and well-documented.
 
-**Related Workflows**: `sdd_task_protocol.md`, `code_quality_assessment_protocol.md`, `regression_protocol.md`
+**Related Workflows**: `mjrp-sdd-task`, `mjrp-code-quality-assessment-protocol.md`, `mjrp-regression-protocol.md`
 
 ---
 
