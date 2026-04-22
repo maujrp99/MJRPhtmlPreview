@@ -135,9 +135,12 @@ function renderMermaid(iframeDoc) {
 // --- Visual Edit Mode (M5) ---
 let isEditMode = false;
 let globalBtnEdit = null;
+let globalBtnCancelEdit = null;
 
 function initEditMode(btnEdit, previewFrame, htmlInput) {
     globalBtnEdit = btnEdit;
+    globalBtnCancelEdit = document.getElementById('btnCancelEdit');
+    
     btnEdit.addEventListener('click', () => {
         const iframeDoc = previewFrame.contentDocument;
         if (!iframeDoc || !iframeDoc.body) return;
@@ -168,6 +171,7 @@ function initEditMode(btnEdit, previewFrame, htmlInput) {
             btnEdit.classList.remove('btn-ghost');
             btnEdit.classList.add('btn-primary');
             btnEdit.textContent = '💾 Save Edits';
+            if (globalBtnCancelEdit) globalBtnCancelEdit.style.display = 'inline-flex';
             
         } else {
             // Turning OFF Edit Mode (Save)
@@ -200,11 +204,40 @@ function initEditMode(btnEdit, previewFrame, htmlInput) {
             btnEdit.classList.remove('btn-primary');
             btnEdit.classList.add('btn-ghost');
             btnEdit.textContent = '✏️ Edit';
+            if (globalBtnCancelEdit) globalBtnCancelEdit.style.display = 'none';
 
             // Clean up: trigger standard pipeline
             renderPreview(htmlInput.value, previewFrame);
         }
     });
+
+    if (globalBtnCancelEdit) {
+        globalBtnCancelEdit.addEventListener('click', () => {
+            if (!isEditMode) return;
+            
+            // Turning OFF Edit Mode without saving
+            isEditMode = false;
+            const iframeDoc = previewFrame.contentDocument;
+            if (iframeDoc && iframeDoc.body) {
+                iframeDoc.body.contentEditable = 'false';
+                iframeDoc.body.style.cursor = 'default';
+            }
+            
+            const previewPanel = previewFrame.parentElement;
+            if (previewPanel) {
+                previewPanel.classList.remove('editing-active');
+            }
+            
+            // Reset buttons
+            btnEdit.classList.remove('btn-primary');
+            btnEdit.classList.add('btn-ghost');
+            btnEdit.textContent = '✏️ Edit';
+            globalBtnCancelEdit.style.display = 'none';
+
+            // Just reload original content from textarea
+            renderPreview(htmlInput.value, previewFrame);
+        });
+    }
 }
 
 function resetEditModeState(previewFrame) {
@@ -215,6 +248,7 @@ function resetEditModeState(previewFrame) {
     globalBtnEdit.classList.remove('btn-primary');
     globalBtnEdit.classList.add('btn-ghost');
     globalBtnEdit.textContent = '✏️ Edit';
+    if (globalBtnCancelEdit) globalBtnCancelEdit.style.display = 'none';
     
     const previewPanel = previewFrame.parentElement;
     if (previewPanel) {
