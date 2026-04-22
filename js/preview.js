@@ -177,7 +177,22 @@ function initEditMode(btnEdit, previewFrame, htmlInput) {
             previewPanel.classList.remove('editing-active');
             
             // Sync content back
-            let newHtml = iframeDoc.body.innerHTML;
+            
+            // 1. Remove the injected base tag so we don't save our local paths
+            const baseTags = iframeDoc.querySelectorAll('base');
+            baseTags.forEach(tag => {
+                if (tag.href === BASE_HREF || tag.getAttribute('href') === BASE_HREF) {
+                    tag.remove();
+                }
+            });
+
+            // 2. Serialize full document instead of just body to preserve <style>, <head>, etc.
+            let newHtml;
+            if (iframeDoc.doctype) {
+                newHtml = `<!DOCTYPE ${iframeDoc.doctype.name}>\n` + iframeDoc.documentElement.outerHTML;
+            } else {
+                newHtml = iframeDoc.documentElement.outerHTML;
+            }
             
             htmlInput.value = newHtml;
 
