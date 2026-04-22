@@ -132,8 +132,88 @@ function renderMermaid(iframeDoc) {
     }
 }
 
+// --- Visual Edit Mode (M5) ---
+let isEditMode = false;
+let globalBtnEdit = null;
+
+function initEditMode(btnEdit, previewFrame, htmlInput) {
+    globalBtnEdit = btnEdit;
+    btnEdit.addEventListener('click', () => {
+        const iframeDoc = previewFrame.contentDocument;
+        if (!iframeDoc || !iframeDoc.body) return;
+
+        const previewPanel = previewFrame.parentElement;
+
+        if (!isEditMode) {
+            // Check if there's actually content
+            if (!htmlInput.value.trim()) return;
+
+            // Turning ON Edit Mode
+            const currentInputType = detectInputType(htmlInput.value);
+            
+            if (currentInputType === 'markdown' || currentInputType === 'mermaid_raw') {
+                const proceed = confirm("Warning: Editing will convert this Markdown permanently to HTML to preserve visual formatting. Do you wish to proceed?");
+                if (!proceed) return;
+            }
+
+            isEditMode = true;
+            iframeDoc.body.contentEditable = 'true';
+            iframeDoc.body.style.cursor = 'text'; // Visual cue for editability
+            previewPanel.classList.add('editing-active');
+            
+            // Focus inside the iframe body
+            iframeDoc.body.focus();
+
+            // Highlight button
+            btnEdit.classList.remove('btn-ghost');
+            btnEdit.classList.add('btn-primary');
+            btnEdit.textContent = '💾 Save Edits';
+            
+        } else {
+            // Turning OFF Edit Mode (Save)
+            isEditMode = false;
+            iframeDoc.body.contentEditable = 'false';
+            iframeDoc.body.style.cursor = 'default';
+            previewPanel.classList.remove('editing-active');
+            
+            // Sync content back
+            let newHtml = iframeDoc.body.innerHTML;
+            
+            htmlInput.value = newHtml;
+
+            // Reset button
+            btnEdit.classList.remove('btn-primary');
+            btnEdit.classList.add('btn-ghost');
+            btnEdit.textContent = '✏️ Edit';
+
+            // Clean up: trigger standard pipeline
+            renderPreview(htmlInput.value, previewFrame);
+        }
+    });
+}
+
+function resetEditModeState(previewFrame) {
+    if (!isEditMode || !globalBtnEdit) return;
+    
+    // Automatically cancel edit mode without saving changes
+    isEditMode = false;
+    globalBtnEdit.classList.remove('btn-primary');
+    globalBtnEdit.classList.add('btn-ghost');
+    globalBtnEdit.textContent = '✏️ Edit';
+    
+    const previewPanel = previewFrame.parentElement;
+    if (previewPanel) {
+        previewPanel.classList.remove('editing-active');
+    }
+}
+
 // --- Main Render Pipeline ---
 function renderPreview(raw, previewFrame) {
+    // If the input is fundamentally changing (e.g. file loaded), reset edit mode.
+    // If we're inside edit mode, we shouldn't ordinarily be triggering renderPreview unless we exit,
+    // but if the user types in the textarea, reset edit mode to prevent a race condition.
+    resetEditModeState(previewFrame);
+
     if (!raw.trim()) {
         previewFrame.srcdoc = EMPTY_PREVIEW;
         return;

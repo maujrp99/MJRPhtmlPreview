@@ -9,6 +9,10 @@ const htmlInput = document.getElementById('htmlInput');
 const previewFrame = document.getElementById('previewFrame');
 const btnClear = document.getElementById('btnClear');
 const btnDrive = document.getElementById('btnDrive');
+const btnOpen = document.getElementById('btnOpen');
+const fileInput = document.getElementById('fileInput');
+const fileNameLabel = document.getElementById('fileNameLabel');
+const btnEdit = document.getElementById('btnEdit');
 
 // --- Initialize Modules ---
 initSettingsModal();       // drive.js
@@ -25,7 +29,31 @@ htmlInput.addEventListener('input', () => {
 btnClear.addEventListener('click', () => {
     htmlInput.value = '';
     previewFrame.srcdoc = EMPTY_PREVIEW; // preview.js constant
+    fileNameLabel.textContent = '';
     htmlInput.focus();
+});
+
+// --- File Picker (M5) ---
+btnOpen.addEventListener('click', () => {
+    fileInput.click();
+});
+
+fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    fileNameLabel.textContent = file.name;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        const content = event.target.result;
+        htmlInput.value = content;
+        renderPreview(content, previewFrame);
+    };
+    reader.readAsText(file);
+    
+    // Reset input so the same file can be selected again
+    fileInput.value = '';
 });
 
 // --- Fullscreen Preview Toggle ---
@@ -43,6 +71,12 @@ btnBackToEditor.addEventListener('click', () => {
     mainEl.classList.remove('fullscreen-preview');
     previewToolbar.style.display = 'none';
 });
+
+// --- Visual Edit Toggle ---
+// Implemented via initEditMode in preview.js
+if (typeof initEditMode === 'function') {
+    initEditMode(btnEdit, previewFrame, htmlInput);
+}
 
 // Focus on editor
 htmlInput.focus();

@@ -80,22 +80,22 @@
 
 ### [US-11] Como desenvolvedor, eu quero carregar um arquivo HTML ou Markdown do meu disco local via file picker, para que eu não precise abrir o arquivo num editor, copiar o conteúdo e colar manualmente na textarea.
 **Acceptance Criteria:**
-- [ ] Existe um botão "📂 Open File" (ou ícone equivalente) na toolbar.
-- [ ] Ao clicar, o file picker nativo do OS é aberto, filtrado para `.html`, `.htm` e `.md`.
-- [ ] O conteúdo do arquivo selecionado substitui o conteúdo atual da textarea.
-- [ ] O preview é atualizado automaticamente após o carregamento.
-- [ ] O nome do arquivo carregado é exibido em algum lugar da UI (toolbar ou status).
-**Priority:** High | **Milestone:** M5 | **Status:** 🔲 Not Started
+- [x] Existe um botão "📂 Open File" (ou ícone equivalente) na toolbar.
+- [x] Ao clicar, o file picker nativo do OS é aberto, filtrado para `.html`, `.htm` e `.md`.
+- [x] O conteúdo do arquivo selecionado substitui o conteúdo atual da textarea.
+- [x] O preview é atualizado automaticamente após o carregamento.
+- [x] O nome do arquivo carregado é exibido em algum lugar da UI (toolbar ou status).
+**Priority:** High | **Milestone:** M5 | **Status:** ✅ Done
 
 ### [US-12] Como desenvolvedor, eu quero selecionar qualquer trecho de texto no preview renderizado (palavra, frase, parágrafo ou mais) e digitar a substituição diretamente, para que eu possa fazer correções rápidas sem precisar encontrar o texto no código HTML.
 **Acceptance Criteria:**
-- [ ] Existe um toggle "✏️ Edit" na toolbar que ativa/desativa o modo de edição.
-- [ ] Em Edit Mode, o corpo do iframe se torna editável (`contentEditable=true` no body).
-- [ ] O usuário pode selecionar qualquer extensão de texto (click+drag, double-click, Ctrl+A, etc.) e digitar para substituir.
-- [ ] O cursor de texto (`text`) indica visualmente que o conteúdo é editável.
-- [ ] Um indicador visual sutil (borda, badge, cor de fundo) diferencia o modo Edit do modo View.
-- [ ] Ao sair do Edit Mode, o HTML editado é sincronizado de volta para a textarea via serialização do DOM (`innerHTML`).
-- [ ] Se o input original era Markdown, o sistema exibe aviso: "Editing will convert Markdown to HTML".
-- [ ] Apenas conteúdo de texto é editável — estrutura, imagens e estilos permanecem intactos.
-- [ ] Export (Download/Drive/PDF/PNG) funciona normalmente com as edições aplicadas.
-**Priority:** Medium | **Milestone:** M5 | **Status:** 🔲 Not Started
+- [x] Existe um toggle "✏️ Edit" na toolbar que ativa/desativa o modo de edição.
+- [x] Em Edit Mode, o corpo do iframe se torna editável (`contentEditable=true` no body).
+- [x] O usuário pode selecionar qualquer extensão de texto (click+drag, double-click, Ctrl+A, etc.) e digitar para substituir.
+- [x] O cursor de texto (`text`) indica visualmente que o conteúdo é editável.
+- [x] Um indicador visual sutil (borda, badge, cor de fundo) diferencia o modo Edit do modo View.
+- [x] Ao sair do Edit Mode, o HTML editado é sincronizado de volta para a textarea via serialização do DOM (`innerHTML`).
+- [x] Se o input original era Markdown, o sistema exibe aviso: "Editing will convert Markdown to HTML".
+- [x] Apenas conteúdo de texto é editável — estrutura, imagens e estilos permanecem intactos.
+- [x] Export (Download/Drive/PDF/PNG) funciona normalmente com as edições aplicadas.
+**Priority:** Medium | **Milestone:** M5 | **Status:** ✅ Done

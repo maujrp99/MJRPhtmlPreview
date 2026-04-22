@@ -51,7 +51,7 @@ AI-generated HTML (from Cowork, Claude Code, ChatGPT, etc.) needs to be previewe
 | M3.5: BYOK | Week 3 | Settings modal, localStorage keys, remove config.js | ✅ Done |
 | Session 02/26 | Ad-hoc | Fullscreen Preview, Base Href, Image Privacy | ✅ Done |
 | M4: Markdown | Week 4 | marked.js + mermaid.js + JS modularization + auto-detect | ✅ Done |
-| M5: Load & Edit | Week 5 | File picker + inline text editing in preview | 🔲 Not Started |
+| M5: Load & Edit | Week 5 | File picker + inline text editing in preview | ✅ Done |
 
 ## Risks and Constraints
 - **Google OAuth2 setup**: Requires Google Cloud Console project with Drive API and Picker API enabled. User must configure OAuth credentials.

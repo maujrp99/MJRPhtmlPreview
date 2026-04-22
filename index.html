@@ -158,7 +158,36 @@
             background-color: #ffffff;
             /* Must be pure white to prevent bleed */
             height: 100%;
+            position: relative; /* For the editing badge overlay */
         }
+
+        /* Editing Mode Visuals */
+        .preview-panel.editing-active iframe {
+            outline: 3px solid var(--accent-green);
+            outline-offset: -3px; /* Keeps outline inside iframe bounds */
+        }
+
+        .editing-badge {
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-green);
+            color: #ffffff;
+            font-family: var(--font-ui);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 12px;
+            pointer-events: none; /* Let clicks pass through to iframe */
+            z-index: 10;
+            display: none;
+        }
+
+        .preview-panel.editing-active .editing-badge {
+            display: block;
+        }
+
 
         iframe {
             flex: 1;
@@ -310,6 +339,7 @@
             <div class="toolbar">
                 <div class="toolbar-title" style="display:flex; align-items:center; gap:8px;">
                     MJRPhtmlPreview
+                    <span id="fileNameLabel" style="font-weight:normal; font-size:0.75rem; color:var(--text-secondary); margin-left: 8px;"></span>
                     <button class="btn-ghost" id="btnSettings" title="API Settings (BYOK)" style="padding:4px;">
                         <svg class="icon" viewBox="0 0 24 24">
                             <path
@@ -318,6 +348,9 @@
                     </button>
                 </div>
                 <div class="toolbar-actions">
+                    <button class="btn-ghost" id="btnOpen" title="Open Local File">📂 Open</button>
+                    <button class="btn-ghost" id="btnEdit" title="Toggle Visual Edit">✏️ Edit</button>
+                    <div style="width: 1px; height: 16px; background-color: var(--border-subtle); margin: 0 4px;"></div>
                     <button class="btn-ghost" id="btnClear" title="Clear Code">Clear</button>
                     <button class="btn-toggle-view" id="btnToggleView" title="Toggle Fullscreen Preview">⛶
                         Preview</button>
@@ -365,9 +398,13 @@
                 <span style="font-size:0.8rem;color:var(--text-secondary);">Preview Mode</span>
                 <button class="btn-toggle-view" id="btnBackToEditor" title="Back to Editor">✏️ Editor</button>
             </div>
+            <div class="editing-badge">EDITING MODE ACTIVE</div>
             <iframe id="previewFrame" sandbox="allow-scripts allow-popups allow-same-origin allow-modals"
                 srcdoc="<style>body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;height:95vh;color:#8b949e;margin:0;}</style><div>Waiting for HTML input...</div>"></iframe>
         </section>
+
+        <!-- Hidden input for file picking -->
+        <input type="file" id="fileInput" accept=".html,.htm,.md" hidden>
     </main>
 
     <!-- Settings Modal (BYOK) -->
