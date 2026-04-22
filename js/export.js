@@ -17,7 +17,7 @@ function initExportButtons(htmlInput, previewFrame) {
     const btnPng = document.getElementById('btnPng');
 
     // Download (HTML as .html, Markdown as .md)
-    btnDownload.addEventListener('click', () => {
+    btnDownload.addEventListener('click', async () => {
         const content = htmlInput.value;
         if (!content.trim()) { alert("The editor is empty. Paste some content first!"); return; }
 
@@ -25,17 +25,47 @@ function initExportButtons(htmlInput, previewFrame) {
         const isMarkdown = inputType === 'markdown' || inputType === 'mermaid_raw';
         const mimeType = isMarkdown ? 'text/markdown' : 'text/html';
         const ext = isMarkdown ? 'md' : 'html';
-        const filename = `preview_${generateTimestamp()}.${ext}`;
+        const defaultFilename = `preview_${generateTimestamp()}.${ext}`;
 
         const blob = new Blob([content], { type: mimeType });
+
+        // Modern API: Opens OS Save Dialog (Chrome, Edge, Safari 15.2+)
+        if (window.showSaveFilePicker) {
+            try {
+                const handle = await window.showSaveFilePicker({
+                    suggestedName: defaultFilename,
+                    types: [{
+                        description: isMarkdown ? 'Markdown Document' : 'HTML Document',
+                        accept: { [mimeType]: [`.${ext}`] },
+                    }],
+                });
+                const writable = await handle.createWritable();
+                await writable.write(blob);
+                await writable.close();
+                return; // Successfully saved via native picker
+            } catch (err) {
+                // If user cancels the dialog, it throws an AbortError. We just silently return.
+                if (err.name !== 'AbortError') console.error("File System API error:", err);
+                return;
+            }
+        }
+
+        // Fallback for browsers that don't support showSaveFilePicker (e.g., Firefox)
+        const userFileName = prompt("Enter file name:", defaultFilename);
+        if (!userFileName) return; // User cancelled
+
+        // Ensure it has the correct extension
+        const finalFilename = userFileName.endsWith(`.${ext}`) ? userFileName : `${userFileName}.${ext}`;
+
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = url;
-        a.download = filename;
+        a.download = finalFilename;
         document.body.appendChild(a);
         a.click();
-        // Defer cleanup to let browser start the download
+        
+        // Defer cleanup
         setTimeout(() => {
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
