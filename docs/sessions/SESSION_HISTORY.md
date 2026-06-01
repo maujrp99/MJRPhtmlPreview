@@ -2,6 +2,68 @@
 
 ---
 
+## Session: 2026-05-28 — M6: Drag & Drop & Folder Memory
+
+> Data: 2026-05-28
+> Participantes: Pedroso + Antigravity
+> Branch: dev (merged to main)
+> Duração: ~15 minutos
+
+### Resumo Executivo
+Implementação de duas novas facilidades de altíssimo valor de uso e conveniência do usuário (M6: Drag and Drop & Folder Memory):
+1. **Drag and Drop Nativo**: O usuário agora pode arrastar qualquer arquivo `.html`, `.htm` ou `.md` para a janela do browser. Um overlay animado, em tela cheia, com blur (glassmorphism) e borda verde tracejada avisa que o arquivo pode ser solto. O arquivo é lido localmente e preenche o editor e o preview.
+2. **Persistent Folder Memory**: Refatoração do botão `📂 Open` para utilizar a moderna *File System Access API* (`showOpenFilePicker`), unificando o ID do picker (`id: 'mjrp_document_picker'`) com o botão de salvamento `⬇️ Local`. Isso garante que o navegador se lembre do último diretório selecionado para ambas as operações nativas (Open e Save).
+
+### Decisões Tomadas
+- **Unificação de IDs de Persistência**: Escolhida a chave `'mjrp_document_picker'` em ambos os seletores nativos de arquivo (`showOpenFilePicker` e `showSaveFilePicker`) para que a navegação do file picker de sistema seja compartilhada e lembrada de forma transparente.
+- **Transições Suaves no Drag & Drop**: Utilização de um contador de eventos (`dragCounter`) para evitar intermitências do overlay durante a transição do cursor sobre elementos filhos do DOM principal.
+
+### Artefatos Modificados
+| Arquivo | Ação | Descrição |
+|---------|------|-----------|
+| `index.html` | Atualizado | Adicionado markup e CSS styles para a classe `.drag-overlay` |
+| `js/app.js` | Atualizado | Lógica de drag & drop, suporte unificado à FileReader e moderno File System Access API para abertura |
+| `js/export.js` | Atualizado | Sincronizado id no `showSaveFilePicker` |
+| `docs/specs/tasks.md` | Atualizado | Registro e conclusão da Milestone 6 |
+
+---
+
+## Session: 2026-04-21 — M5: Load & Edit Implementation
+
+> Data: 2026-04-21
+> Participantes: Pedroso + Antigravity
+> Branch: dev (merged to main)
+> Duração: ~1 hora
+
+### Resumo Executivo
+Implementação ponta-a-ponta do Milestone 5 (M5: Load & Edit) via SDD Protocol. Adição de capacidade de carregamento de arquivos locais (HTML/Markdown) com File Picker nativo (`#btnOpen`). Implementação de "Edit Mode" injetando `contentEditable=true` no iframe para edições textuais WYSIWYG, suportando Sync estrutural (`outerHTML` extraction) para evitar perdas de CSS (bug fix). O botão "Local" foi otimizado para usar o gerador de Dialog Nativo (File System Access API). Código aprovado e preparado na `main` para GH Pages.
+
+### Decisões Tomadas
+- **Serialization Strategy**: Mudança de sync da raiz `innerHTML` de `body` para `documentElement.outerHTML` para não remover tags meta, `<style>` nem script do `<head>` na saída do modo edição.
+- **UX Markdown Alert**: Markdown cru vira permanentemente HTML se o usuário testar a visibilidade no edit e salvar, exigindo um `confirm()` preventivo na UI.
+- **Deploy OOB Dialog**: Ao invés de autosave, o app agora invoca o `window.showSaveFilePicker` nativo do MacOS/Chrome sempre que possível.
+- **Cancel Edit**: Ao lado do "Save Edits", implementado o botão `❌ Cancel` que recarrega instantaneamente a RAM local descartando a edição sem persistência suja.
+
+### Artefatos Gerados/Modificados
+| Arquivo | Ação | Descrição |
+|---------|------|-----------|
+| `docs/specs/m5/*` | Atualizado | Completação do SDD M5 (Spec/Plan/Tasks DONE) |
+| `index.html` | Atualizado | Novos botões na toolbar (File Picker, Edit, Cancel) |
+| `js/app.js` | Atualizado | Lógica de carregamento de files locais `FileReader` |
+| `js/preview.js` | Atualizado | Lógica de Edição Visual Inline e preservação de head |
+| `js/export.js` | Atualizado | Add API Modern Save Native |
+| `story.md` / `CHARTER.md` | Atualizado | Marcação de Milestones concluídas |
+
+### Pendências para Próxima Sessão
+1. Confirmar fechamento do roadmap / migrar de Active-Feature-Development para Manutenção.
+2. Explorar (se necessário) componentização com Vite caso a base se expanda (hoje é Single HTML File Vanilla).
+
+### Dados-Chave
+- File System Access API demanda HTTPS ou localhost (Chrome).
+- Base tags re-injetadas pelo preview script são devidamente depuradas pelo engine de serialização DOM no exit mode.
+
+---
+
 ## Session 1: Project Bootstrap
 
 > Date: 2025-02-25
