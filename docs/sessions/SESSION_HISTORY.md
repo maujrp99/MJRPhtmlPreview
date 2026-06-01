@@ -2,6 +2,32 @@
 
 ---
 
+## Session: 2026-05-28 — M6: Drag & Drop & Folder Memory
+
+> Data: 2026-05-28
+> Participantes: Pedroso + Antigravity
+> Branch: dev (merged to main)
+> Duração: ~15 minutos
+
+### Resumo Executivo
+Implementação de duas novas facilidades de altíssimo valor de uso e conveniência do usuário (M6: Drag and Drop & Folder Memory):
+1. **Drag and Drop Nativo**: O usuário agora pode arrastar qualquer arquivo `.html`, `.htm` ou `.md` para a janela do browser. Um overlay animado, em tela cheia, com blur (glassmorphism) e borda verde tracejada avisa que o arquivo pode ser solto. O arquivo é lido localmente e preenche o editor e o preview.
+2. **Persistent Folder Memory**: Refatoração do botão `📂 Open` para utilizar a moderna *File System Access API* (`showOpenFilePicker`), unificando o ID do picker (`id: 'mjrp_document_picker'`) com o botão de salvamento `⬇️ Local`. Isso garante que o navegador se lembre do último diretório selecionado para ambas as operações nativas (Open e Save).
+
+### Decisões Tomadas
+- **Unificação de IDs de Persistência**: Escolhida a chave `'mjrp_document_picker'` em ambos os seletores nativos de arquivo (`showOpenFilePicker` e `showSaveFilePicker`) para que a navegação do file picker de sistema seja compartilhada e lembrada de forma transparente.
+- **Transições Suaves no Drag & Drop**: Utilização de um contador de eventos (`dragCounter`) para evitar intermitências do overlay durante a transição do cursor sobre elementos filhos do DOM principal.
+
+### Artefatos Modificados
+| Arquivo | Ação | Descrição |
+|---------|------|-----------|
+| `index.html` | Atualizado | Adicionado markup e CSS styles para a classe `.drag-overlay` |
+| `js/app.js` | Atualizado | Lógica de drag & drop, suporte unificado à FileReader e moderno File System Access API para abertura |
+| `js/export.js` | Atualizado | Sincronizado id no `showSaveFilePicker` |
+| `docs/specs/tasks.md` | Atualizado | Registro e conclusão da Milestone 6 |
+
+---
+
 ## Session: 2026-04-21 — M5: Load & Edit Implementation
 
 > Data: 2026-04-21

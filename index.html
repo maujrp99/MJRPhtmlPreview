@@ -328,10 +328,66 @@
             gap: 12px;
             margin-top: 8px;
         }
+
+        /* Drag and Drop Overlay style */
+        .drag-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(13, 17, 23, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none; /* Ignore mouse events while dragging */
+            border: 4px dashed var(--accent-green);
+            margin: 0;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+        }
+
+        .drag-message {
+            text-align: center;
+            color: var(--text-primary);
+            font-family: var(--font-ui);
+            animation: pulse 1.5s infinite;
+        }
+
+        .drag-message h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .drag-message p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 
 <body>
+
+    <!-- Drag and Drop Overlay -->
+    <div id="dragOverlay" class="drag-overlay">
+        <div class="drag-message">
+            <svg style="width: 64px; height: 64px; fill: var(--accent-green); margin-bottom: 16px;" viewBox="0 0 24 24">
+                <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+            </svg>
+            <h2>Solte seu arquivo aqui</h2>
+            <p>Suporta arquivos HTML, HTM e Markdown (.md)</p>
+        </div>
+    </div>
 
     <main>
         <!-- Editor Left / Top -->

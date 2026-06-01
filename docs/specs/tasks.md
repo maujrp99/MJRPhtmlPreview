@@ -129,3 +129,20 @@
 ### Implementation: Download Type Detection
 - [x] Download salva `.md` para Markdown, `.html` para HTML.
 
+---
+
+## Milestone 6: Drag and Drop & Persistent Folder Memory 🚀
+**Status**: Concluído | **Date**: 2026-05-28
+
+### Implementation: UI & Overlay
+- [x] Adicionar overlay visual `.drag-overlay` e styles de glassmorphism em `index.html`.
+
+### Implementation: Drag & Drop Logic
+- [x] Escutar eventos de arrasto (`dragover`, `dragleave`, `drop`) em `js/app.js`.
+- [x] Ler arquivos soltos (.html, .htm, .md) usando FileReader e carregar no editor.
+
+### Implementation: Open/Save Persistent Directory Memory
+- [x] Atualizar o clique de `btnOpen` em `js/app.js` para usar `showOpenFilePicker` se suportado.
+- [x] Unificar ID de persistência `mjrp_document_picker` para `showOpenFilePicker` e `showSaveFilePicker` (em `js/export.js`).
+
+

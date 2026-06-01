@@ -38,6 +38,7 @@ function initExportButtons(htmlInput, previewFrame) {
                         description: isMarkdown ? 'Markdown Document' : 'HTML Document',
                         accept: { [mimeType]: [`.${ext}`] },
                     }],
+                    id: 'mjrp_document_picker'
                 });
                 const writable = await handle.createWritable();
                 await writable.write(blob);
