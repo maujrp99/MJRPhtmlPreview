@@ -7,12 +7,12 @@ mjrp_harness:
   gates: [tasks]
   gate_sla_days: 14
   gates_open: []
-  stack:                     # a tecnologia do PRODUTO (a constituicao nao descreve stack)
+  tech_stack:                # a tecnologia do PRODUTO - varia e evolui por projeto
     frontend: vanilla-html-css-js   # SPA de arquivo unico, sem build no M1
     backend: nenhum                 # 100% client-side
     apis: google-oauth2, google-drive-v3, google-picker
     hosting: github-pages
-  models:                    # quem executa o que nesta instancia
+  stack:                     # QUEM FAZ O QUE - atribuicao de papel e decisao de instancia (§5.2.1)
     strategy: cowork
     build: claude-code
     review: antigravity

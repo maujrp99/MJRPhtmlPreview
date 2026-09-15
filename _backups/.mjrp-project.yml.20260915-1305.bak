@@ -1,0 +1,27 @@
+mjrp_harness:
+  version: "1.0"
+  profile: code-app          # code-app | content | meta
+  process_level: standard     # minimal | standard | full
+  context: lazy              # eager | lazy
+  orchestration: assisted    # assisted | autonomous
+  gates: [tasks]
+  gate_sla_days: 14
+  gates_open: []
+  stack:                     # a tecnologia do PRODUTO (a constituicao nao descreve stack)
+    frontend: vanilla-html-css-js   # SPA de arquivo unico, sem build no M1
+    backend: nenhum                 # 100% client-side
+    apis: google-oauth2, google-drive-v3, google-picker
+    hosting: github-pages
+  models:                    # quem executa o que nesta instancia
+    strategy: cowork
+    build: claude-code
+    review: antigravity
+  environment:
+    setup: nenhum             # comando de setup, ou 'nenhum' se não há pré-requisito
+    runtime: ""               # ex.: 'python3, node' - preencha quando a stack existir
+  sensors:
+    placeholder: "true"  # troque pelo lint/test/build reais assim que a stack existir
+  kernel:                    # as páginas da wiki do harness que este projeto carrega (I5)
+    version: 2026-09-15
+    source: 0036156
+    pages: [base-concept, vision-document, memory-architecture, context-vs-memory, project-profiles, terms, doctor, adr-practice, harness-concept, harness-elements]

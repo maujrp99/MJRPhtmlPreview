@@ -10,5 +10,7 @@
 
 **Do Not Forget.** Este projeto herda o `PRINCIPLES.md` do MJRP Harness (declarado em AGENTS.md e constitution.md) - não redecidir o que já está lá.
 
+**Contrato, 2026-09-15.** A tecnologia do produto (SPA de arquivo único, Google Drive/Picker) mora em `tech_stack:` do `.mjrp-project.yml`; `stack:` é atribuição de papel (§5.2.1). A constituição não descreve nem uma nem outra.
+
 ## Ways of Working
 

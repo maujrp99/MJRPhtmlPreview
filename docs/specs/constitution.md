@@ -5,7 +5,7 @@ reescreve** nada de lá: declara a herança e acrescenta só o que é da stack d
 `PRINCIPLES.md` Parte III.
 
 > **O que saiu daqui em 2026-09-15, e para onde foi.** *Technical Stack* e *AI Orchestration*
-> viraram campo do contrato (`.mjrp-project.yml` → `stack:`, `models:`) — constituição não
+> viraram campo do contrato (`.mjrp-project.yml` → `tech_stack:` a tecnologia, `stack:` os papéis) — constituição não
 > descreve stack nem quem-faz-o-quê. *Development Methodology (SDD)* e *SCM & Governance* são os
 > princípios I e II do harness — herdados, não repetidos; o "nenhum código sem task definida" é o
 > II.7. O que ficou é o que **só vale aqui**: a disciplina vanilla, o que a stack proíbe e as
