@@ -1,7 +1,7 @@
 # Plan: M5 — Load & Edit
 
 **Status**: Draft
-**Spec Reference**: [spec.md](file:///Users/mpedroso/0.MyPetProjects/MJRPhtmlPreview/docs/specs/m5/spec.md)
+**Spec Reference**: [spec.md](../m5/spec.md)
 
 ## Architecture Approach
 We will extend the existing modular architecture:

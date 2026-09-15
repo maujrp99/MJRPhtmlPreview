@@ -26,7 +26,7 @@ open src/index.html
 ## Project Docs
 
 - [VISION.md](VISION.md) — Purpose and aesthetic direction
-- [CHARTER.md](CHARTER.md) — Scope, goals, and roadmap
+- [docs/specs/prd.md](docs/specs/prd.md) — Scope, goals, and roadmap
 - [docs/specs/constitution.md](docs/specs/constitution.md) — Technical rules
 
 ## Tech Stack

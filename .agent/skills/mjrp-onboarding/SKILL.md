@@ -8,7 +8,7 @@ description: >
   "onboarding", "nova sessão", "qual o estado do projeto", "audit this feature", "deep reset",
   "first session", "o que temos até agora". É o DONO do início de sessão — para SALVAR ao
   final, use mjrp-save-context-handoff. Cobre: recuperação SESSION_HISTORY, leitura de
-  VISION/CHARTER/ROADMAP/constitution, arch/story/spec/plan/tasks por role, e síntese com
+  VISION/PRD/ROADMAP/constitution, arch/story/spec/plan/tasks por role, e síntese com
   verificação de alinhamento SDD. Familiarizado com templates SDD: spec.md (WHAT+WHY, REQ-IDs,
   Success Criteria), plan.md (HOW, mockups, componentes), tasks.md (WHEN, checklist atômico).
 ---
@@ -31,7 +31,7 @@ Fim de sessão    → mjrp-save-context-handoff (skill)
 Antes de qualquer trabalho, o agente deve ter este mapa mental:
 
 ```
-CHARTER.md ──► ROADMAP.md ──► story.md (backlog) ──► spec.md ──► plan.md ──► tasks.md ──► src/
+docs/specs/prd.md ──► ROADMAP.md ──► story.md (backlog) ──► spec.md ──► plan.md ──► tasks.md ──► src/
     │               │               │                    │           │           │
   Scope &       Phases &        O QUE          WHAT+WHY+REQ      HOW+mockups  WHEN+checklist
  Principles    Priorities      to build next   REQ-IDs, AC        components    atômico
@@ -185,8 +185,8 @@ Se não houver Git (projeto Cowork-only): pular, notar que é projeto sem versio
 
 **Ler nesta ordem**:
 1. `VISION.md` — filosofia, goals, aesthetic vibe do projeto
-2. `CHARTER.md` — escopo, stakeholders, milestones iniciais, constraints
-3. `ROADMAP.md` — fase atual, prioridades ativas, próximos milestones (deriva do CHARTER)
+2. `docs/specs/prd.md` — escopo, stakeholders, milestones iniciais, constraints
+3. `ROADMAP.md` — fase atual, prioridades ativas, próximos milestones (deriva do PRD)
 4. `docs/specs/constitution.md` — stack, padrões a seguir, padrões a evitar, versões
 
 **Ler AI config do projeto** (se existir):

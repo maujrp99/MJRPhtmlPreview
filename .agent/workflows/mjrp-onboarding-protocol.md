@@ -50,13 +50,13 @@ or "Understand" a feature.
 > Skip this phase if Phase 0 provided sufficient context to proceed.
 
 1. Read `VISION.md` — align with the project's core philosophy and goals.
-2. Read `CHARTER.md` — understand scope, stakeholders, initial milestones, and constraints.
+2. Read `docs/specs/prd.md` — understand scope, stakeholders, initial milestones, and constraints.
 3. Read `ROADMAP.md` — load current tactical phase, active priorities, and upcoming milestones.
-   ROADMAP derives from CHARTER and reflects the living state of the project.
+   ROADMAP derives from PRD and reflects the living state of the project.
 4. Read `docs/specs/constitution.md` — load technical rules, stack, patterns to follow and avoid.
 
-> **Derivation chain reminder**: CHARTER → ROADMAP → story.md (backlog) → spec.md → plan.md → tasks.md.
-> Reading CHARTER and ROADMAP first prevents contradicting strategic decisions during implementation.
+> **Derivation chain reminder**: PRD → ROADMAP → story.md (backlog) → spec.md → plan.md → tasks.md.
+> Reading PRD and ROADMAP first prevents contradicting strategic decisions during implementation.
 
 ---
 

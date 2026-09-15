@@ -1,7 +1,7 @@
 # Tasks: M5 — Load & Edit
 
 **Status**: Completed
-**Plan Reference**: [plan.md](file:///Users/mpedroso/0.MyPetProjects/MJRPhtmlPreview/docs/specs/m5/plan.md)
+**Plan Reference**: [plan.md](../m5/plan.md)
 
 ## Pre-Implementation
 - [x] Confirm spec.md and plan.md are APPROVED (Gate 1 & 2 ✅)
@@ -32,6 +32,6 @@
 - [x] [T-05.16] Regression: Ensure Google Drive save still functions correctly.
 
 ## Documentation
-- [x] Update `ROADMAP.md` and `CHARTER.md` status if needed.
+- [x] Update `ROADMAP.md` and `docs/specs/prd.md` status if needed.
 - [x] Update `SESSION_HISTORY.md`.
 - [x] Final Commit: `feat: implement file loader and inline editing (M5)`

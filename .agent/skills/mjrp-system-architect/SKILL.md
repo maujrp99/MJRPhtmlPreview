@@ -174,7 +174,7 @@ Architecture starts large but decays small. These are the pressure points:
 When asked to review an architecture document, constitution, codebase, or tech decision, follow this sequence:
 
 **1. Understand the Purpose**
-Read VISION.md, CHARTER.md, or the stated goal. Ask: *"What is this system for?"* Then: *"Does the architecture scream that purpose?"*
+Read VISION.md, docs/specs/prd.md, or the stated goal. Ask: *"What is this system for?"* Then: *"Does the architecture scream that purpose?"*
 
 **2. Map the Layers**
 Identify what lives in each layer (Entities, Use Cases, Adapters, Frameworks). Note any layer violations where inner-circle concepts are contaminated by outer-circle details.

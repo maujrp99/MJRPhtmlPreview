@@ -9,7 +9,7 @@ description: >
   like "new project", "start a project", "initialize project", "project setup",
   "bootstrap project", "set up framework", "criar projeto", "novo projeto",
   "inicializar projeto", "setup do projeto", "aplicar framework", or any request
-  involving creating project scaffolding with docs/specs, VISION.md, CHARTER.md,
+  involving creating project scaffolding with docs/specs, VISION.md, docs/specs/prd.md,
   constitution.md, or multi-AI orchestration setup. Also trigger when the user
   mentions "Greenfield", "Brownfield", or "SpecKit setup" in the context of
   starting work on a project.
@@ -61,7 +61,7 @@ Collaborate with the user to define the project's identity. Create two files in 
 [Visual reference — screenshot, Stitch link, or description]
 ```
 
-**CHARTER.md** — The boundaries:
+**docs/specs/prd.md** — The boundaries:
 ```markdown
 # [Project Name] — Charter
 
@@ -134,7 +134,7 @@ Apply the standard structure that makes the project readable by AI agents:
 ├── src/                  # Source code
 ├── tests/                # Tests
 ├── VISION.md
-├── CHARTER.md
+├── docs/specs/prd.md
 ├── README.md
 └── .gitignore
 ```
@@ -146,7 +146,7 @@ mkdir -p docs/specs docs/sessions docs/architecture src tests
 
 ### Step 4: Baseline Docs
 
-Create `README.md` with a project overview that references the VISION and CHARTER.
+Create `README.md` with a project overview that references the VISION and PRD.
 
 ### Step 5: SpecKit Setup
 
@@ -196,7 +196,7 @@ You are a developer working on [Project Name].
 
 Before any implementation, read:
 - VISION.md (purpose)
-- CHARTER.md (scope and limits)
+- docs/specs/prd.md (scope and limits)
 - docs/specs/constitution.md (technical rules)
 - docs/specs/design-system.md (visual standards)
 - docs/specs/tasks.md (current backlog)
@@ -217,7 +217,7 @@ Follow the checklist:
 
 | # | Phase | Action | Commit |
 |---|-------|--------|--------|
-| 1 | Setup | Create VISION.md and CHARTER.md | `docs: initial vision and charter` |
+| 1 | Setup | Create VISION.md and docs/specs/prd.md | `docs: initial vision and charter` |
 | 2 | Setup | git init + .gitignore + first commit | `chore: project scaffold` |
 | 3 | Setup | Create full folder structure | `chore: folder structure` |
 | 4 | Setup | Create constitution.md | `docs: project constitution` |
@@ -247,7 +247,7 @@ Before anything else, map what already exists:
 - Design: prototypes, wireframes, existing UI
 - Previous sessions: AI session context
 
-**0.2 Gap Analysis** — For each framework artifact (VISION.md, CHARTER.md, constitution.md, story.md, spec.md, arch.md, data-model.md, design-system.md, tasks.md, SESSION_HISTORY.md, .claudeprompt), determine: Does it exist? Is it partial? What action is needed (Create / Extract / Adapt)?
+**0.2 Gap Analysis** — For each framework artifact (VISION.md, docs/specs/prd.md, constitution.md, story.md, spec.md, arch.md, data-model.md, design-system.md, tasks.md, SESSION_HISTORY.md, .claudeprompt), determine: Does it exist? Is it partial? What action is needed (Create / Extract / Adapt)?
 
 **0.3 Bootstrap Decision** — For each missing artifact:
 - **Extract** when equivalent content exists in another format (spec in Google Docs, stack defined in package.json)
@@ -257,7 +257,7 @@ Before anything else, map what already exists:
 ### Brownfield Steps 1-8
 
 1. **Execute Audit & Bootstrap** → Document in BOOTSTRAP_REPORT.md
-2. **Extract/Create Vision** → Generate VISION.md and CHARTER.md from existing material
+2. **Extract/Create Vision** → Generate VISION.md and docs/specs/prd.md from existing material
 3. **Portray Current State** → Create constitution.md reflecting the ACTUAL stack and patterns (not idealized)
 4. **Adapt Folder Structure** → Only reorganize where needed to add `docs/specs/`. Don't move working code.
 5. **Retrofit SpecKit** → Document existing features in story.md and spec.md
@@ -283,7 +283,7 @@ Purpose: Understand the problem space, users, and opportunities before jumping i
 
 Activities include: user research, competitive analysis, problem framing, opportunity mapping, stakeholder interviews, and defining success metrics. The output is a validated understanding of what's worth building.
 
-This phase feeds into VISION.md and CHARTER.md refinement, and directly informs the Design phase.
+This phase feeds into VISION.md and docs/specs/prd.md refinement, and directly informs the Design phase.
 
 ### Phase 2: Design (`design_protocol.md` + `architecture_review_protocol.md`)
 

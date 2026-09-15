@@ -13,7 +13,7 @@ ciclo de desenvolvimento (passo 8) itera via Agile/Scrum com sprints ou
 Kanban por feature.
 
 1.  **Visão e Charter:** Defina a Ideia e Visão do Produto. Preencha os
-    > templates de VISION.md e CHARTER.md (seção 4).
+    > templates de VISION.md e docs/specs/prd.md (seção 4).
 
 2.  **Diretório e SCM:** Crie a pasta do projeto e inicialize o Git com
     > o padrão de branches (seção 3). Primeiro commit: estrutura vazia +
@@ -22,7 +22,7 @@ Kanban por feature.
 3.  **Folder Structure:** Aplique o template de pastas (seção 2) para
     > organizar o conhecimento da IA.
 
-4.  **Baseline Docs:** Crie README.md, VISION.md e CHARTER.md na raiz.
+4.  **Baseline Docs:** Crie README.md, VISION.md e docs/specs/prd.md na raiz.
 
 5.  **Setup SDD (SpecKit):** Crie a pasta docs/specs/ e popule os
     > artefatos do SpecKit (seção 5). Commit de docs após cada estágio.
@@ -34,7 +34,7 @@ Kanban por feature.
     > papel definido (seção 7).
 
 8.  **Sincronização de Contexto:** Em cada ferramenta, carregue os
-    > arquivos de visão: VISION.md, CHARTER.md, docs/specs/.
+    > arquivos de visão: VISION.md, docs/specs/prd.md, docs/specs/.
 
 9.  **Ciclo de Desenvolvimento (Iterativo):** Sprints ou features
     > seguindo Specify → Plan → Tasks → Implement. Cada iteração produz
@@ -89,7 +89,7 @@ como cérebro do projeto.
 >
 > ├── VISION.md \# A Vibe e o propósito
 >
-> ├── CHARTER.md \# Escopo, Limites e Stack
+> ├── docs/specs/prd.md \# Escopo, Limites e Stack
 >
 > ├── README.md \# Overview do projeto
 >
@@ -163,7 +163,7 @@ snapshot auditável:
 >
 > \[Referência visual --- screenshot, link Stitch, ou descrição\]
 
-**4.2 CHARTER.md (As Fronteiras)**
+**4.2 docs/specs/prd.md (As Fronteiras)**
 ----------------------------------
 
 Elementos essenciais conforme PMI e Asana:
@@ -420,7 +420,7 @@ com instruções específicas para o Claude:
 >
 > \- VISION.md (propósito)
 >
-> \- CHARTER.md (escopo e limites)
+> \- docs/specs/prd.md (escopo e limites)
 >
 > \- docs/specs/constitution.md (regras técnicas)
 >
@@ -548,14 +548,14 @@ technical\_debt (registro de dívida técnica), agent\_rules\_template
 **Operacionais (3):** reference\_guide\_index (índice numerado do
 manual), implementation\_walkthrough (documentação de implementação),
 roadmap (roadmap evolutivo do projeto --- complementa a seção de
-Milestones do CHARTER.md).
+Milestones do docs/specs/prd.md).
 
 **Apêndice: Checklist de Setup Greenfield**
 ===========================================
 
   **\#**   **Ação**                                  **Commit**
   -------- ----------------------------------------- ----------------------------------
-  1        Criar VISION.md e CHARTER.md              docs: initial vision and charter
+  1        Criar VISION.md e docs/specs/prd.md              docs: initial vision and charter
   2        git init + .gitignore + primeiro commit   chore: project scaffold
   3        Criar folder structure completa           chore: folder structure
   4        Criar constitution.md                     docs: project constitution

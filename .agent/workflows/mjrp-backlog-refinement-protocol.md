@@ -24,7 +24,7 @@ Before starting the session, load in this order:
 2. `docs/specs/product_backlog.md` — Prioritized backlog (if separate from story.md)
 3. `docs/ROADMAP.md` — Milestone sequencing and exit criteria (for priority context)
 4. Active milestone `docs/specs/milestones/<active>/spec.md` — What's in scope right now
-5. `CHARTER.md` — MVP scope and boundaries (to catch out-of-scope items)
+5. `docs/specs/prd.md` — MVP scope and boundaries (to catch out-of-scope items)
 6. `docs/specs/constitution.md` — Technical constraints that affect feasibility
 
 ## 3. Refinement Session Flow
@@ -91,23 +91,23 @@ A story is ready for SDD Specify when:
 - [ ] Passes all 6 INVEST criteria
 - [ ] Estimated ≤ 8 story points (or explicitly split if larger)
 - [ ] Dependencies identified and resolved or explicitly accepted
-- [ ] Fits within CHARTER MVP scope or has explicit approval to extend
+- [ ] Fits within PRD MVP scope or has explicit approval to extend
 
 If a story fails any criterion, it is **Not Ready** and must not enter the SDD Specify phase.
 
 ## 5. Charter Check
 
-During Phase 3 (Prioritize), if any of the following are detected, flag for CHARTER update before proceeding:
+During Phase 3 (Prioritize), if any of the following are detected, flag for PRD update before proceeding:
 
-- A story being added is **outside current CHARTER MVP scope**
-- A story being deferred reveals that a **CHARTER goal is no longer being pursued**
+- A story being added is **outside current PRD MVP scope**
+- A story being deferred reveals that a **PRD goal is no longer being pursued**
 - **Stakeholder input** introduced new requirements that change the project's direction
 
-**Action**: Surface the drift to the human. If confirmed, update `CHARTER.md` (human approval required), then cascade:
+**Action**: Surface the drift to the human. If confirmed, update `docs/specs/prd.md` (human approval required), then cascade:
 1. `docs/ROADMAP.md` — realign milestone targets
 2. `docs/specs/story.md` — mark out-of-scope stories as `🚫 Deferred`
 
-Do not silently absorb scope changes into the backlog without surfacing them to the CHARTER level.
+Do not silently absorb scope changes into the backlog without surfacing them to the PRD level.
 
 ---
 

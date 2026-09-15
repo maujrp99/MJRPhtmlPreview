@@ -44,11 +44,11 @@ Consult this map to find the relevant SpecKit artifacts:
 
 ### Project Definition
 - **Vision**: `VISION.md`
-- **Charter**: `CHARTER.md` — Verify scope, goals, and success metrics still reflect reality. Update when:
+- **Charter**: `docs/specs/prd.md` — Verify scope, goals, and success metrics still reflect reality. Update when:
   - A milestone is completed and metrics need refreshing
   - Scope expanded or contracted (in/out of MVP)
   - Stakeholders or success criteria changed
-  - **After any scope update**: cascade to `ROADMAP.md` (milestone alignment) and `story.md` (mark out-of-scope stories as `🚫 Deferred`). CHARTER changes require explicit human approval before commit.
+  - **After any scope update**: cascade to `ROADMAP.md` (milestone alignment) and `story.md` (mark out-of-scope stories as `🚫 Deferred`). PRD changes require explicit human approval before commit.
 - **README**: `README.md`
 
 ## 3. Update Documentation

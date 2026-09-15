@@ -1,9 +1,12 @@
 # Instruções do Projeto MJRPhtmlPreview
 
+> **A fonte canônica de instruções deste projeto é o [`AGENTS.md`](AGENTS.md).**
+> Leia-o primeiro; o que está abaixo acrescenta só o que é específico desta AI Platform.
+
 ## Contexto Obrigatório
 Antes de qualquer trabalho, leia:
 - VISION.md (propósito e direção estética)
-- CHARTER.md (escopo, milestones, restrições)
+- docs/specs/prd.md (escopo, milestones, restrições)
 - docs/specs/constitution.md (regras técnicas e stack)
 - docs/specs/design-system.md (tokens visuais Minimal Dark)
 - docs/specs/tasks.md (backlog atual)

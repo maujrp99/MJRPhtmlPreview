@@ -52,7 +52,7 @@ Com o inventário feito, identifique o que falta em relação ao framework:
   **Artefato do Framework**   **Já existe?**              **Ação necessária**         **Prioridade**
   --------------------------- --------------------------- --------------------------- ----------------
   VISION.md                   ☐ Sim / ☐ Parcial / ☐ Não   Criar / Extrair / Adaptar   Alta
-  CHARTER.md                  ☐ Sim / ☐ Parcial / ☐ Não   Criar / Extrair / Adaptar   Alta
+  docs/specs/prd.md                  ☐ Sim / ☐ Parcial / ☐ Não   Criar / Extrair / Adaptar   Alta
   constitution.md             ☐ Sim / ☐ Parcial / ☐ Não   Criar / Extrair / Adaptar   Crítica
   story.md + spec.md          ☐ Sim / ☐ Parcial / ☐ Não   Criar / Extrair / Adaptar   Alta
   arch.md + data-model.md     ☐ Sim / ☐ Parcial / ☐ Não   Criar / Extrair / Adaptar   Alta
@@ -94,7 +94,7 @@ bootstrap, o ciclo de desenvolvimento é idêntico.
 1.  **Audit & Bootstrap (Step 0):** Execute o inventário e gap analysis
     > da seção anterior. Documente em BOOTSTRAP\_REPORT.md.
 
-2.  **Extrair/Criar Visão:** Gere VISION.md e CHARTER.md a partir de
+2.  **Extrair/Criar Visão:** Gere VISION.md e docs/specs/prd.md a partir de
     > material existente (docs, chats, código). Commit: docs: bootstrap
     > vision and charter
 
@@ -196,7 +196,7 @@ Se o projeto já tem código, scripts e um vault Obsidian:
 >
 > ├── VISION.md \# NOVO --- adicionar
 >
-> ├── CHARTER.md \# NOVO --- adicionar
+> ├── docs/specs/prd.md \# NOVO --- adicionar
 >
 > └── README.md \# EXISTENTE --- atualizar
 >
@@ -231,7 +231,7 @@ O primeiro commit do framework deve incluir todos os novos artefatos:
 
 > docs: bootstrap MJRP Framework v1.2
 >
-> \- Add VISION.md, CHARTER.md
+> \- Add VISION.md, docs/specs/prd.md
 >
 > \- Add docs/specs/ with constitution, story, spec, arch, data-model,
 > plan, tasks
@@ -304,7 +304,7 @@ criar do zero.
 > de documentação, chats do Stitch com decisões de design, README
 > existente, conversas de sessões AI anteriores.*
 
-**4.2 CHARTER.md (mesma da V1.1)**
+**4.2 docs/specs/prd.md (mesma da V1.1)**
 ----------------------------------
 
 Elementos essenciais:
@@ -329,7 +329,7 @@ Elementos essenciais:
     > (seção 7).
 
 > **DICA BROWNFIELD:** *Para projetos existentes, adicione uma seção
-> \'Current State\' ao CHARTER com: o que já foi feito, o que está
+> \'Current State\' ao PRD com: o que já foi feito, o que está
 > funcionando, e o que precisa mudar.*
 
 **◆ 5. SpecKit: Retrofitting em Projeto Existente**
@@ -560,7 +560,7 @@ Seção idêntica à V1.1. Cada ferramenta tem um papel definido:
 >
 > \- VISION.md (propósito)
 >
-> \- CHARTER.md (escopo e limites)
+> \- docs/specs/prd.md (escopo e limites)
 >
 > \- docs/specs/constitution.md (regras técnicas)
 >
@@ -735,7 +735,7 @@ technical\_debt (registro de dívida técnica), agent\_rules\_template
 **Operacionais (3):** reference\_guide\_index (índice numerado do
 manual), implementation\_walkthrough (documentação de implementação),
 roadmap (roadmap evolutivo do projeto --- complementa a seção de
-Milestones do CHARTER.md).
+Milestones do docs/specs/prd.md).
 
 **Apêndice: Checklist de Bootstrap Brownfield**
 ===============================================
@@ -745,7 +745,7 @@ Milestones do CHARTER.md).
   1        Executar Audit & Inventário                  Cowork + manual   ---
   2        Executar Gap Analysis                        Cowork            ---
   3        Criar/Extrair VISION.md                      Extrair de docs   docs: bootstrap vision
-  4        Criar/Extrair CHARTER.md                     Extrair de docs   docs: bootstrap charter
+  4        Criar/Extrair docs/specs/prd.md                     Extrair de docs   docs: bootstrap charter
   5        Criar constitution.md (stack ATUAL)          Extrair de code   docs: constitution
   6        Criar docs/specs/ folder structure           Manual            chore: speckit structure
   7        Retrofitting: story.md + spec.md             Cowork + code     docs: retrofit specs

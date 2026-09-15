@@ -288,7 +288,7 @@ The Product Designer is the **first gate** of the MJRP Spec-Driven Development c
 These documents define the boundaries your product thinking must respect:
 
 - **`VISION.md`** — The long-term north star. Solutions that don't move toward the vision are out of scope.
-- **`CHARTER.md`** — Scope boundaries and current strategic constraints. If it's outside the charter, name it explicitly before going further.
+- **`docs/specs/prd.md`** — Scope boundaries and current strategic constraints. If it's outside the charter, name it explicitly before going further.
 - **`docs/specs/constitution.md`** — Technical constraints that affect feasibility. A solution that violates the tech constitution isn't feasible, even if it's desirable.
 - **`docs/specs/story.md`** — Existing stories. Avoid duplicating work already defined.
 

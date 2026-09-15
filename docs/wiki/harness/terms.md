@@ -1,0 +1,190 @@
+---
+title: Termos
+aliases: [termos, glossário, glossario, verbetes, vocabulário, vocabulario, visão, visao, princípio, principio, principles, roadmap, prd, sdd, spec-kit, speckit, openspec, bmad, kiro, ears, delta-spec, steering-files, harness, user-harness, tres-planos, quatro-dominios, donos, instancia, skills, skill, sensores, sensor, contrato, contrato-de-instancia, caminhos-de-adocao, gate, bootstrap, agente, invariante, invariantes, inegociáveis, inegociável, processo, nivel-de-processo]
+summary: o glossário do MJRP — todo o vocabulário, agrupado por função no harness e alfabético dentro de cada grupo
+tags: [conceitos, glossario]
+status: firme
+atualizado: 2026-09-14
+fontes: []
+---
+<!-- kernel do MJRP Harness · versão 2026-09-15 · fonte 0036156 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+
+# Termos — o glossário
+
+**Esta é a única casa do vocabulário.** Até 11/09/2026 metade dele vivia no apêndice do
+`VISION.md`, que chegou a ser 73% daquele documento e carregava em toda sessão. O `VISION.md`
+ficou com a identidade do projeto; o glossário mora aqui e é carregado **sob demanda**.
+
+Um conceito ganha **página própria** quando o MJRP indica que merece uma — regra de 09/09; a
+anterior (*"quando alguém precisou explicá-lo duas vezes"*) era heurística de agente, não decisão
+dele. Antes disso, é uma linha aqui.
+
+**Agrupados por função no harness**, e alfabéticos dentro de cada grupo. O que **ainda não existe**
+está na última seção, separado de propósito.
+
+## Fundamentos — o que o harness é
+
+| Termo | Definição |
+|---|---|
+| **Dogfooding** | O harness obedece às próprias regras: mantém a identidade e o histórico de sessão que manda todo projeto manter. |
+| **Fábrica de software** | **Metáfora**, não nome de nada (ADR-0004): serve para explicar o método a quem não é de software. O entorno chama-se MJRP Harness; o identificador pro cliente é o MJRP SaaS — ver a entrada própria abaixo. |
+| **Harness** | O **entorno do modelo** — as onze peças: loop de execução, ferramentas, guides, context engineering, memória, ambiente de execução, sensores, governança, guardrails, observabilidade e orquestração. Não é o modelo nem o prompt. |
+| **Jaggedness** | A competência dos modelos é irregular — ótima numa tarefa, ruim na vizinha, sem aviso. Obriga a medir no próprio domínio. *(Karpathy)* |
+| **MJRP SaaS** | O **identificador reconhecível pro cliente** do negócio da MJRP — não o produto em si (ADR-0004, resolvido 14/09). O produto real é o que o Harness constrói e entrega caso a caso. Mesmo papel que "Salesforce" faz pro SaaS que a marca nomeia: identifica pra fora, sem ser o nome de nenhum módulo por dentro. |
+| **Pedido × regra** | Uma linha no `CLAUDE.md` é pedido; um hook que intercepta a chamada é regra. T4 é sobre regras. *(Karpathy)* |
+| **Quatro domínios** (antes *três planos*) | De quem é cada domínio do **entorno** — não do software entregue. **Instância**: muda a cada projeto, o contrato declara. **Harness**: muda quando o método da MJRP muda. **Plataforma**: muda quando o fornecedor quiser. **Usuário**: como o Zé quer as coisas, fora de repo. |
+| **Sandbox** | O ambiente isolado em que o agente executa. Hoje é **system harness** — quem entrega é a Plataforma. A **fase D** do `ROADMAP.md` o traz para o lado do MJRP: o agente ganha canteiro, o projeto ganha chão. Alinhado ao [[vision-document]]. |
+| **Skill issue** | Vira princípio aqui: toda falha de agente é bug do harness até prova em contrário. *(Karpathy)* |
+| **T1–T4** | As quatro condições necessárias para algo ser um harness: loop, interface de ferramenta, gestão de contexto, e mecanismo que não dependa do modelo cooperar. |
+| **User harness × system harness** | User: o que você configura e que sobrevive à troca de ferramenta — skills, contrato, sensores, arquivos no repo. System: o que o fornecedor entrega — loop do turno, compactação, memória interna. O MJRP constrói só o primeiro. |
+
+## Contrato e configuração
+
+| Termo | Definição |
+|---|---|
+| **AI Collab / Autonomous** | Os dois modos de operação (`orchestration:` no contrato). *AI Collab* (assistido por IA, human-in-the-loop): o humano interage com a IA em gates e fluxos padronizados, validando e combinando o próximo passo. *Autonomous*: um agente orquestrador roteia e para só nos gates — que podem ser agente ou humano (judge, validator). Mesmo grafo, roteador diferente. |
+| **Bootstrap** | O passo de setup que preenche o contrato de instância do projeto: perfil, nível de processo, gates, stack, ferramentas, ambiente. Decidido ali, nunca em runtime. |
+| **Brownfield** | Caminho de adoção sobre codebase existente: documentar o que *é*, evoluir aos poucos. |
+| **Caminhos de adoção** | As **duas** portas de entrada de um projeto de código no harness: *greenfield* (do zero) e *brownfield* (codebase existente). **Não vão para o contrato** — convergem na FASE 3 e depois do retrofit o projeto deixa de ser brownfield. O que o contrato declara é o **perfil** (`profile: code-app \| content \| meta`), que é o que o projeto *entrega*. Ver [[project-profiles]]. |
+| **Contrato de instância** | O `.mjrp-project.yml` na raiz do projeto: tudo o que varia entre projetos declarado num lugar só — `profile`, `process_level`, `context`, `gates`, `gate_sla_days`, `gates_open`, `stack`, `models`, `environment`, `sensors`, `tools`, `orchestration`, `source`. É autoritativo: onboarding, lifecycle e `doctor` leem ele primeiro. Validado por schema (checagens I1 e I2). Antes chamava-se *marker*. |
+| **Gate** | Ponto onde o fluxo para e alguém aprova — humano, ou agente (judge, validator). Todo gate tem **dono e relógio**: gate sem prazo é beco. Declarados em `gates:` no contrato. |
+| **Greenfield** | Caminho de adoção a partir do zero. |
+| **Inegociável** | A palavra do MJRP para o mesmo conjunto que *invariante* — e os dois não são sinônimos exatos, são as duas faces da mesma coisa: **invariante** diz *o que a coisa é* (uma verdade que tem de valer sempre); **inegociável** diz *como se trata* (não está em discussão). A postura é consequência da propriedade — como não tem dose, não há o que negociar. |
+| **Invariante** | Coisa que **tem que ser verdade**. Não tem dose, custa zero quando está certo, não escala com o projeto, e **não tem campo no contrato**. Oposto de *processo*. |
+| **Processo** (*nível de*, `process_level:`) | Trabalho que se escolhe fazer — **quanto do método o projeto roda**. Tem dose, custa token toda vez, escala com o projeto, e é declarado no contrato: `minimal` · `standard` · `full`. *O teste:* complete "esse projeto é pequeno, então pode ficar assim"; se faz sentido é processo, se soa absurdo é *invariante* (verbete acima). **Chamava-se "cerimônia" até 11/09/2026** — trocado porque em ágil *cerimônia* é ritual (daily, planning, review, retro), e não é disso que o campo trata. |
+
+## Identidade e documentos do projeto
+
+| Termo | Definição |
+|---|---|
+| **ADR** | *Architecture Decision Record* — um arquivo por decisão em `docs/decisions/NNNN-*.md`, imutável; decisão nova supersede, não edita. É a memória decisória com casa. *(MADR)* |
+| **`AGENTS.md`** | Formato aberto de instruções para qualquer agente de código (Linux Foundation; 60+ ferramentas). Canônico no MJRP; `CLAUDE.md` e `GEMINI.md` o importam e acrescentam só o que é da ferramenta. |
+| **Kernel** (`docs/wiki/harness/`) | As páginas da wiki do harness que **todo projeto carrega** — cópia carimbada (versão + fonte no contrato, campo `kernel:`) do que governa a instância: o que os campos do VISION, a memória, o perfil e os sensores significam. O `new_project.py` copia, `--refresh-kernel` atualiza, o doctor (I5) avisa quando envelhece. Mesmo mecanismo da herança do `PRINCIPLES.md`. |
+| **Objetivo** (`VISION.md`) | O **WHAT** da [[base-concept|cadeia de intenção]]: a meta de curto a médio prazo que leva à visão, e o que se entrega para chegar lá. |
+| **PRD** (`docs/specs/prd.md`) | *Product Requirements Document* — o que o produto **é**, para quem, com que objetivo, e **o que ele explicitamente não é**. Documento **vivo**, ao contrário do charter, que era um retrato do kickoff. Alimenta o `story.md`; não o substitui. Pela regra do BMAD: existe quando **mais de um épico não pode divergir** — no MJRP, quando mais de um agente trabalha no mesmo produto. *(Atlassian; BMAD)* |
+| **Princípio** (`PRINCIPLES.md`) | O **fundamento do agente e do humano** — o que deve ser seguido nos projetos MJRP. Pelo dicionário do próprio arquivo: *a regra que regula a ação e serve de base ao método*. Não é "como se decide": decisão com alternativa e consequência é ADR. |
+| **Propósito** (`VISION.md`) | O **WHY** da [[base-concept|cadeia de intenção]]: a razão de ser — a necessidade que se quer resolver. Sem prazo. |
+| **Roadmap** (`ROADMAP.md`) | O **HOW** da [[base-concept|cadeia de intenção]]: o plano — em que ordem se constrói e com que prova — que, junto da estratégia, leva ao objetivo. |
+| **Visão** (`VISION.md`) | O **WHERE** da [[base-concept|cadeia de intenção]]: o horizonte a alcançar, uma instanciação do propósito. O documento que a carrega é o [[vision-document]]. |
+
+## Contexto e memória
+
+| Termo | Definição |
+|---|---|
+| **Compactação** | A operação *compress*: resumir a conversa perto do limite da janela e reiniciar com o resumo, preservando decisões e pendências. Hoje só o system harness faz. *(Anthropic)* |
+| **Context engineering** | A disciplina de decidir o que entra na janela, quando e em que forma — "o menor conjunto possível de tokens de alto sinal". Quatro operações: write, select, compress, isolate. No MJRP, a `onboarding` é a operação *select*. *(Karpathy; Anthropic; LangChain)* |
+| **Context rot** | Conforme a janela cresce, a capacidade do modelo de recuperar o que está nela **cai**. Consequência: contexto grande não é só caro, é pior. *(Anthropic)* |
+| **Contexto (memória de trabalho)** | O conjunto de tokens na janela do modelo numa chamada. Finito, reconstruído a cada turno, degrada conforme cresce (*context rot*). Distinto de memória, que é o que persiste fora da janela. *(Anthropic; CoALA)* |
+| **Custo fixo de sessão** | O que se paga antes de qualquer trabalho começar: o contexto carregado mais as descriptions residentes. É falha de *select*, não de memória — e por *context rot* o excesso é pior que inútil. A medição atual sai do `doctor`, não deste documento. |
+| **Memória (longo prazo)** | O que persiste fora da janela — arquivos, banco, pesos — e precisa ser *recuperado* para virar contexto. Memória é fonte de contexto, não a mesma coisa. Tipos: episódica, procedural, semântica *(CoALA)* + decisória, de usuário *(Kipper)*. |
+| **Memória aprendida** | O que o **agente** descobriu trabalhando e guardou sem ser mandado — correções do Zé, decisões de meio de sessão, achados sobre o próprio harness. `MEMORY.md`, **acrescenta** com data e hora (ADR-0005). É o único tipo que o humano não escreve. |
+| **Memória ativa** | Onde o trabalho está: foco, próximo passo, bloqueios. Vive na seção `## Now` do `MEMORY.md`, quatro blocos com ponteiros, **sobrescrita** a cada bloco de trabalho (ADR-0006). É o que tem que sobreviver à compactação. *(Cline Memory Bank; Anthropic memory tool)* |
+| **Memória de trabalho** | Sinônimo de contexto — o que está na janela agora. Ver *Contexto*. |
+| **Memória de usuário** | Como o Zé quer as coisas. Casa: `~/.claude/CLAUDE.md`, nível de usuário, fora de qualquer repo. Vazia hoje. |
+| **Memória decisória** | Por que decidimos X e o que foi descartado. Casa: `docs/decisions/` — um arquivo por decisão, imutável; decisão nova supersede, não edita. |
+| **Memória episódica** | "Experiência de ciclos de decisão anteriores" *(CoALA)* — o que aconteceu. No MJRP, `docs/log.md`, que **acrescenta** por checkpoint. |
+| **Memória procedural** | Como se faz. O CoALA distingue a implícita (nos pesos do modelo) da **explícita, escrita no código do agente** — as skills do MJRP são exatamente isso, distribuídas em dois pacotes: o do ciclo de software e o toolkit, que usa o mesmo mecanismo fora dele. |
+| **Memória semântica** | "O conhecimento do agente sobre o mundo e sobre si" *(CoALA)* — fatos do domínio. No MJRP, o SpecKit, `docs/diagrams.md` (a fonte Mermaid, não os PNGs), `docs/sources/` e **este glossário**. |
+| **Modos de falha de contexto** | Poisoning (lixo entra na memória), distraction (janela grande demais), confusion (supérfluo influencia), clash (contradição na janela). Todos os quatro já ocorreram no MJRP. *(Breunig, via LangChain)* |
+| **Operações de contexto** | As quatro de context engineering: **write** (mesa → arquivo), **select** (arquivo → mesa), **compress** (encolher a mesa), **isolate** (dividir a mesa entre agentes). No MJRP: handoff/checkpoint, onboarding/progressive disclosure, compactação, e a fábrica. *(LangChain)* |
+| **Orçamento de atenção** | O limite real do contexto: o transformer cria n² relações para n tokens, e a atenção se dilui. Por isso a regra é "o menor conjunto possível de tokens de alto sinal". *(Anthropic)* |
+| **Progressive disclosure** | Carregar conhecimento no momento em que ele é necessário — a operação *select* feita sob demanda; a Anthropic chama de *recuperação just-in-time*: manter identificadores leves e carregar com ferramenta. As skills do MJRP estão no nível 2: índice residente, corpo sob demanda. |
+
+## Verificação — sensores, guides e prova
+
+| Termo | Definição |
+|---|---|
+| **Computacional × inferencial** | Eixo de custo de um guide ou sensor. Computacional: determinístico, milissegundos, zero token quando passa. Inferencial: semântico, caro, não determinístico. *(Fowler)* |
+| **Escalar pelo diagnóstico** | Falha por falta de informação pede mais contexto; falha por comportamento errado pede mais regra. Eixos diferentes; escalar o errado só encarece. |
+| **Guide** | Orienta antes da ação (feedforward): specs, `CLAUDE.md`, regras, skills. É sempre um pedido. *(Fowler)* |
+| **`mjrp doctor`** | Comando com contrato de saída **0 / 1 / 2 (não avaliável)** que checa conformidade, integridade e fluxo. O critério do que entra está na ADR-0002. |
+| **Rastro** | O que o harness consegue garantir: o lado da **memória de longo prazo** — o decidido está num lugar previsível, e trabalho sem registro, decisão reaberta e saída errada são detectáveis. O que a memória de trabalho *retém* não se garante; o que lhe é *oferecido* e o que *persiste* fora dela, sim. |
+| **Sensor** | O que detecta **depois** da ação que algo saiu errado, sem depender do agente cooperar: linter, type checker, teste, CI, `doctor`. Devolve 0 ou 1. Par oposto do *guide*, que orienta antes. |
+
+## Skills e distribuição
+
+| Termo | Definição |
+|---|---|
+| **Core / Advanced / Toolkit** | As três camadas de skills. Core: sempre ligado. Advanced: puxado por gatilho. Toolkit: domínio e trabalho, fora do loop de código. |
+| **Description-as-changelog** | Falha em que publicar uma skill substitui a description de roteamento por um resumo da alteração. A skill para de disparar por intenção — quebrada parecendo saudável. |
+| **Drift de três vias** | Uma skill existe instalada na ferramenta, em `mjrp-skills/` e commitada no Git, e nada força concordância — e ninguém sabe quando divergiu. |
+| **Earn every skill** | Uma skill só fica se acelera o loop ideia→entregue. |
+| **Feedback implícito** | Sinal barato de que uma skill não presta, sem formulário: interrupção precoce, correção do output, reformulação, regeneração, comprimento da conversa. *(Chip Huyen)* |
+| **Skill** | Procedimento escrito que o agente carrega quando a tarefa pede. É memória procedural explícita — não é agente, não é ferramenta, não é conhecimento documentado. |
+
+## Método e ciclo — spec-driven development
+
+| Termo | Definição |
+|---|---|
+| **Agile specking** | Specs pequenas com checkpoints curtos, em vez de uma spec grande antes de tudo. *(Karpathy)* |
+| **BMAD** | *Breakthrough Method for Agile AI-Driven Development* — SDD com **agentes por papel** (Analyst, PM, Architect, SM, Dev) e caminhos dimensionados pelo tamanho do trabalho: *trivial · one session · epic-sized · project-sized*. Daí vem a regra da cerimônia do PRD. É o parente mais próximo do que o MJRP constrói. *(bmad-method.org)* |
+| **Delta spec** | Especificação escrita como **diferença** do que já existe, não como documento completo: seções `ADDED`, `MODIFIED`, `REMOVED`. Reduz conflito quando várias mudanças tocam a mesma spec — e é o formato natural para brownfield. *(OpenSpec)* |
+| **EARS** | *Easy Approach to Requirements Syntax* — requisito escrito em forma restrita e testável ("quando X, o sistema deve Y"), em vez de prosa. Usado pelo Kiro no `requirements.md`. *(proposto no MJRP)* |
+| **Kiro** | O SDD da AWS. Separa **contexto durável do projeto** (`steering/`: product, tech, structure) de **escopo por feature** (`requirements.md` em notação EARS → `design.md` → `tasks.md`). A separação steering × spec é o mesmo eixo do MJRP entre identidade e ciclo. *(AWS)* |
+| **OpenSpec** | SDD leve em que o escopo mora **por mudança**, nunca no projeto: cada `proposal.md` declara o que inclui e o que **exclui explicitamente**. Introduz a **delta spec** — `ADDED`/`MODIFIED`/`REMOVED` relativo ao comportamento atual — em vez de reescrever a spec inteira. *(Fission-AI/OpenSpec)* |
+| **SDD** (*spec-driven development*) | Método em que a **especificação é o artefato primário** e o código é derivado dela, não o contrário. Cada artefato deriva de um pai, e implementar sem spec aprovada quebra a cadeia. É o método do perfil `code-app` do MJRP. |
+| **Spec Kit** | O SDD do GitHub: `constitution` → `specify` → `plan` → `tasks` → `implement`. É a base do SpecKit do MJRP. **Não tem documento de escopo**: a fronteira é conceitual (spec = *o quê/por quê*, plan = *como*) e a constitution limita complexidade, não features. *(github/spec-kit)* |
+| **SpecKit** | Os documentos vivos em `docs/specs/`: spec → plan → tasks, mais constitution, arch e design-system. Cada artefato deriva do anterior. |
+| **Steering files** | Arquivos de contexto de projeto que valem para **toda** atividade, distintos da spec de uma feature. No Kiro: `product.md`, `tech.md`, `structure.md`. No MJRP o papel é do `VISION.md`, do `constitution.md` e do `.mjrp-project.yml`. *(Kiro)* |
+
+## Agentes, orquestração e loop
+
+| Termo | Definição |
+|---|---|
+| **Agent swarm** | Padrão de orquestração em que cada agente recebe só uma personalidade e o problema é jogado ao grupo, sem caminho definido. Para problemas ambíguos — o oposto do grafo. *(Google Cloud Tech)* |
+| **Agente** | Composição: modelo (plataforma) + skill (harness) + ferramentas (contrato) + contexto. Hoje o MJRP não tem nenhum — só skills. |
+| **Fan-out / join / router** | Os três padrões de um grafo: disparar n processos em paralelo; esperar o mais lento e sintetizar; rotear condicionalmente conforme o resultado. É a forma das rotinas de manutenção do MJRP — ver `docs/diagrams.md` nº 6. *(Google Cloud Tech)* |
+| **Graph engineering** | Fluxo do agente como grafo de nós (agente ou função determinística) e arestas — um "organograma" do trabalho. Enfatiza **comportamento** (o que entra, em que ordem, o que vem depois), ao contrário de *knowledge graph*, que enfatiza **dado**. Padrões: fan-out, join, router. Serve quando o fluxo é conhecido de antemão. *(LangChain; Google Cloud Tech)* No MJRP: entra na manutenção, não na sessão — §3.2 da proposta. |
+| **Loop engineering** | "Projetar fluxos agênticos, ou loops, que guiam iterativamente o agente até a conclusão de um objetivo com intervenção humana mínima" *(IBM)*. Está para o harness como uma parte para o todo: o loop é o componente 1 do mapa; o harness é o entorno inteiro. |
+| **Orquestrador** | Quem roteia entre as fases do ciclo de vida: o humano (*AI Collab*) ou um agente que lê o contrato (*Autonomous*). Hoje é a `project-lifecycle` em prosa. |
+
+<!-- BEGIN gerado por mjrp-scripts/gen_terms.py — nao edite a mao -->
+
+## Conceitos com página própria
+
+> Gerado de `docs/wiki/*.md` — a primeira frase do `## Definition` de cada página.
+> Corrija na página, não aqui; `gen_terms.py --check` reprova se divergirem.
+
+| Termo | Definição |
+|---|---|
+| **[A prática de ADR](adr-practice.md)** | Uma **ADR** registra uma decisão grande — a que tem alternativas, custos e consequências que sobrevivem a quem a tomou. |
+| **Agente e agêntico — os conceitos** | Um **agente** é software que não apenas responde: decide e age. |
+| **[Arquitetura de memória](memory-architecture.md)** | A memória do harness é o que persiste **fora da janela** e precisa ser trazido de volta. |
+| **Catálogo de ferramentas** | O **catálogo** é a lista fechada de **categorias** de ferramenta que um projeto pode declarar no campo `tools:` do contrato. |
+| **[Conceitos base](base-concept.md)** | A **cadeia de intenção** que ordena todo documento do MJRP que declara para onde se vai: **Propósito → Visão → Objetivo → Roadmap**. |
+| **[Contexto e memória](context-vs-memory.md)** | **Contexto** é o conjunto de tokens presentes na janela do modelo **nesta chamada**: estado momentâneo, finito, reconstruído a cada turno. |
+| **Distribuição de skills** | Uma skill do MJRP existe em **três lugares ao mesmo tempo**: a fonte em `mjrp-skills/`, o derivado em `dist/` que o `marketplace add` lê, e a **cópia instalada** na ferramenta que a usa. |
+| **[Documento de visão](vision-document.md)** | O documento que responde **por que este projeto existe e onde ele quer chegar**. |
+| **Dores recorrentes** | As quatro falhas recorrentes do desenvolvimento agêntico que o MJRP Harness existe para atacar: **perda de contexto e memória**, **inconsistência entre projetos**, **a tensão vibe × rigor** e **ausência de verificação independente**. |
+| **External locations** | A memória de **referência** (ADR-0008): fato durável sobre **onde algo está**, que o agente não descobre sozinho. |
+| **Ferramentas** | Tudo o que um agente ou uma pessoa pode **chamar para agir** — em três camadas (do produto, da construção, do agente) e três estados de operação, sendo que a ferramenta que só o humano opera é um gate não declarado. |
+| **Graph engineering — o conceito** | **Graph engineering** é desenhar o fluxo do agente como um **grafo** — um organograma de nós e arestas — em vez de um loop único. |
+| **[Harness — o conceito](harness-concept.md)** | O **harness** é tudo o que envolve o modelo para transformá-lo em agente: as ferramentas, o loop que o executa, e o mecanismo que avalia se ele terminou. |
+| **[Harness elements](harness-elements.md)** | As **onze peças** que compõem o entorno de um modelo de linguagem para que ele produza trabalho confiável. |
+| **Harness kaizen** | O registro do que o harness **não pegou** e do que se aprendeu com isso. |
+| **Hooks — o conceito** | Um **hook** é um evento que dispara um script: **o evento responde *quando* o código roda; o script responde *o que* ele faz**. |
+| **Loop engineering — o conceito** | **Loop engineering** é projetar o ciclo que roda **sem você**: o agente raciocina, age, observa e ajusta até atingir um objetivo — e o que decide se ele continua **não é um `if`, é o próprio modelo**. |
+| **[O doctor](doctor.md)** | O **doctor** é o sensor do harness: um script que lê a instância e devolve verde, amarelo ou vermelho por critério nomeado. |
+| **Opções para construir agentes — as quatro abordagens** | Existem **quatro caminhos** para construir um agente de IA hoje, e eles variam num único eixo central: quanto de infraestrutura, loop de execução e orquestração você **possui** versus quanto o provedor **cuida para você**. |
+| **[Perfis de projeto](project-profiles.md)** | **Perfil** é o que o projeto **entrega**, e é o que o campo `profile:` do contrato declara: `code-app` (software), `content` (vault, dossiê, pipeline editorial) ou `meta` (o próprio harness). |
+
+<!-- END gerado -->
+
+## Proposto — ainda não existe
+
+⚠️ **Nada nesta seção existe no repositório.** São conceitos com nome reservado e desenho pensado,
+que entram quando a fase deles chegar no `ROADMAP.md`. Um agente que os encontre **não deve agir
+como se existissem**.
+
+| Termo | Definição |
+|---|---|
+| **Checkpoint incremental** | Escrever memória durante a sessão, não no fim — a operação *write* feita cedo, quando a janela ainda não está cheia. *(proposto)* |
+| **Evaluations** | Caso de teste de uma skill: entrada conhecida e critério de aprovação escrito antes. *(proposto — fase F)* |
+| **Governança de ferramenta** | Três baldes calibrados pelo custo de errar — Always do / Ask first / Never do — aplicados no nível da chamada da ferramenta. *(proposto)* |
+| **Guardrails** | Limite que impede uma ação antes de ela acontecer — distinto de *sensor*, que detecta depois. Uma das onze peças. *(proposto)* |
+| **`harness.lock`** | Arquivo na instância declarando o que foi instalado, de qual versão, com quais hashes. *(proposto)* |
+| **Manifesto** | `manifest-<versão>.json` publicado pela fonte a cada release: nome, caminho, hash e categoria de cada skill. *(proposto)* |
+| **Observabilidade** | Permite diagnosticar sem fazer deploy novo — distinta de monitoring, que só detecta que quebrou. *(proposto)* |
+| **Roteamento de modelo** | Tarefa diferente, modelo diferente — declarado no contrato, nunca escolhido em runtime. *(proposto)* |
+| **Rubrica** | O critério de avaliação escrito antes do mecanismo, amarrado a um limiar de utilidade. *(proposto)* |
+| **Validação por schema** | Tipos na porta, semântica no livro-razão: marker e frontmatter validados contra schema, não lidos com regex. *(proposto)* |

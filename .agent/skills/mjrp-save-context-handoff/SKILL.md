@@ -86,7 +86,7 @@ Após salvar:
 
 > **Este skill não é responsável por recuperação de contexto.**
 > Use `mjrp-onboarding` para iniciar uma sessão — ele cobre recuperação do
-> SESSION_HISTORY.md, leitura de VISION/CHARTER/ROADMAP/constitution/specs, e síntese de contexto
+> SESSION_HISTORY.md, leitura de VISION/PRD/ROADMAP/constitution/specs, e síntese de contexto
 > por role. Este skill só deve ser invocado para SALVAR ao final ou BRIDGE entre ferramentas.
 
 ---

@@ -2,7 +2,7 @@
 name: mjrp-project-bootstrap
 description: >
   Use when bootstrapping a NEW project or adopting the framework on an EXISTING
-  codebase. Covers folder structure creation, VISION.md and CHARTER.md writing
+  codebase. Covers folder structure creation, VISION.md and docs/specs/prd.md writing
   guides, Brownfield audit and gap analysis, extraction process from legacy code,
   and bootstrap commit strategy.
 ---
@@ -21,7 +21,7 @@ description: >
 ### Step-by-Step
 
 ```
-1. Create VISION.md + CHARTER.md           → commit: docs: initial vision and charter
+1. Create VISION.md + docs/specs/prd.md           → commit: docs: initial vision and charter
 2. git init + .gitignore + first commit    → commit: chore: project scaffold
 3. Create folder structure                 → commit: chore: folder structure
 4. Create constitution.md                  → commit: docs: project constitution
@@ -67,7 +67,7 @@ description: >
 ├── src/                    # Source code
 ├── tests/                  # Tests
 ├── VISION.md
-├── CHARTER.md
+├── docs/specs/prd.md
 ├── README.md
 └── .gitignore
 ```
@@ -97,7 +97,7 @@ Keep it short (under 100 words). It answers: "Why does this project exist?"
 - "User Empathy" forces you to think from the user's perspective
 - Keep updating this as the vision evolves
 
-### CHARTER.md Writing Guide
+### docs/specs/prd.md Writing Guide
 
 The boundary document. It answers: "What are we building, and what are we NOT building?"
 
@@ -139,7 +139,7 @@ For each Framework artifact, determine:
 ### Phase 2: Extract or Create
 
 **Extraction Rule**: If equivalent content exists somewhere, EXTRACT it into the correct format rather than writing from scratch. Sources:
-- Google Docs → VISION.md, CHARTER.md
+- Google Docs → VISION.md, docs/specs/prd.md
 - Package.json + code patterns → constitution.md
 - Existing READMEs / specs → story.md, spec.md
 - UI prototypes / CSS → mjrp-design-system.md
@@ -153,7 +153,7 @@ One commit for all new framework artifacts:
 ```
 docs: bootstrap MJRP Framework v1.2
 
-- Add VISION.md, CHARTER.md
+- Add VISION.md, docs/specs/prd.md
 - Add docs/specs/ with constitution, story, spec, arch, data-model, plan, tasks
 - Add docs/sessions/SESSION_HISTORY.md
 - Add .claudeprompt

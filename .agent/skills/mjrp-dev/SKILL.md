@@ -11,7 +11,7 @@ description: >
 > **STOP. Execute this checklist before writing a single line of code.**
 
 - [ ] Read `VISION.md` — product direction and north star
-- [ ] Read `CHARTER.md` — scope boundaries (what is and isn't in scope)
+- [ ] Read `docs/specs/prd.md` — scope boundaries (what is and isn't in scope)
 - [ ] Read `ROADMAP.md` — current milestone context
 - [ ] Read `docs/specs/constitution.md` — this is the law of the project. If it doesn't exist, ask the user to create it before proceeding.
 - [ ] Read `docs/specs/arch.md` — understand the layer map and data flow chain. Never improvise layers.

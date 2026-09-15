@@ -6,7 +6,7 @@ description: Protocol for setting up the development environment after project s
 
 **When to run**: After the project scaffold is created (folder structure, SpecKit placeholders, AI configs) and before Discovery begins. The goal is to make the project runnable — not just documented.
 
-**Pre-requisites**: constitution.md exists with the tech stack defined. VISION.md and CHARTER.md exist. Folder structure is in place.
+**Pre-requisites**: constitution.md exists with the tech stack defined. VISION.md and docs/specs/prd.md exist. Folder structure is in place.
 
 ---
 
@@ -19,7 +19,7 @@ Set up the remote repository so all AI tools and collaborators can access it.
    ```bash
    gh repo create [project-name] --private --source=. --push
    ```
-   (Use `--public` if it's an open-source project. Check CHARTER.md for guidance.)
+   (Use `--public` if it's an open-source project. Check docs/specs/prd.md for guidance.)
 
 2. Set up branch protection on `main`:
    - Require pull request reviews (if team > 1)
@@ -194,7 +194,7 @@ Verify that the README contains enough information for a new developer (human or
 - Prerequisites (Node version, Python version, etc.)
 - Setup instructions (clone, install, configure .env, run)
 - Available scripts/commands
-- Link to CHARTER.md for scope
+- Link to docs/specs/prd.md for scope
 - Link to docs/specs/ for technical details
 
 **The test**: Could someone with zero context about this project clone the repo and have it running in under 10 minutes by following the README?

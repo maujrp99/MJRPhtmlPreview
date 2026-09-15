@@ -292,7 +292,7 @@ The Discovery phase is where you and `mjrp-product-designer` work together. The 
 
 **Before writing any story, read:**
 - `VISION.md` — to align stories with the project's north star
-- `CHARTER.md` — to understand scope constraints and boundaries
+- `docs/specs/prd.md` — to understand scope constraints and boundaries
 - `docs/specs/story.md` — to avoid duplicating existing stories
 
 **Exit gate for Discovery:** Stories are in `story.md`, scope is in `ROADMAP.md`, arch.md and
@@ -328,7 +328,7 @@ When a feature moves from Discovery into the SDD cycle, your stories become the 
 
 - ❌ Write implementation details — those belong in `plan.md`, not in stories or spec.md
 - ❌ Generate a spec.md in isolation — the `mjrp-sdd-specify` workflow governs that gate
-- ❌ Skip VISION.md and CHARTER.md — stories that contradict the project charter create rework downstream
+- ❌ Skip VISION.md and docs/specs/prd.md — stories that contradict the project charter create rework downstream
 
 ---
 

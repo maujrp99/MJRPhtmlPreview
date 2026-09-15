@@ -91,7 +91,7 @@ Você é um desenvolvedor trabalhando no projeto [Nome].
 
 Antes de qualquer implementação, leia:
 - VISION.md (propósito)
-- CHARTER.md (escopo)
+- docs/specs/prd.md (escopo)
 - docs/specs/constitution.md (regras técnicas)
 
 Skills disponíveis (leia quando relevante):
@@ -315,7 +315,7 @@ Crie um `GEMINI.md` na raiz do projeto para instruções persistentes:
 ## Contexto Obrigatório
 Antes de qualquer trabalho, leia:
 - VISION.md
-- CHARTER.md
+- docs/specs/prd.md
 - docs/specs/constitution.md
 
 ## Workflows Disponíveis

@@ -22,7 +22,7 @@ description: >
 ## 3. Workflow Steps
 
 ### Phase 1: Empathize & Ideate (`mjrp-product-designer`)
-1. **Understand the User**: Who is this for? What is the core problem being solved? (Consult `VISION.md` and `CHARTER.md`).
+1. **Understand the User**: Who is this for? What is the core problem being solved? (Consult `VISION.md` and `docs/specs/prd.md`).
 2. **Challenge Assumptions**: Ask "Why?" to the user. Is this the most valuable thing to build right now? 
 3. **Define Success**: What does success look like? What metrics or qualitative changes are expected?
 

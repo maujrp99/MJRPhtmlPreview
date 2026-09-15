@@ -1,38 +1,51 @@
 # Project Constitution — MJRPhtmlPreview
 
-## 1. Technical Stack
-- **Frontend**: Vanilla HTML + CSS + JavaScript (single file SPA)
-- **Styling**: Custom CSS — Vibe: Minimal Dark (#0d1117 background, #58a6ff cyan accent, #3fb950 green accent)
-- **Typography**: JetBrains Mono (code/textarea), Inter (UI labels)
-- **Backend**: None (fully client-side)
-- **APIs**: Google OAuth2, Google Drive API v3, Google Picker API
-- **Hosting**: GitHub Pages or local file (no server required for MVP)
+Este projeto segue o **`PRINCIPLES.md` do MJRP Harness, versão 1.0**. Esta constituição **não
+reescreve** nada de lá: declara a herança e acrescenta só o que é da stack deste projeto —
+`PRINCIPLES.md` Parte III.
 
-## 2. Development Methodology (SDD)
-- Flow: Specify -> Plan -> Tasks -> Implement
-- No implementation without a defined Task in tasks.md
-- Iteration via Kanban per feature (M1 → M2 → M3)
-- Pre-SDD phases: Discovery → Design (for each milestone)
+> **O que saiu daqui em 2026-09-15, e para onde foi.** *Technical Stack* e *AI Orchestration*
+> viraram campo do contrato (`.mjrp-project.yml` → `stack:`, `models:`) — constituição não
+> descreve stack nem quem-faz-o-quê. *Development Methodology (SDD)* e *SCM & Governance* são os
+> princípios I e II do harness — herdados, não repetidos; o "nenhum código sem task definida" é o
+> II.7. O que ficou é o que **só vale aqui**: a disciplina vanilla, o que a stack proíbe e as
+> restrições de credencial e de conta. De 38 linhas para o que segue. Original em
+> `_backups/constitution.md.20260915-1159.bak`.
 
-## 3. SCM & Governance
-- Branching: main (stable), dev (integration)
-- Commits: Conventional Commits (feat, fix, docs, refactor, vibe, chore)
-- Review: Every implementation validated against story.md
+## 1 · O que é proibido nesta stack
 
-## 4. AI Orchestration
-- Claude Cowork: Strategy, specs, brainstorming, analysis
-- Claude Code: Terminal implementation, refactoring, tests, git ops
-- Antigravity: Code implementation, code review, Git ops via GitHub
-- Always check this file before suggesting packages or patterns
-- No external dependencies unless absolutely necessary (vanilla-first philosophy)
+- **Nada de dependência externa.** *Vanilla-first* é a regra, não a preferência: biblioteca só
+  entra com decisão registrada. O produto é um arquivo que abre sem servidor — dependência
+  quebra isso antes de quebrar qualquer outra coisa.
+- **Nada de build tool no M1.** O MVP tem que continuar rodando como `file://`. Build entra em M2
+  ou M3, se entrar, e a decisão vira ADR.
+- **Credencial não mora no repositório.** As chaves de Google API passam por `.env`, nunca
+  commitadas. *(A regra do MJRP: segredo em disco versionado está fora.)*
+- **Nada de assumir a conta.** O fluxo tem que funcionar com conta Google **pessoal e
+  profissional** — código que assume um domínio é bug, não configuração.
 
-## 5. Design System Reference
-- Consult design-system.md for visual decisions
-- Never deviate from the Minimal Dark palette
-- Accessibility: WCAG AA contrast ratios on dark backgrounds
+## 2 · A forma deste projeto: um arquivo só
 
-## 6. Key Constraints
-- Single HTML file for MVP (inline CSS + JS)
-- No build tools for M1 (may add for M2/M3 if needed)
-- Google API credentials managed via .env (never committed)
-- Must work with both personal and professional Google accounts
+O MVP é **uma SPA de arquivo único** — HTML com CSS e JS inline. Isso não é atalho; é a
+restrição de produto. Enquanto ela valer:
+
+| O que | Onde mora |
+|---|---|
+| Marcação, estilo e comportamento | o próprio `.html` |
+| Integração com Google (OAuth2, Drive v3, Picker) | uma camada de funções isolada dentro do arquivo, atrás de nomes próprios do projeto — nunca chamada de API espalhada pela UI (`PRINCIPLES.md` II.2) |
+| Decisões visuais | [`design-system.md`](design-system.md) |
+
+**O teste de fronteira deste projeto:** se trocar o Drive por outro armazenamento exigir mexer em
+mais do que a camada de integração, a fronteira vazou.
+
+## 3 · Design system
+
+Vibe **Minimal Dark**, e dela não se desvia: fundo `#0d1117`, acento ciano `#58a6ff`, acento
+verde `#3fb950`; JetBrains Mono para código e textarea, Inter para rótulos de UI. Contraste
+**WCAG AA** sobre fundo escuro é requisito, não meta. O detalhe mora em
+[`design-system.md`](design-system.md); aqui fica só o que é inegociável.
+
+## 4 · Convenções de branch e commit
+
+`main` estável · `dev` integração. Conventional Commits, com o tipo extra **`vibe`** para mudança
+puramente estética.

@@ -31,7 +31,7 @@ understanding it prevents gaps, duplication, and drift between documents.
 
 ```
 ┌──────────────────┐
-│   CHARTER.md     │  Project identity, principles, initial milestones (root truth)
+│   docs/specs/prd.md     │  Project identity, principles, initial milestones (root truth)
 └────────┬─────────┘
          │ derives strategic plan
          ▼
@@ -133,12 +133,12 @@ This single answer determines the entire entry path. Do not proceed without it.
 
 **Workflows**:
 - `mjrp-environment-setup-protocol.md` → git init, branches (main/dev), .gitignore, folder structure, CI/CD scaffold
-- `mjrp-project-bootstrap` (skill) → VISION.md, CHARTER.md, constitution.md, docs/specs/ structure, .claudeprompt, .gemini/GEMINI.md
+- `mjrp-project-bootstrap` (skill) → VISION.md, docs/specs/prd.md, constitution.md, docs/specs/ structure, .claudeprompt, .gemini/GEMINI.md
 
 **Outputs**:
 - Git repo with main + dev branches
-- `VISION.md` and `CHARTER.md` at root
-- `ROADMAP.md` at root — created from CHARTER milestones (use `mjrp-templates/roadmap.md` as base)
+- `VISION.md` and `docs/specs/prd.md` at root
+- `ROADMAP.md` at root — created from PRD milestones (use `mjrp-templates/roadmap.md` as base)
 - `docs/specs/constitution.md` (stack, methodology, governance, design reference)
 - `docs/sessions/SESSION_HISTORY.md` initialized
 - `.claudeprompt` and `.gemini/GEMINI.md` configured
@@ -153,7 +153,7 @@ chore: folder structure
 chore: AI config
 ```
 
-⛔ **GATE — FOUNDATION APPROVAL**: Ask the user to review VISION.md, CHARTER.md, ROADMAP.md, and constitution.md.
+⛔ **GATE — FOUNDATION APPROVAL**: Ask the user to review VISION.md, docs/specs/prd.md, ROADMAP.md, and constitution.md.
 Do not advance until they confirm these are correct. These files are what every AI agent reads
 before making any decision — getting them right now prevents expensive rework later.
 
@@ -439,7 +439,7 @@ before any artifacts are created or modified.
 
 ### FASE 0.5 — Extract Foundation Artifacts
 
-**Why extract, not create**: For existing projects, VISION.md, CHARTER.md, and constitution.md
+**Why extract, not create**: For existing projects, VISION.md, docs/specs/prd.md, and constitution.md
 should reflect what the project **already is** — not what it could ideally become. Extract from
 README, existing docs, chat history, Google Drive files, and the actual codebase.
 
@@ -460,7 +460,7 @@ docs: initial roadmap from existing project history
 docs: project constitution — current state
 ```
 
-⛔ **GATE — FOUNDATION APPROVAL**: User reviews and confirms VISION.md, CHARTER.md, ROADMAP.md,
+⛔ **GATE — FOUNDATION APPROVAL**: User reviews and confirms VISION.md, docs/specs/prd.md, ROADMAP.md,
 constitution.md accurately represent the project as it exists today.
 
 ---
@@ -521,7 +521,7 @@ These workflows and skills are not phase-specific — they run continuously:
 
 | Phase | ⚙️ Workflow | 🧠 Skill | Artifact | Gate |
 |-------|------------|---------|----------|------|
-| FASE 0 Setup | `mjrp-environment-setup-protocol.md` | `mjrp-project-bootstrap` | VISION, CHARTER, ROADMAP, constitution | ✅ |
+| FASE 0 Setup | `mjrp-environment-setup-protocol.md` | `mjrp-project-bootstrap` | VISION, PRD, ROADMAP, constitution | ✅ |
 | FASE 1 Discovery | `mjrp-discovery` | `mjrp-product-designer`, `mjrp-it-executive` | story.md, ROADMAP update | — |
 | FASE 1 (fim) | — | `mjrp-system-architect`, `sdd-speckit` | arch.md skeleton, data-model.md skeleton | — |
 | FASE 2a IA | — | `mjrp-ux-ui-designer` | info-arch.md | ✅ |
@@ -535,5 +535,5 @@ These workflows and skills are not phase-specific — they run continuously:
 | FASE 5 Docs | `mjrp-doc`, `mjrp-documentation-audit-protocol.md` | `mjrp-conventional-commits` | ROADMAP update | — |
 | Transversal | `mjrp-onboarding`, `mjrp-backlog-refine`, `mjrp-adr` | `mjrp-save-context-handoff`, `mjrp-conventional-commits` | SESSION_HISTORY | — |
 | Brownfield 0 | — | `mjrp-project-bootstrap`, `mjrp-save-context-handoff` | BOOTSTRAP_REPORT | ✅ |
-| Brownfield 0.5 | — | `mjrp-project-bootstrap`, `mjrp-sdd-speckit`, `mjrp-system-architect` | VISION, CHARTER, ROADMAP, constitution | ✅ |
+| Brownfield 0.5 | — | `mjrp-project-bootstrap`, `mjrp-sdd-speckit`, `mjrp-system-architect` | VISION, PRD, ROADMAP, constitution | ✅ |
 | Brownfield 2B | `mjrp-environment-setup-protocol.md` | `mjrp-project-bootstrap`, `mjrp-save-context-handoff` | .claudeprompt, GEMINI.md | — |

@@ -26,7 +26,7 @@ Do **not** run this protocol for every feature. Reserve it for milestone-level m
 Before starting the review, load in this order:
 
 1. `VISION.md` — system purpose (does architecture serve it?)
-2. `CHARTER.md` — scope and constraints
+2. `docs/specs/prd.md` — scope and constraints
 3. `docs/specs/constitution.md` — technical rules and layer boundaries
 4. `docs/specs/arch.md` — documented layer map and ADRs
 5. `docs/specs/data-model.md` — entity contracts
@@ -38,7 +38,7 @@ Before starting the review, load in this order:
 Follow the `mjrp-system-architect` skill's review sequence:
 
 **Step 1 — Understand the Purpose**
-Read VISION + CHARTER. Ask: *"Does the current architecture scream this project's domain?"*
+Read VISION + PRD. Ask: *"Does the current architecture scream this project's domain?"*
 
 **Step 2 — Map the Layers**
 Identify what lives in each Clean Architecture layer. Compare against `arch.md`. Flag anything in the wrong ring.
