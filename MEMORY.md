@@ -12,7 +12,7 @@
 
 **Contrato, 2026-09-15.** A tecnologia do produto (SPA de arquivo único, Google Drive/Picker) mora em `tech_stack:` do `.mjrp-project.yml`; `stack:` é atribuição de papel (§5.2.1). A constituição não descreve nem uma nem outra.
 
-**Kernel, 2026-09-16.** 11 páginas — entrou a `engineering-canon`, o cânone de engenharia que a Parte I do `PRINCIPLES.md` referencia. Em `docs/wiki/harness/`; não se edita lá.
+**Kernel e PRINCIPLES, 2026-09-16.** As referências da constituição ao `PRINCIPLES.md` foram renumeradas (a Parte I virou 1..n). **Kernel:** 11 páginas — entrou a `engineering-canon`, o cânone de engenharia que a Parte I do `PRINCIPLES.md` referencia. Em `docs/wiki/harness/`; não se edita lá.
 
 ## Ways of Working
 
