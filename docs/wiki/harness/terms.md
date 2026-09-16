@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-09-14
 fontes: []
 ---
-<!-- kernel do MJRP Harness · versão 2026-09-15 · fonte 0036156 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-09-16 · fonte f7183b0 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # Termos — o glossário
 
@@ -150,7 +150,8 @@ está na última seção, separado de propósito.
 | **[A prática de ADR](adr-practice.md)** | Uma **ADR** registra uma decisão grande — a que tem alternativas, custos e consequências que sobrevivem a quem a tomou. |
 | **Agente e agêntico — os conceitos** | Um **agente** é software que não apenas responde: decide e age. |
 | **[Arquitetura de memória](memory-architecture.md)** | A memória do harness é o que persiste **fora da janela** e precisa ser trazido de volta. |
-| **Catálogo de ferramentas** | O **catálogo** é a lista fechada de **categorias** de ferramenta que um projeto pode declarar no campo `tools:` do contrato. |
+| **[Cânone de engenharia](engineering-canon.md)** | O **cânone** é o corpo de referência que fundamenta os princípios de engenharia do MJRP: *The Pragmatic Programmer* (Andrew Hunt e David Thomas), *Clean Code* e *Clean Architecture* (Robert C. Martin). |
+| **Catálogo de ferramentas** | O **catálogo** é a **prateleira**: o registro vivo do que a MJRP já tem à mão, para o agente consultar **antes de pesquisar na web**. |
 | **[Conceitos base](base-concept.md)** | A **cadeia de intenção** que ordena todo documento do MJRP que declara para onde se vai: **Propósito → Visão → Objetivo → Roadmap**. |
 | **[Contexto e memória](context-vs-memory.md)** | **Contexto** é o conjunto de tokens presentes na janela do modelo **nesta chamada**: estado momentâneo, finito, reconstruído a cada turno. |
 | **Distribuição de skills** | Uma skill do MJRP existe em **três lugares ao mesmo tempo**: a fonte em `mjrp-skills/`, o derivado em `dist/` que o `marketplace add` lê, e a **cópia instalada** na ferramenta que a usa. |

@@ -1,11 +1,11 @@
 ---
 title: Kernel do MJRP Harness
-summary: as 10 páginas do harness que este projeto carrega — o que os campos do VISION, a memória, o perfil e os sensores significam
+summary: as 11 páginas do harness que este projeto carrega — o que os campos do VISION, a memória, o perfil e os sensores significam
 ---
 
 ## Definition
 
-Cópia carimbada (versão **2026-09-15**, fonte `0036156`) das páginas do MJRP Harness que governam como uma instância funciona. **Não se edita aqui**: edite no harness e rode `new_project.py --refresh-kernel`. O doctor (I5) avisa quando o carimbo envelhece.
+Cópia carimbada (versão **2026-09-16**, fonte `f7183b0`) das páginas do MJRP Harness que governam como uma instância funciona. **Não se edita aqui**: edite no harness e rode `new_project.py --refresh-kernel`. O doctor (I5) avisa quando o carimbo envelhece.
 
 | Página | O que responde |
 |---|---|
@@ -19,3 +19,4 @@ Cópia carimbada (versão **2026-09-15**, fonte `0036156`) das páginas do MJRP 
 | [adr-practice](adr-practice.md) | quando uma decisão vira ADR, o que a ADR pode e não pode mudar depois, e o gate Proposed → Accepted |
 | [harness-concept](harness-concept.md) | o que o campo chama de harness — cinco fontes, onde elas convergem, onde discordam, e a posição que o MJRP adota |
 | [harness-elements](harness-elements.md) | os harness elements — as onze peças de um sistema agêntico, o domínio de cada uma, e onde o MJRP está |
+| [engineering-canon](engineering-canon.md) | os três livros que fundamentam a Parte I do PRINCIPLES — destilados, com o que é universal separado do que é opinião de stack |
