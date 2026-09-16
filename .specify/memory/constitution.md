@@ -1,4 +1,4 @@
-<!-- GERADO de docs/specs/constitution.md em 2026-09-15 — nao edite aqui.
+<!-- GERADO de docs/specs/constitution.md em 2026-09-16 — nao edite aqui.
      Edite a fonte e regenere com mjrp-scripts/gen_speckit_constitution.py.
      PRINCIPLES.md Parte III: uma escrita e uma gerada, nunca duas escritas
      (em 2 de 5 projetos elas ja tinham divergido). -->
@@ -13,7 +13,7 @@ reescreve** nada de lá: declara a herança e acrescenta só o que é da stack d
 > viraram campo do contrato (`.mjrp-project.yml` → `tech_stack:` a tecnologia, `stack:` os papéis) — constituição não
 > descreve stack nem quem-faz-o-quê. *Development Methodology (SDD)* e *SCM & Governance* são os
 > princípios I e II do harness — herdados, não repetidos; o "nenhum código sem task definida" é o
-> II.7. O que ficou é o que **só vale aqui**: a disciplina vanilla, o que a stack proíbe e as
+> I.10. O que ficou é o que **só vale aqui**: a disciplina vanilla, o que a stack proíbe e as
 > restrições de credencial e de conta. De 38 linhas para o que segue. Original em
 > `_backups/constitution.md.20260915-1159.bak`.
 
@@ -37,7 +37,7 @@ restrição de produto. Enquanto ela valer:
 | O que | Onde mora |
 |---|---|
 | Marcação, estilo e comportamento | o próprio `.html` |
-| Integração com Google (OAuth2, Drive v3, Picker) | uma camada de funções isolada dentro do arquivo, atrás de nomes próprios do projeto — nunca chamada de API espalhada pela UI (`PRINCIPLES.md` II.2) |
+| Integração com Google (OAuth2, Drive v3, Picker) | uma camada de funções isolada dentro do arquivo, atrás de nomes próprios do projeto — nunca chamada de API espalhada pela UI (`PRINCIPLES.md` I.3) |
 | Decisões visuais | [`design-system.md`](design-system.md) |
 
 **O teste de fronteira deste projeto:** se trocar o Drive por outro armazenamento exigir mexer em
