@@ -6,7 +6,7 @@ tags: [harness, decisao, processo]
 status: em formação
 atualizado: 2026-09-14
 ---
-<!-- kernel do MJRP Harness · versão 2026-09-16 · fonte f7183b0 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-09-16 · fonte 19eaf95 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 Uma **ADR** registra uma decisão grande — a que tem alternativas, custos e consequências
@@ -19,7 +19,7 @@ de escrever.
 componente, um módulo, uma regra de negócio ou uma UI — **conflita** com o que já está declarado
 em `arch.md`, `info-arch.md` ou `design-system.md`. Não escala por `process_level:` — a mesma
 regra vale nos três níveis; em projetos `minimal`, que raramente têm esses três documentos, ela
-simplesmente dispara pouco, o que é a dose certa, não uma exceção.
+simplesmente dispara pouco, o que é a medida certa, não uma exceção.
 
 ## History
 

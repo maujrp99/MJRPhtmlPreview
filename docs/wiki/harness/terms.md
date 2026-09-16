@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-09-14
 fontes: []
 ---
-<!-- kernel do MJRP Harness · versão 2026-09-16 · fonte f7183b0 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-09-16 · fonte 19eaf95 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # Termos — o glossário
 
@@ -49,9 +49,9 @@ está na última seção, separado de propósito.
 | **Contrato de instância** | O `.mjrp-project.yml` na raiz do projeto: tudo o que varia entre projetos declarado num lugar só — `profile`, `process_level`, `context`, `gates`, `gate_sla_days`, `gates_open`, `stack`, `models`, `environment`, `sensors`, `tools`, `orchestration`, `source`. É autoritativo: onboarding, lifecycle e `doctor` leem ele primeiro. Validado por schema (checagens I1 e I2). Antes chamava-se *marker*. |
 | **Gate** | Ponto onde o fluxo para e alguém aprova — humano, ou agente (judge, validator). Todo gate tem **dono e relógio**: gate sem prazo é beco. Declarados em `gates:` no contrato. |
 | **Greenfield** | Caminho de adoção a partir do zero. |
-| **Inegociável** | A palavra do MJRP para o mesmo conjunto que *invariante* — e os dois não são sinônimos exatos, são as duas faces da mesma coisa: **invariante** diz *o que a coisa é* (uma verdade que tem de valer sempre); **inegociável** diz *como se trata* (não está em discussão). A postura é consequência da propriedade — como não tem dose, não há o que negociar. |
-| **Invariante** | Coisa que **tem que ser verdade**. Não tem dose, custa zero quando está certo, não escala com o projeto, e **não tem campo no contrato**. Oposto de *processo*. |
-| **Processo** (*nível de*, `process_level:`) | Trabalho que se escolhe fazer — **quanto do método o projeto roda**. Tem dose, custa token toda vez, escala com o projeto, e é declarado no contrato: `minimal` · `standard` · `full`. *O teste:* complete "esse projeto é pequeno, então pode ficar assim"; se faz sentido é processo, se soa absurdo é *invariante* (verbete acima). **Chamava-se "cerimônia" até 11/09/2026** — trocado porque em ágil *cerimônia* é ritual (daily, planning, review, retro), e não é disso que o campo trata. |
+| **Inegociável** | A palavra do MJRP para o mesmo conjunto que *invariante* — e os dois não são sinônimos exatos, são as duas faces da mesma coisa: **invariante** diz *o que a coisa é* (uma verdade que tem de valer sempre); **inegociável** diz *como se trata* (não está em discussão). A postura é consequência da propriedade — como não tem nível, não há o que negociar. |
+| **Invariante** | Coisa que **tem que ser verdade**. Não tem nível, custa zero quando está certo, não escala com o projeto, e **não tem campo no contrato**. Oposto de *processo* — mas o nível de processo que a instância declarou vira invariante dela (`PRINCIPLES.md` II.1). |
+| **Processo** (*nível de*, `process_level:`) | Trabalho que se escolhe fazer — **quanto do método o projeto roda**. Tem nível, custa token toda vez, escala com o projeto, e é declarado no contrato: `minimal` · `standard` · `full`. *O teste:* complete "esse projeto é pequeno, então pode ficar assim"; se faz sentido é processo, se soa absurdo é *invariante* (verbete acima). **Chamava-se "cerimônia" até 11/09/2026** — trocado porque em ágil *cerimônia* é ritual (daily, planning, review, retro), e não é disso que o campo trata. |
 
 ## Identidade e documentos do projeto
 

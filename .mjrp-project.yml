@@ -23,5 +23,5 @@ mjrp_harness:
     placeholder: "true"  # troque pelo lint/test/build reais assim que a stack existir
   kernel:                    # as páginas da wiki do harness que este projeto carrega (I5)
     version: 2026-09-16
-    source: f7183b0
+    source: 19eaf95
     pages: [base-concept, vision-document, memory-architecture, context-vs-memory, project-profiles, terms, doctor, adr-practice, harness-concept, harness-elements, engineering-canon]

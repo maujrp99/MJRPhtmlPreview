@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-09-11
 fontes: [google-cloud-tech-what-is-an-agentic-harness, cloud-x-berry-agent-harness-6min, don-woodlock-what-is-harness-engineering, fernanda-kipper-harness-alem-do-claude-md, quintanilha-o-que-e-harness]
 ---
-<!-- kernel do MJRP Harness · versão 2026-09-16 · fonte f7183b0 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-09-16 · fonte 19eaf95 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **harness** é tudo o que envolve o modelo para transformá-lo em agente: as ferramentas, o loop
@@ -115,9 +115,21 @@ e estende com três posições próprias:
    permissão, memória interna — pertence à Plataforma. É uma das linhas dos [[project-profiles|
    quatro domínios]], e a consequência prática está no `VISION.md`: a memória tem que viver em
    arquivos no repositório, ou deixa de ser portátil entre ferramentas.
-3. **T1–T4** — as quatro condições necessárias para algo ser harness (loop, interface de
-   ferramenta, gestão de contexto, e mecanismo que não dependa do modelo cooperar) são critério do
-   MJRP, não do campo. O T4 é o que a literatura não formula: *pedido não é regra*.
+3. **T1–T4** — as quatro condições necessárias para algo ser harness são critério do MJRP, não
+   do campo. O T4 é o que a literatura não formula: *pedido não é regra*. **A régua mora no
+   `PRINCIPLES.md`**, no preâmbulo da Parte II — ela não envelhece. O que envelhece é a nota do
+   MJRP contra ela, e é esta:
+
+| | Condição | Onde o MJRP está — **2026-09-16** |
+|---|---|---|
+| **T1** | Loop de execução | **Emprestado**, por decisão declarada. O loop do turno é da Plataforma (system harness); o `loop.py` é o loop **da tarefa**, e esse é do MJRP |
+| **T2** | Interface de ferramenta | **Parcial.** Os MCP conectados dão chamada real (tools-catalog); as skills continuam sendo guia, não interface. JIRA e ClickUp esperam credencial |
+| **T3** | Gestão ativa de contexto | **Parcial, mas com mecanismo.** Deixou de ser só prosa: `layer0_budget_chars` e `now_max_lines` no contrato, F1 medindo, kernel carimbado. Falta descarte automático |
+| **T4** | Mecanismo que não dependa do modelo cooperar | **Existe.** Era *"ausente — 9 gates em markdown, zero CI"* em 11/09. Hoje: `doctor` com 20 checks, hooks `SessionStart`/`Stop`, `loop.py` que **recusa** começar sem `--until` |
+
+> **A avaliação anterior vivia na `harness-evolution-proposal.md` § 4**, documento de *plano*. Ficou
+> um mês desatualizada sem que nada acusasse — o T4 já existia e a régua ainda o dava como ausente.
+> Por isso ela passou a morar aqui, na página do assunto, com data (ADR-0008).
 
 **Onde o MJRP diverge do campo:** as fontes descrevem harness como aquilo que **aumenta a
 capacidade** do modelo. O MJRP acrescenta o eixo que falta — o harness também **restringe**: é o
