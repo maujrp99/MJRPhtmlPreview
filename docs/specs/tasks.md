@@ -73,7 +73,7 @@
 - [x] Injetar biblioteca `html2canvas` via CDN.
 - [x] Botão PNG (`#btnPng`) na Toolbar ao lado do PDF.
 - [x] Captura via `html2canvas(iframeDoc.body)` → Base64 → download como `.png`.
-- [x] ⚠️ Limitação documentada: falha com HTML dinâmico (charts, canvas). Ver `docs/debug-log.md`.
+- [x] ⚠️ Limitação documentada: falha com HTML dinâmico (charts, canvas). Ver `docs/specs/uat.md` (UAT-001).
 
 ---
 

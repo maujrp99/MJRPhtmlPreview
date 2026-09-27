@@ -38,7 +38,7 @@
 **Acceptance Criteria:**
 - [x] A funcionalidade importa e usa a biblioteca `html2canvas`.
 - [x] O download do arquivo de imagem reflete o visual do iframe.
-- [x] ⚠️ Limitação conhecida: HTML dinâmico (canvas, charts) pode falhar. Documentado em `docs/debug-log.md`.
+- [x] ⚠️ Limitação conhecida: HTML dinâmico (canvas, charts) pode falhar. Documentado em `docs/specs/uat.md` (UAT-001).
 **Priority:** Low | **Milestone:** M3 | **Status:** ✅ Done
 
 ### [US-06] Como desenvolvedor, eu quero configurar minhas chaves da API do Google sem expô-las no código-fonte público.
