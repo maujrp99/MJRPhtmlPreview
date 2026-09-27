@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-09-14
 fontes: [pasquadev-loop-engineering, anthropic-context-engineering, ibm-skills-mcp-rag-memory, fowler-guides-sensors]
 ---
-<!-- kernel do MJRP Harness · versão 2026-09-16 · fonte 19eaf95 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-09-27 · fonte d42894e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 As **onze peças** que compõem o entorno de um modelo de linguagem para que ele produza trabalho
@@ -29,7 +29,7 @@ Uma tabela para ver de relance, e depois cada uma com detalhe.
 | 3 | Guides | Harness | é o que mais temos — as skills |
 | 4 | Context engineering | Harness | `onboarding` faz o *select*; falta medir |
 | 5 | Memória | Harness + Instância | seis tipos, com casa (ADR-0001, 0005, 0006) |
-| 6 | Ambiente de execução | Plataforma → Harness | fase D do roadmap |
+| 6 | Ambiente de execução | Plataforma → Harness | EP-04 do PRD (Next do roadmap) |
 | 7 | Sensores | Harness | `doctor` + 4 sensores rodando |
 | 8 | Governança | Harness | escrita, não mecanizada |
 | 9 | Guardrails | Plataforma | emprestado; nada nosso |
@@ -91,7 +91,7 @@ Cinco são escritas por humano; só a aprendida é escrita pelo agente.
 ambiente do agente) e o **provisionamento** (o ambiente do produto).
 
 **No MJRP.** Hoje os sensores rodam onde calha — Mac, ponte, container — e isso não é ambiente, é
-acaso. A **fase D** traz o sandbox da Plataforma para o Harness, e é pré-requisito da autonomia:
+acaso. O **EP-04** (ambiente do agente e do produto) traz o sandbox da Plataforma para o Harness, e é pré-requisito da autonomia:
 agente autônomo sem isolamento tem a máquina inteira como raio de explosão.
 
 ### 7 · Sensores
@@ -116,14 +116,14 @@ uma chamada. É pedido, não regra.
 **O que é.** O limite que **impede** a ação antes de acontecer — distinto do sensor, que detecta
 depois. Permissão negada, caminho fora do sandbox, orçamento estourado.
 
-**No MJRP.** Nada nosso. O que existe é o sistema de permissão da Plataforma. Migra junto com a
-fase D, pela mesma razão do sandbox.
+**No MJRP.** Nada nosso. O que existe é o sistema de permissão da Plataforma. Migra junto com o
+EP-04, pela mesma razão do sandbox.
 
 ### 10 · Observabilidade
 **O que é.** Conseguir diagnosticar **sem fazer deploy novo** — distinta de monitoring, que só
 avisa que quebrou. Que skill disparou, que ferramenta foi chamada, quanto custou.
 
-**No MJRP.** Não existe. É a fase F, e é o que permite melhorar com dado em vez de impressão.
+**No MJRP.** Não existe como evals de skill (candidato no PRD); o que já existe é o rastro datado de `daily-checks/` e o verificador do entregável, EP-02 — é o que permite melhorar com dado em vez de impressão.
 
 ### 11 · Orquestração
 **O que é.** Quem roteia entre as fases: passa o estado, escolhe o próximo papel, para nos gates.
@@ -152,6 +152,12 @@ fase, loop** (o trabalho do papel é exploratório).
   dono MJRP no fio da cadeia de intenção (BACKLOG #7). A página viaja no kernel de todo projeto.
 - **2026-09-08 14:53** · As **onze peças** viram `docs/wiki/harness-elements.md`, com cada elemento
   detalhado — o Zé valida depois. Não é ponteiro para o nada.
+- **2026-09-21 16:51** · **A peça #10 (Observabilidade) ganha corpo: o Harness Control Center (EP-08).** Brief
+  aprovado pelo MJRP — escopo discovery + prototipação (entrega um protótipo das informações do
+  cockpit, não o app). Casa: subprojeto aninhado `apps/control-center/`, porque o cockpit lê os
+  arquivos do próprio harness e pertence ao repo. A seção "resultado dos sensores" do cockpit é a
+  #10 de verdade; o resto (diagrama, docs por fase, Kernel, memory/log, roadmap) é um Docs Plane.
+  Detalhe: `docs/log.md` [2026-09-21 16:51].
 
 ## Related
 tools · [[terms]] · [[vision-document]] · ADR-0005 · ADR-0006

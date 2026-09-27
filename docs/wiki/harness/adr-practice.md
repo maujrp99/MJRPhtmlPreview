@@ -6,7 +6,7 @@ tags: [harness, decisao, processo]
 status: em formação
 atualizado: 2026-09-14
 ---
-<!-- kernel do MJRP Harness · versão 2026-09-16 · fonte 19eaf95 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-09-27 · fonte d42894e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 Uma **ADR** registra uma decisão grande — a que tem alternativas, custos e consequências
@@ -55,4 +55,4 @@ simplesmente dispara pouco, o que é a medida certa, não uma exceção.
   meses sem ninguém notar: o que governa a sessão é `AGENTS.md` + `MEMORY.md`.
 
 ## Related
-[[harness-elements]] · harness-kaizen · [[memory-architecture]] · ADR-0002 · ADR-0007 · ADR-0010
+[[harness-elements]] · [[harness-kaizen]] · [[memory-architecture]] · ADR-0002 · ADR-0007 · ADR-0010

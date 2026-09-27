@@ -6,7 +6,7 @@ tags: [harness, sensores, verificacao]
 status: em formação
 atualizado: 2026-09-14
 ---
-<!-- kernel do MJRP Harness · versão 2026-09-16 · fonte 19eaf95 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-09-27 · fonte d42894e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **doctor** é o sensor do harness: um script que lê a instância e devolve verde,
@@ -132,4 +132,4 @@ pegado (ADR-0002, emendada pela ADR-0007): checagem sem incidente é opinião co
   qualquer IA (ver BACKLOG e ADR pendente sobre "como um projeto começa, de verdade").
 
 ## Related
-[[harness-elements]] · harness-kaizen · skill-distribution · ADR-0002 · ADR-0007
+[[harness-elements]] · [[harness-kaizen]] · skill-distribution · ADR-0002 · ADR-0007

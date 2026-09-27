@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-09-14
 fontes: []
 ---
-<!-- kernel do MJRP Harness · versão 2026-09-16 · fonte 19eaf95 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-09-27 · fonte d42894e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 A **cadeia de intenção** que ordena todo documento do MJRP que declara para onde se vai:
@@ -120,7 +120,7 @@ são os rótulos e a ordem.
 | `Propósito` — *"começar ou retomar qualquer projeto sem atrito… zero re-explicação"* | **Objetivo.** Meta clara, de curto a médio prazo, verificável |
 | dentro do `Objetivo (WHAT)` — *"o horizonte é um sistema agêntico que entrega software — o MJRP SaaS"* | **Visão.** É o ONDE: o patamar a alcançar |
 | `Como (HOW)` — *"o que o projeto é, na prática"* | **Objetivo.** O que o harness é e entrega faz parte do WHAT. O campo `Como (HOW)` passa a carregar o que é de fato HOW: o ponteiro para o `ROADMAP.md` e a estratégia |
-| `ROADMAP.md`, abertura — *"~20 intervenções → 1"* | **Objetivo.** O roadmap é o que vem depois disso: as oito fases |
+| `ROADMAP.md`, abertura — *"~20 intervenções → 1"* | **Objetivo.** O roadmap é o que vem depois disso — desde 17/09, os resultados em Now / Next / Later (a métrica saiu) |
 
 **Consequência para o [BACKLOG #25].** O item pedia confirmar o Propósito e nunca fechava porque
 o campo estava errado, não o texto: o parágrafo escrito é um bom Objetivo posto no lugar do WHY.

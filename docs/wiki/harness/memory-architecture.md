@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-09-10
 fontes: [2026-claude-code-auto-memory, 2026-04-04-karpathy-llm-wiki, 2023-10-memgpt-virtual-context, 2025-cline-memory-bank, 2023-09-coala-cognitive-architectures-language-agents, 2025-anthropic-effective-context-engineering]
 ---
-<!-- kernel do MJRP Harness · versão 2026-09-16 · fonte 19eaf95 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-09-27 · fonte d42894e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 A memória do harness é o que persiste **fora da janela** e precisa ser trazido de volta. Esta
@@ -29,7 +29,7 @@ com papéis que não se sobrepõem:
 | `docs/log.md` | **episódica** — uma linha datada por decisão ou bloco de trabalho; *append-only* | **nunca inteiro**; por data ou `grep` |
 
 Mais a ADR para decisão grande com alternativas e consequências ([[adr-practice]]), e o
-harness-kaizen para achado sobre o próprio harness — onde o erro e a lição moram juntos.
+[[harness-kaizen]] para achado sobre o próprio harness — onde o erro e a lição moram juntos.
 
 **O que fecha o ciclo são as skills.** A `mjrp-onboarding` é o *select*: lê `## Now` +
 `## Ways of Working` + `wiki/index.md` (camada 1, sempre), abre a página do assunto sob demanda, e
@@ -291,7 +291,7 @@ de B é precisar de página para cada assunto; o preço de A é ter dois lugares
   da wiki seguiram. Renomeação mecânica em 41 arquivos, `doctor`/`memory_check`/`check_docs` e
   selftests ajustados e verdes. MJRP também decidiu: nenhuma skill cita ADR (o porquê mora na wiki),
   skills são agnósticas de plataforma ("AI Platform"), e o backlog não vai continuar em `.md` — vai
-  ter ferramenta; portanto nada de ponteiro para `BACKLOG.md` no `## Now`. Em aberto: o teto de 20
+  ter ferramenta; portanto nada de ponteiro para o backlog no `## Now` (o `BACKLOG.md` foi arquivado em 17/09; os Epics vivem no `docs/specs/prd.md`). Em aberto: o teto de 20
   linhas (sensor de forma/ponteiros, ou expiração por período) — MJRP pediu um exemplo prático de
   `MEMORY.md` antes de decidir.
 - **2026-09-10 18:32** · **O teto de 20 linhas do `## Now` caiu; o F1 mede a forma.** MJRP
@@ -304,8 +304,7 @@ de B é precisar de página para cada assunto; o preço de A é ter dois lugares
   `ponteiro` que não resolve reprova; os dois *Pending* levam data e avisam ao passar de
   `memory.pending_expiry_days` (expiração **por bloco**, ideia do MJRP — `Where` e `Do Not Forget`
   não expiram); linha repetida do `AGENTS.md` avisa; camada 0 acima de `memory.layer0_budget_chars`
-  avisa. Contagem de linhas virou nota. Ponteiro para backlog **não** existe — o `BACKLOG.md` vai
-  virar ferramenta. Os limiares moram no contrato `.mjrp-project.yml`, que ganhou `locale:`
+  avisa. Contagem de linhas virou nota. Ponteiro para backlog **não** existe — o backlog virou o PRD (17/09) e, depois, ferramenta. Os limiares moram no contrato `.mjrp-project.yml`, que ganhou `locale:`
   (timezone, idioma de rótulo e de conteúdo) e `memory:` — resposta parcial à pergunta do MJRP sobre
   um arquivo de config do harness: o contrato já é esse arquivo. Termo agnóstico para a ferramenta
   que hospeda o agente: **AI Platform** (escolha do MJRP; "LLM/harness" saiu).

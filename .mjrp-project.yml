@@ -22,6 +22,7 @@ mjrp_harness:
   sensors:
     placeholder: "true"  # troque pelo lint/test/build reais assim que a stack existir
   kernel:                    # as páginas da wiki do harness que este projeto carrega (I5)
-    version: 2026-09-16
-    source: 19eaf95
-    pages: [base-concept, vision-document, memory-architecture, context-vs-memory, project-profiles, terms, doctor, adr-practice, harness-concept, harness-elements, engineering-canon]
+    version: 2026-09-27
+    source: d42894e
+    pages: [base-concept, vision-document, memory-architecture, context-vs-memory, project-profiles, terms, doctor, adr-practice, harness-concept, harness-elements, engineering-canon, spec-kit, agents-agentic-concepts, graph-engineering-concept, hooks-concept, loop-engineering-concept, harness-kaizen, design-canon]
+    vendored: [PRINCIPLES.md, mjrp-scripts/doctor.py, mjrp-scripts/structure_rules.json, mjrp-scripts/structure_check.py, mjrp-scripts/path_guard.py, mjrp-scripts/hooks/pre-commit]     # copias carimbadas fora da wiki (PRINCIPLES.md, doctor.py) - I5 confere

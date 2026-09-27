@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-09-14
 fontes: []
 ---
-<!-- kernel do MJRP Harness · versão 2026-09-16 · fonte 19eaf95 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-09-27 · fonte d42894e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # Termos — o glossário
 
@@ -33,7 +33,7 @@ está na última seção, separado de propósito.
 | **MJRP SaaS** | O **identificador reconhecível pro cliente** do negócio da MJRP — não o produto em si (ADR-0004, resolvido 14/09). O produto real é o que o Harness constrói e entrega caso a caso. Mesmo papel que "Salesforce" faz pro SaaS que a marca nomeia: identifica pra fora, sem ser o nome de nenhum módulo por dentro. |
 | **Pedido × regra** | Uma linha no `CLAUDE.md` é pedido; um hook que intercepta a chamada é regra. T4 é sobre regras. *(Karpathy)* |
 | **Quatro domínios** (antes *três planos*) | De quem é cada domínio do **entorno** — não do software entregue. **Instância**: muda a cada projeto, o contrato declara. **Harness**: muda quando o método da MJRP muda. **Plataforma**: muda quando o fornecedor quiser. **Usuário**: como o Zé quer as coisas, fora de repo. |
-| **Sandbox** | O ambiente isolado em que o agente executa. Hoje é **system harness** — quem entrega é a Plataforma. A **fase D** do `ROADMAP.md` o traz para o lado do MJRP: o agente ganha canteiro, o projeto ganha chão. Alinhado ao [[vision-document]]. |
+| **Sandbox** | O ambiente isolado em que o agente executa. Hoje é **system harness** — quem entrega é a Plataforma. O EP-04 do PRD (o Next "o produto sobe por comando do agente" do `ROADMAP.md`) o traz para o lado do MJRP: o agente ganha canteiro, o projeto ganha chão. Alinhado ao [[vision-document]]. |
 | **Skill issue** | Vira princípio aqui: toda falha de agente é bug do harness até prova em contrário. *(Karpathy)* |
 | **T1–T4** | As quatro condições necessárias para algo ser um harness: loop, interface de ferramenta, gestão de contexto, e mecanismo que não dependa do modelo cooperar. |
 | **User harness × system harness** | User: o que você configura e que sobrevive à troca de ferramenta — skills, contrato, sensores, arquivos no repo. System: o que o fornecedor entrega — loop do turno, compactação, memória interna. O MJRP constrói só o primeiro. |
@@ -61,10 +61,10 @@ está na última seção, separado de propósito.
 | **`AGENTS.md`** | Formato aberto de instruções para qualquer agente de código (Linux Foundation; 60+ ferramentas). Canônico no MJRP; `CLAUDE.md` e `GEMINI.md` o importam e acrescentam só o que é da ferramenta. |
 | **Kernel** (`docs/wiki/harness/`) | As páginas da wiki do harness que **todo projeto carrega** — cópia carimbada (versão + fonte no contrato, campo `kernel:`) do que governa a instância: o que os campos do VISION, a memória, o perfil e os sensores significam. O `new_project.py` copia, `--refresh-kernel` atualiza, o doctor (I5) avisa quando envelhece. Mesmo mecanismo da herança do `PRINCIPLES.md`. |
 | **Objetivo** (`VISION.md`) | O **WHAT** da [[base-concept|cadeia de intenção]]: a meta de curto a médio prazo que leva à visão, e o que se entrega para chegar lá. |
-| **PRD** (`docs/specs/prd.md`) | *Product Requirements Document* — o que o produto **é**, para quem, com que objetivo, e **o que ele explicitamente não é**. Documento **vivo**, ao contrário do charter, que era um retrato do kickoff. Alimenta o `story.md`; não o substitui. Pela regra do BMAD: existe quando **mais de um épico não pode divergir** — no MJRP, quando mais de um agente trabalha no mesmo produto. *(Atlassian; BMAD)* |
+| **PRD** (`docs/specs/prd.md`) | *Product Requirements Document* — o que o produto **é**, para quem, com que objetivo, e **o que ele explicitamente não é**. Documento **vivo**, ao contrário do charter, que era um retrato do kickoff. Alimenta o `story.md`; não o substitui. Carrega os **Epics** (as soluções do `ROADMAP.md`), a seção *Entregue* e os *Candidatos* (o intake de achados — Epic *Enhancements*). Pela regra do BMAD: existe quando **mais de um épico não pode divergir** — no MJRP, quando mais de um agente trabalha no mesmo produto. *(Atlassian; BMAD)* |
 | **Princípio** (`PRINCIPLES.md`) | O **fundamento do agente e do humano** — o que deve ser seguido nos projetos MJRP. Pelo dicionário do próprio arquivo: *a regra que regula a ação e serve de base ao método*. Não é "como se decide": decisão com alternativa e consequência é ADR. |
 | **Propósito** (`VISION.md`) | O **WHY** da [[base-concept|cadeia de intenção]]: a razão de ser — a necessidade que se quer resolver. Sem prazo. |
-| **Roadmap** (`ROADMAP.md`) | O **HOW** da [[base-concept|cadeia de intenção]]: o plano — em que ordem se constrói e com que prova — que, junto da estratégia, leva ao objetivo. |
+| **Roadmap** (`ROADMAP.md`) | O **HOW** da [[base-concept|cadeia de intenção]]: os **resultados** que o produto persegue, em Now / Next / Later — quem sente, hoje, medida e solução ou opções por item; sem data, sem estado. "Pronto" é a medida mover, não o trabalho terminar (v0 em 17/09/2026). |
 | **Visão** (`VISION.md`) | O **WHERE** da [[base-concept|cadeia de intenção]]: o horizonte a alcançar, uma instanciação do propósito. O documento que a carrega é o [[vision-document]]. |
 
 ## Contexto e memória
@@ -118,14 +118,16 @@ está na última seção, separado de propósito.
 |---|---|
 | **Agile specking** | Specs pequenas com checkpoints curtos, em vez de uma spec grande antes de tudo. *(Karpathy)* |
 | **BMAD** | *Breakthrough Method for Agile AI-Driven Development* — SDD com **agentes por papel** (Analyst, PM, Architect, SM, Dev) e caminhos dimensionados pelo tamanho do trabalho: *trivial · one session · epic-sized · project-sized*. Daí vem a regra da cerimônia do PRD. É o parente mais próximo do que o MJRP constrói. *(bmad-method.org)* |
+| **Constitution — duas camadas** | `PRINCIPLES.md` (harness) é **universal** e herdado; `docs/specs/constitution.md` (projeto) o **estende** com o que é específico da stack, nas normas do Spec Kit — nunca reescreve um princípio. O gate que faltava: no Pós-Plan da SDD, `plan.md` é checado contra os dois. |
 | **Delta spec** | Especificação escrita como **diferença** do que já existe, não como documento completo: seções `ADDED`, `MODIFIED`, `REMOVED`. Reduz conflito quando várias mudanças tocam a mesma spec — e é o formato natural para brownfield. *(OpenSpec)* |
 | **EARS** | *Easy Approach to Requirements Syntax* — requisito escrito em forma restrita e testável ("quando X, o sistema deve Y"), em vez de prosa. Usado pelo Kiro no `requirements.md`. *(proposto no MJRP)* |
 | **Kiro** | O SDD da AWS. Separa **contexto durável do projeto** (`steering/`: product, tech, structure) de **escopo por feature** (`requirements.md` em notação EARS → `design.md` → `tasks.md`). A separação steering × spec é o mesmo eixo do MJRP entre identidade e ciclo. *(AWS)* |
 | **OpenSpec** | SDD leve em que o escopo mora **por mudança**, nunca no projeto: cada `proposal.md` declara o que inclui e o que **exclui explicitamente**. Introduz a **delta spec** — `ADDED`/`MODIFIED`/`REMOVED` relativo ao comportamento atual — em vez de reescrever a spec inteira. *(Fission-AI/OpenSpec)* |
 | **SDD** (*spec-driven development*) | Método em que a **especificação é o artefato primário** e o código é derivado dela, não o contrário. Cada artefato deriva de um pai, e implementar sem spec aprovada quebra a cadeia. É o método do perfil `code-app` do MJRP. |
 | **Spec Kit** | O SDD do GitHub: `constitution` → `specify` → `plan` → `tasks` → `implement`. É a base do SpecKit do MJRP. **Não tem documento de escopo**: a fronteira é conceitual (spec = *o quê/por quê*, plan = *como*) e a constitution limita complexidade, não features. *(github/spec-kit)* |
-| **SpecKit** | Os documentos vivos em `docs/specs/`: spec → plan → tasks, mais constitution, arch e design-system. Cada artefato deriva do anterior. |
+| **SpecKit** | Os documentos vivos em `docs/specs/` do MJRP — **10 artefatos**, lista única desde 17/09/2026 ([[spec-kit]]): `prd` → `story` → `spec` → `plan` → `tasks` → `uat` (a cadeia, cada um derivado do anterior), mais `constitution`, `arch`, `data-model` e `design-system` (o contexto durável que a cadeia consulta). `prd` e `story` vêm do BMAD, não do Spec Kit; `uat` é extensão do MJRP. `research`, `contracts`, `quickstart` e `checklists` do Spec Kit original **não são arquivos** aqui: vivem como seções opcionais de `plan.md`/`tasks.md` — fusão declarada, não omissão. Arquivo de apoio de um projeto (um diagrama, uma planilha) não entra na lista. |
 | **Steering files** | Arquivos de contexto de projeto que valem para **toda** atividade, distintos da spec de uma feature. No Kiro: `product.md`, `tech.md`, `structure.md`. No MJRP o papel é do `VISION.md`, do `constitution.md` e do `.mjrp-project.yml`. *(Kiro)* |
+| **UAT / Homologação** (`docs/specs/uat.md`) | O aceite pelo humano (MJRP) **depois** do deploy — o Spec Kit termina no *implement*, o MJRP não. É um rastreador de issues mínimo: cada item tem contexto (release/feature em que foi visto), tipo (*bug* ou *mudança*), status e o **OK do humano** que confirma o fechamento. Sem plano de teste nem casos de teste — os cenários de aceite continuam no `spec.md`. Décimo artefato do [[spec-kit|SpecKit]]. |
 
 ## Agentes, orquestração e loop
 
@@ -148,8 +150,10 @@ está na última seção, separado de propósito.
 | Termo | Definição |
 |---|---|
 | **[A prática de ADR](adr-practice.md)** | Uma **ADR** registra uma decisão grande — a que tem alternativas, custos e consequências que sobrevivem a quem a tomou. |
-| **Agente e agêntico — os conceitos** | Um **agente** é software que não apenas responde: decide e age. |
+| **[Agente e agêntico — os conceitos](agents-agentic-concepts.md)** | Um **agente** é software que não apenas responde: decide e age. |
 | **[Arquitetura de memória](memory-architecture.md)** | A memória do harness é o que persiste **fora da janela** e precisa ser trazido de volta. |
+| **Biblioteca de paletas MJRP** | A **MJRP Personal Palette Library** é o conjunto de paletas curadas para output com a identidade visual pessoal do MJRP — infográficos de reunião, dossiês, decks, site pessoal. |
+| **[Cânone de design](design-canon.md)** | O **cânone de design** é o corpo de referência externo que fundamenta as regras de UX, UI e conteúdo explicativo do MJRP — 21 fontes fichadas em `docs/sources/`, organizadas em sete disciplinas, cada regra com um **ID estável** que as skills de design citam em vez de recitar. |
 | **[Cânone de engenharia](engineering-canon.md)** | O **cânone** é o corpo de referência que fundamenta os princípios de engenharia do MJRP: *The Pragmatic Programmer* (Andrew Hunt e David Thomas), *Clean Code* e *Clean Architecture* (Robert C. Martin). |
 | **Catálogo de ferramentas** | O **catálogo** é a **prateleira**: o registro vivo do que a MJRP já tem à mão, para o agente consultar **antes de pesquisar na web**. |
 | **[Conceitos base](base-concept.md)** | A **cadeia de intenção** que ordena todo documento do MJRP que declara para onde se vai: **Propósito → Visão → Objetivo → Roadmap**. |
@@ -159,15 +163,17 @@ está na última seção, separado de propósito.
 | **Dores recorrentes** | As quatro falhas recorrentes do desenvolvimento agêntico que o MJRP Harness existe para atacar: **perda de contexto e memória**, **inconsistência entre projetos**, **a tensão vibe × rigor** e **ausência de verificação independente**. |
 | **External locations** | A memória de **referência** (ADR-0008): fato durável sobre **onde algo está**, que o agente não descobre sozinho. |
 | **Ferramentas** | Tudo o que um agente ou uma pessoa pode **chamar para agir** — em três camadas (do produto, da construção, do agente) e três estados de operação, sendo que a ferramenta que só o humano opera é um gate não declarado. |
-| **Graph engineering — o conceito** | **Graph engineering** é desenhar o fluxo do agente como um **grafo** — um organograma de nós e arestas — em vez de um loop único. |
+| **[Graph engineering — o conceito](graph-engineering-concept.md)** | **Graph engineering** é desenhar o fluxo do agente como um **grafo** — um organograma de nós e arestas — em vez de um loop único. |
 | **[Harness — o conceito](harness-concept.md)** | O **harness** é tudo o que envolve o modelo para transformá-lo em agente: as ferramentas, o loop que o executa, e o mecanismo que avalia se ele terminou. |
 | **[Harness elements](harness-elements.md)** | As **onze peças** que compõem o entorno de um modelo de linguagem para que ele produza trabalho confiável. |
-| **Harness kaizen** | O registro do que o harness **não pegou** e do que se aprendeu com isso. |
-| **Hooks — o conceito** | Um **hook** é um evento que dispara um script: **o evento responde *quando* o código roda; o script responde *o que* ele faz**. |
-| **Loop engineering — o conceito** | **Loop engineering** é projetar o ciclo que roda **sem você**: o agente raciocina, age, observa e ajusta até atingir um objetivo — e o que decide se ele continua **não é um `if`, é o próprio modelo**. |
+| **[Harness kaizen](harness-kaizen.md)** | O registro do que o harness **não pegou** e do que se aprendeu com isso. |
+| **[Hooks — o conceito](hooks-concept.md)** | Um **hook** é um evento que dispara um script: **o evento responde *quando* o código roda; o script responde *o que* ele faz**. |
+| **[Loop engineering — o conceito](loop-engineering-concept.md)** | **Loop engineering** é projetar o ciclo que roda **sem você**: o agente raciocina, age, observa e ajusta até atingir um objetivo — e o que decide se ele continua **não é um `if`, é o próprio modelo**. |
 | **[O doctor](doctor.md)** | O **doctor** é o sensor do harness: um script que lê a instância e devolve verde, amarelo ou vermelho por critério nomeado. |
 | **Opções para construir agentes — as quatro abordagens** | Existem **quatro caminhos** para construir um agente de IA hoje, e eles variam num único eixo central: quanto de infraestrutura, loop de execução e orquestração você **possui** versus quanto o provedor **cuida para você**. |
 | **[Perfis de projeto](project-profiles.md)** | **Perfil** é o que o projeto **entrega**, e é o que o campo `profile:` do contrato declara: `code-app` (software), `content` (vault, dossiê, pipeline editorial) ou `meta` (o próprio harness). |
+| **Revisão de essencialidade — o que o harness mantém** | A revisão em que o MJRP decidiu que **o harness entra no próprio SDD**: ganha `docs/specs/prd.md` escrito do zero, o `ROADMAP.md` é reescrito do zero a partir do que o `VISION.md` promete, e o `BACKLOG.md` é arquivado — seu papel de intake passa ao PRD (Epic *Enhancements*), a numeração recomeça do zero. |
+| **[Spec Kit e SpecKit — o SDD do MJRP](spec-kit.md)** | **SpecKit** é a adaptação do MJRP ao Spec Kit do GitHub: os **10 documentos vivos** de `docs/specs/` — a cadeia `prd → story → spec → plan → tasks → uat`, em que cada um deriva do anterior, mais o contexto durável que a cadeia consulta, `constitution`, `arch`, `data-model` e `design-system`. |
 
 <!-- END gerado -->
 
@@ -180,7 +186,7 @@ como se existissem**.
 | Termo | Definição |
 |---|---|
 | **Checkpoint incremental** | Escrever memória durante a sessão, não no fim — a operação *write* feita cedo, quando a janela ainda não está cheia. *(proposto)* |
-| **Evaluations** | Caso de teste de uma skill: entrada conhecida e critério de aprovação escrito antes. *(proposto — fase F)* |
+| **Evaluations** | Caso de teste de uma skill: entrada conhecida e critério de aprovação escrito antes. *(proposto — candidato no PRD, junto do verificador do entregável, EP-02)* |
 | **Governança de ferramenta** | Três baldes calibrados pelo custo de errar — Always do / Ask first / Never do — aplicados no nível da chamada da ferramenta. *(proposto)* |
 | **Guardrails** | Limite que impede uma ação antes de ela acontecer — distinto de *sensor*, que detecta depois. Uma das onze peças. *(proposto)* |
 | **`harness.lock`** | Arquivo na instância declarando o que foi instalado, de qual versão, com quais hashes. *(proposto)* |

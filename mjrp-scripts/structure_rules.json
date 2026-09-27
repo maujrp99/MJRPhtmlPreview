@@ -1,0 +1,165 @@
+{
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-09-27 · fonte d42894e · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_about": "The single declaration of structure by nature (ADR-0014). Vendored to every project with the kernel; structure_check.py, the doctor (W9), the pre-commit and the PreToolUse hook all read THIS file. Edit here, in the harness, never in a copy.",
+  "version": "2026-09-26",
+  "rule_of_thumb": "agente precisa ler para saber o que é verdade → docs/ · resultado de olhar o projeto → reports/ · ainda sendo decidido ou mostrado → design/ · não é texto para gente → data/",
+  "natures": {
+    "docs": "MEMÓRIA",
+    "reports": "OBSERVAÇÃO",
+    "design": "DESENHO",
+    "data": "DADO"
+  },
+  "profiles": {
+    "code-app": {
+      "roots": [
+        "docs",
+        "reports",
+        "design",
+        "data"
+      ],
+      "docs_allowed": [
+        "log.md",
+        "decisions",
+        "specs",
+        "wiki",
+        "TECHNICAL_DEBT.md",
+        "folder-index.md",
+        "index.md",
+        "README.md",
+        "raw"
+      ]
+    },
+    "meta": {
+      "roots": [
+        "docs",
+        "reports",
+        "design",
+        "data"
+      ],
+      "docs_allowed": [
+        "log.md",
+        "decisions",
+        "specs",
+        "wiki",
+        "TECHNICAL_DEBT.md",
+        "folder-index.md",
+        "index.md",
+        "README.md",
+        "raw",
+        "sources",
+        "exit-criteria",
+        "diagrams.md"
+      ]
+    },
+    "content": {
+      "roots": [
+        "docs",
+        "reports",
+        "design"
+      ],
+      "docs_allowed": [
+        "log.md",
+        "decisions",
+        "specs",
+        "wiki",
+        "TECHNICAL_DEBT.md",
+        "folder-index.md",
+        "index.md",
+        "README.md",
+        "raw",
+        "sources"
+      ]
+    }
+  },
+  "subfolders": {
+    "reports": [
+      "audits",
+      "handoffs",
+      "harness-feedback",
+      "presentations"
+    ],
+    "design": [
+      "inception",
+      "prototypes",
+      "proposals"
+    ],
+    "data": [
+      "fixtures",
+      "raw"
+    ]
+  },
+  "tolerated_in_every_folder": [
+    "folder-index.md",
+    "index.md",
+    "README.md",
+    ".DS_Store",
+    ".gitkeep"
+  ],
+  "folder_aliases": {
+    "audits": "reports/audits",
+    "handoffs": "reports/handoffs",
+    "harness-feedback": "reports/harness-feedback",
+    "presentations": "reports/presentations",
+    "proposals": "design/proposals",
+    "prototypes": "design/prototypes",
+    "inception": "design/inception",
+    "fixtures": "data/fixtures",
+    "infographics": {
+      "meta": "docs/raw/infographics",
+      "content": "docs/raw/infographics",
+      "code-app": "data/raw/infographics"
+    }
+  },
+  "retired_folders": {
+    "sessions": "aposentada em 09/09 — o histórico é docs/log.md; mova para _archive/",
+    "architecture": "aposentada pela ADR-0001 — decisão em docs/decisions/, arquitetura em docs/specs/arch.md",
+    "archive": "arquivo não mora em docs/ — o aposentado vai para _archive/; audit vai para reports/audits/",
+    "debug": "o DEBUG_LOG foi aposentado (ADR-0014 §4) — mova para _archive/ depois de redistribuir"
+  },
+  "retired_files": {
+    "debug_log.md": "DEBUG_LOG aposentado (ADR-0014 §4): bug visto pelo humano → issue no docs/specs/uat.md; causa que virou regra → ## History da página na wiki; episódio → docs/log.md; depois, o arquivo vai para _archive/",
+    "debug-log.md": "DEBUG_LOG aposentado (ADR-0014 §4): bug visto pelo humano → issue no docs/specs/uat.md; causa que virou regra → ## History da página na wiki; episódio → docs/log.md; depois, o arquivo vai para _archive/"
+  },
+  "name_patterns": [
+    {
+      "regex": "(^ux-audit|quality_assessment|audit-report|^audit-|-audit-\\d{4})",
+      "to": "reports/audits"
+    },
+    {
+      "regex": "handoff",
+      "to": "reports/handoffs"
+    },
+    {
+      "regex": "proposal",
+      "to": "design/proposals"
+    },
+    {
+      "regex": "(^prototype|-prototype|prototype-)",
+      "to": "design/prototypes"
+    }
+  ],
+  "name_patterns_scope": [
+    "docs/specs"
+  ],
+  "data_extensions": [
+    ".xlsx",
+    ".xls",
+    ".csv",
+    ".tsv",
+    ".parquet",
+    ".sqlite",
+    ".db",
+    ".jsonl"
+  ],
+  "visual_extensions": [
+    ".html",
+    ".pdf"
+  ],
+  "skip_inside_docs": [
+    "wiki/harness",
+    "wiki/kernel",
+    "wiki/feedback-from-other-projects",
+    "sources"
+  ],
+  "_raw_note": "docs/raw/ is the Karpathy chain in every profile (original source TEXT the agent reads: drafts, requirements, transcripts); a DATA file (xlsx, csv...) inside it still goes to data/raw/."
+}

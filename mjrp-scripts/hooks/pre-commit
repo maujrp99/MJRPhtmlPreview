@@ -1,0 +1,21 @@
+#!/bin/sh
+# cópia carimbada do MJRP Harness · versão 2026-09-27 · fonte d42894e · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# pre-commit - structure by nature (EP-09). Blocks a commit that ADDS something outside its nature
+# (docs/ only memory; reports/, design/, data/ with their declared subfolders). Only what this commit
+# adds is judged - an old misplacement is the doctor's W9 warning, not a blocked commit.
+#
+# Installed per clone by:  git config core.hooksPath mjrp-scripts/hooks   (new_project.py does it)
+# Bypass is the human's call, never the agent's:  git commit --no-verify
+ROOT=$(git rev-parse --show-toplevel) || exit 0
+CHECK="$ROOT/mjrp-scripts/structure_check.py"
+[ -f "$CHECK" ] || exit 0
+command -v python3 >/dev/null 2>&1 || exit 0
+python3 "$CHECK" "$ROOT" --staged
+code=$?
+if [ "$code" -eq 1 ]; then
+  echo ""
+  echo "  commit bloqueado: o que ele acrescenta está fora da natureza da pasta."
+  echo "  cada linha acima diz para onde vai (e o git mv que sara). Regra: mjrp-scripts/structure_rules.json"
+  exit 1
+fi
+exit 0

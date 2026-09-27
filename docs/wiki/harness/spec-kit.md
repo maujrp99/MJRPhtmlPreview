@@ -1,0 +1,57 @@
+---
+title: Spec Kit e SpecKit — o SDD do MJRP
+aliases: [spec-kit, speckit, SpecKit, artefatos do speckit, uat, homologacao, homologação, constitution duas camadas]
+summary: as três camadas com o mesmo nome (Spec Kit do GitHub, SpecKit do MJRP, uso real por projeto), a lista única de 10 artefatos, o que foi fundido de propósito, e as duas extensões do MJRP — PRD/story do BMAD e uat.md
+tags: [kernel, sdd, speckit, metodo]
+status: firme
+atualizado: 2026-09-17
+fontes: [github/spec-kit, BMAD, feedback-from-other-projects/spec-kit, feedback-from-other-projects/speckit-artifact-reconciliation]
+---
+<!-- kernel do MJRP Harness · versão 2026-09-27 · fonte d42894e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+
+## Definition
+**SpecKit** é a adaptação do MJRP ao Spec Kit do GitHub: os **10 documentos vivos** de `docs/specs/` — a cadeia `prd → story → spec → plan → tasks → uat`, em que cada um deriva do anterior, mais o contexto durável que a cadeia consulta, `constitution`, `arch`, `data-model` e `design-system`. Três coisas têm o mesmo nome e confundi-las gera achado errado: **Spec Kit** (com espaço) é o método original do GitHub, `constitution → specify → plan → tasks → implement`; **SpecKit** (sem espaço) é esta adaptação; e o **uso real de cada projeto**, que pode acrescentar arquivos de apoio (um diagrama, uma planilha) sem que isso mude a lista.
+
+## Details
+
+### 1. A lista única — decidida em 17/09/2026
+Até 16/09 o glossário dizia 6 artefatos e a skill `mjrp-sdd-speckit` dizia 7, e nenhum dos dois citava `prd.md`, que os projetos usavam. A reconciliação:
+
+| Artefato | Papel | Origem |
+|---|---|---|
+| `prd.md` | o que o produto é, para quem, e o que **não** é; carrega os Epics | BMAD (não existe no Spec Kit; ver §3) |
+| `story.md` | as histórias — o que construir a seguir, com critérios de aceite | BMAD |
+| `spec.md` | o quê e por quê de uma feature: requisitos, cenários, critérios de sucesso | Spec Kit (`/specify`) |
+| `plan.md` | o como: arquitetura, componentes, dependências | Spec Kit (`/plan`) |
+| `tasks.md` | a ordem de execução, tarefa a tarefa, verificável | Spec Kit (`/tasks`) |
+| `uat.md` | o aceite pelo humano depois do deploy — issues, status, OK de fechamento | **extensão do MJRP** (ver §4) |
+| `constitution.md` | o delta de stack do projeto sobre o `PRINCIPLES.md` herdado (ver §5) | Spec Kit, com escopo estreitado |
+| `arch.md` | a arquitetura real (não a aspiracional) | MJRP |
+| `data-model.md` | entidades, relações, persistência | Spec Kit (fase 1 do `/plan`) |
+| `design-system.md` | tokens e componentes — a fonte de verdade visual | MJRP (dono: skill `mjrp-design-system`) |
+
+Os seis primeiros são **a cadeia**: o sensor de rastreabilidade (`SDD_chain_artifacts_check.py`) confere que um ID que aparece num elo existe no anterior. Os quatro últimos são **contexto durável**: a cadeia os consulta, não deriva deles.
+
+### 2. O que foi fundido, de propósito
+`research.md`, `contracts/`, `quickstart.md` e `checklists/` do Spec Kit oficial **não são arquivos** no MJRP. O conteúdo vive como **seções opcionais e recomendadas** nos templates: *Research* e *Contracts* em `plan.md`; *Quickstart* (validação manual logo após implementar) e *Checklist de requisitos* em `tasks.md`. Cada projeto usa se precisar. Isto é decisão, não omissão — antes de 17/09 a fusão existia na prática e não estava escrita em lugar nenhum.
+
+### 3. PRD e story — o que veio do BMAD
+O Spec Kit trata `spec.md` como o PRD ("*the source that generates implementation*") e não tem documento de produto nem de backlog. O MJRP fundiu o Spec Kit com a regra do BMAD: o PRD existe quando mais de um Epic — no MJRP, mais de um agente — não pode divergir; ele **alimenta** o `story.md`, não o substitui. Quando o produto muda, o PRD muda junto — PRD com data velha é charter.
+
+### 4. UAT / Homologação — a extensão do MJRP
+O Spec Kit termina no *implement*: os *Acceptance Scenarios* do `spec.md` são pré-implementação e o `quickstart.md` é validação logo depois, não aceite continuado. O mercado resolve isso com plano de UAT, casos de teste, log de defeitos e termo de aceite com "aceite condicional" (disposição por defeito: corrigir antes, adiar, aceitar como está). O MJRP começa pela **versão mínima**: `uat.md` é um rastreador de issues reportadas pelo humano (MJRP) sobre o produto implantado — cada item com contexto (release/feature), tipo (*bug* ou *mudança/enhancement*), status e o **OK do humano** que confirma o fechamento. Sem plano nem casos de teste. É o sexto elo da cadeia e pode ser declarado como gate no contrato.
+
+### 5. Constitution — duas camadas
+`PRINCIPLES.md` do harness é **universal** e herdado por todo projeto; `docs/specs/constitution.md` do projeto o **estende** com o que é específico da stack (padrões a seguir e evitar, versões, débito técnico conhecido), nas normas do Spec Kit — e **nunca reescreve** um princípio. O gate que faltava, e passou a existir em 17/09: no Pós-Plan da skill `mjrp-sdd`, `plan.md` é checado contra os dois — o "Constitution Check" do Spec Kit original, que o MJRP não tinha.
+
+### 6. O que não muda a lista
+Arquivo de apoio que um projeto cria para si (`roadmap-diagrams.md`, uma planilha de dados de referência) é do projeto, não do SpecKit: não entra na lista, não entra na cadeia, não precisa ser mencionado no harness.
+
+## History
+- **2026-09-17 14:32** — Reconciliação do BACKLOG #59, decidida pelo MJRP item a item: lista de 10 (9 + `uat.md`); fusão de research/contracts/quickstart/checklists declarada como seções opcionais; duas camadas da constitution nomeadas e o gate criado; `uat.md` como issue tracker mínimo com OK humano; arquivo de apoio de projeto fora da lista. Página promovida ao kernel a partir do rascunho `feedback-from-other-projects/spec-kit.md` (16/09).
+- **2026-09-16 19:39** — Rascunho criado no `mjrp-fin-control-2026-27` a pedido do MJRP, com a pesquisa em fontes primárias do Spec Kit; movido para o harness às 20:14 com os 5 achados de divergência.
+
+## Fontes
+- [github/spec-kit — README](https://github.com/github/spec-kit) · [spec-driven.md](https://github.com/github/spec-kit/blob/main/spec-driven.md) · [github.github.io/spec-kit — Concepts](https://github.github.io/spec-kit/concepts/sdd.html)
+- [Issue #1527 — pedido de `/speckit.prd`](https://github.com/github/spec-kit/issues/1527)
+- UAT no mercado: [Marker.io — UAT templates](https://marker.io/blog/user-acceptance-testing-template) · [Bestest — UAT sign-off](https://getbestest.com/blog/uat-sign-off-checklist/) · [BMAD — test completed work](https://docs.bmad-method.org/build/test-completed-work/)

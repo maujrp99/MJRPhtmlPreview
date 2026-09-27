@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-09-10
 fontes: []
 ---
-<!-- kernel do MJRP Harness · versão 2026-09-16 · fonte 19eaf95 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-09-27 · fonte d42894e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 **Perfil** é o que o projeto **entrega**, e é o que o campo `profile:` do contrato declara:
@@ -128,7 +128,7 @@ um álbum por vez.
 - **A `mjrp-onboarding` ramifica por perfil** na Phase −1 — Modo Código × Modo Conteúdo.
 - **⚠️ O que ainda não bate.** O `README.md` § 2 ensina `mjrp_project:` com `type:` e `path:`; o
   contrato real deste repositório é `mjrp_harness:` com `profile:`. **Dois schemas com o mesmo
-  nome de arquivo** — está no `BACKLOG.md` e é decisão do Zé. Enquanto não se resolve, o que o
+  nome de arquivo** — está entre os *Candidatos* do `docs/specs/prd.md` e é decisão do MJRP. Enquanto não se resolve, o que o
   `doctor.py` valida é o `profile:`.
 
 ## History
