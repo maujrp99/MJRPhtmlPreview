@@ -6,6 +6,8 @@
 
 **Estrutura por natureza (2026-09-27 00:05).** Aplicada pelo harness (EP-09) — ver `docs/log.md`.
 
+**Kernel atualizado (2026-09-27 10:45).** PRINCIPLES I.14 (segredo nunca no código) e [[engineering-canon]] ampliado — ver `docs/log.md`.
+
 **Pending on Agent.** (2026-09-15) Nenhum trabalho em voo.
 
 **Pending on Human.** (2026-09-15) Preencher VISION.md, `docs/specs/constitution.md` e (se `sensors:` ficou com o placeholder) os comandos reais de lint/test/build no `.mjrp-project.yml`.
