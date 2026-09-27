@@ -2,6 +2,16 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`. Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-09-27 11:21] decision — kernel do harness atualizado: MP-01 no design-canon e `data/canonical/`
+
+> Participantes: MJRP + Claude (Cowork, sessão do harness) · Branch: main
+> Session: https://claude.ai/code/session_01QmaqjvQpirivrfpMzMbKvm
+
+- `design-canon` (`docs/wiki/harness/`) ganhou a disciplina **MP · Método de produção**, com o **MP-01 — divergir antes de
+  convergir**: onde a decisão de design tem latitude, a skill entrega três opções (Consolidar / Elevar / Transformar)
+  sobre um eixo nomeado antes do checklist.
+- A estrutura por natureza passou a aceitar `data/canonical/` (dado já normalizado para ingestão).
+
 ## [2026-09-27 10:45] decision — kernel do harness atualizado: PRINCIPLES I.14 e engineering-canon ampliado
 
 > Participantes: MJRP + Claude (Cowork, sessão do harness) · Branch: main
