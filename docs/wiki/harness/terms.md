@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-09-14
 fontes: []
 ---
-<!-- kernel do MJRP Harness · versão 2026-09-27 · fonte d42894e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-09-27 · fonte 55473fe · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # Termos — o glossário
 
@@ -154,7 +154,7 @@ está na última seção, separado de propósito.
 | **[Arquitetura de memória](memory-architecture.md)** | A memória do harness é o que persiste **fora da janela** e precisa ser trazido de volta. |
 | **Biblioteca de paletas MJRP** | A **MJRP Personal Palette Library** é o conjunto de paletas curadas para output com a identidade visual pessoal do MJRP — infográficos de reunião, dossiês, decks, site pessoal. |
 | **[Cânone de design](design-canon.md)** | O **cânone de design** é o corpo de referência externo que fundamenta as regras de UX, UI e conteúdo explicativo do MJRP — 21 fontes fichadas em `docs/sources/`, organizadas em sete disciplinas, cada regra com um **ID estável** que as skills de design citam em vez de recitar. |
-| **[Cânone de engenharia](engineering-canon.md)** | O **cânone** é o corpo de referência que fundamenta os princípios de engenharia do MJRP: *The Pragmatic Programmer* (Andrew Hunt e David Thomas), *Clean Code* e *Clean Architecture* (Robert C. Martin). |
+| **[Cânone de engenharia](engineering-canon.md)** | O **cânone** é o corpo de referência que fundamenta os princípios de engenharia do MJRP: *The Pragmatic Programmer* (Andrew Hunt e David Thomas), *Clean Code* e *Clean Architecture* (Robert C. Martin) e *Refactoring* (Martin Fowler; ficha em `docs/sources/1999-fowler-refactoring.md`), que dá nome aos sinais de código ruim e à refatoração que resolve cada um. |
 | **Catálogo de ferramentas** | O **catálogo** é a **prateleira**: o registro vivo do que a MJRP já tem à mão, para o agente consultar **antes de pesquisar na web**. |
 | **[Conceitos base](base-concept.md)** | A **cadeia de intenção** que ordena todo documento do MJRP que declara para onde se vai: **Propósito → Visão → Objetivo → Roadmap**. |
 | **[Contexto e memória](context-vs-memory.md)** | **Contexto** é o conjunto de tokens presentes na janela do modelo **nesta chamada**: estado momentâneo, finito, reconstruído a cada turno. |

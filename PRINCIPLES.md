@@ -1,4 +1,4 @@
-<!-- cópia carimbada do MJRP Harness · versão 2026-09-27 · fonte d42894e · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-09-27 · fonte 55473fe · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # PRINCIPLES — as regras que regulam a ação no MJRP
 
 > Princípio é **a regra que regula a ação e serve de base ao método**; visão é para onde se vai;
@@ -14,13 +14,13 @@ Valem para qualquer stack. Um projeto não os reescreve: herda (Parte III) e acr
 específico da linguagem ou do framework dele.
 
 > **O cânone mora em [[engineering-canon]]**, página do kernel — *The Pragmatic Programmer*,
-> *Clean Code* e *Clean Architecture* destilados, com o que é universal separado do que é opinião
+> *Clean Code*, *Clean Architecture* e *Refactoring* destilados, com o que é universal separado do que é opinião
 > de stack. Cada princípio abaixo aponta para a seção que o fundamenta. Aqui fica a **regra e o
 > teste**; lá, o porquê e o detalhe — carregado por quem vai desenhar, não por toda sessão.
 
 1. **Todo código é componentizado e modularizado.** Escolha sempre o design pattern que leve a
    isso. *O teste:* se um arquivo faz duas coisas que mudam por motivos diferentes, virou dois.
-   → [[engineering-canon]] § *Componentização*
+   → [[engineering-canon]] § *Componentização* — inclui *Quando extrair* · § *Sinais e anti-padrões*
 
 2. **Uma responsabilidade por módulo, e módulo pequeno.** Componente renderiza, repositório busca,
    serviço orquestra — nunca os três. **Previna God Files.** *O teste:* descreva o módulo numa
@@ -42,7 +42,7 @@ específico da linguagem ou do framework dele.
 5. **ETC e DRY.** Bom design é o que é **mais fácil de mudar**; e todo conhecimento tem uma
    representação única, inequívoca e autoritativa no sistema. *O teste:* a mesma regra escrita em
    dois lugares vai divergir — a única questão é quando.
-   → [[engineering-canon]] § *ETC e DRY*
+   → [[engineering-canon]] § *ETC e DRY* · § *Fluxo de dados e estado* (estado em fonte única)
 
 6. **O código expressa a intenção.** Nome revela propósito, função é pequena e faz uma coisa, um
    nível de abstração por função. Comentário não compensa código ruim. *O teste:* alguém lê a
@@ -58,7 +58,8 @@ específico da linguagem ou do framework dele.
 8. **Sem falha silenciosa.** Clique morto, erro engolido, estado que dessincroniza sem avisar são
    bugs, não detalhes. Erro se sinaliza pelo mecanismo da linguagem, nunca se ignora. *O teste:*
    se falhar, alguém **fica sabendo** — usuário, log ou sensor.
-   → [[engineering-canon]] § *Tratamento de erro* — inclui o que aí é opinião de stack
+   → [[engineering-canon]] § *Tratamento de erro* — inclui o que aí é opinião de stack · § *Fluxo
+   de dados e estado*
 
 9. **O sistema é testável, e o teste vem junto.** Testes rodam todos, e são **F.I.R.S.T.** —
    rápidos, independentes, repetíveis, auto-verificáveis e escritos no tempo certo. *O teste:* dá
@@ -96,6 +97,13 @@ específico da linguagem ou do framework dele.
     pontas. *O teste:* existe referência de protótipo, vista e aprovada pelo dono, datada, presente
     em `spec.md` cobrindo a tela nova, com o veredito do juiz — sem isso, spec.md está incompleta
     mesmo com REQs certos.
+
+14. **Segredo nunca no código.** Chave de API, token, senha e credencial vêm do ambiente — variável
+    de ambiente, `.env` fora do versionamento, secret manager ou as propriedades do script — e
+    nunca são escritos no código nem na documentação. Credencial guardada no cliente só com o
+    padrão BYOK aprovado na `constitution.md` do projeto. Segredo encontrado no código existente
+    se aponta na hora, e o padrão não se copia. *O teste:* o repositório inteiro pode ficar
+    público amanhã sem que nenhuma credencial precise ser trocada.
 
 ---
 

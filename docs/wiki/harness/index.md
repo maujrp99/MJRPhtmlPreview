@@ -5,7 +5,7 @@ summary: as 18 páginas do harness que este projeto carrega — o que os campos 
 
 ## Definition
 
-Cópia carimbada (versão **2026-09-27**, fonte `d42894e`) das páginas do MJRP Harness que governam como uma instância funciona. **Não se edita aqui**: edite no harness e rode `new_project.py --refresh-kernel`. O doctor (I5) avisa quando o carimbo envelhece.
+Cópia carimbada (versão **2026-09-27**, fonte `55473fe`) das páginas do MJRP Harness que governam como uma instância funciona. **Não se edita aqui**: edite no harness e rode `new_project.py --refresh-kernel`. O doctor (I5) avisa quando o carimbo envelhece.
 
 | Página | O que responde |
 |---|---|
@@ -19,7 +19,7 @@ Cópia carimbada (versão **2026-09-27**, fonte `d42894e`) das páginas do MJRP 
 | [adr-practice](adr-practice.md) | quando uma decisão vira ADR, o que a ADR pode e não pode mudar depois, e o gate Proposed → Accepted |
 | [harness-concept](harness-concept.md) | o que o campo chama de harness — cinco fontes, onde elas convergem, onde discordam, e a posição que o MJRP adota |
 | [harness-elements](harness-elements.md) | os harness elements — as onze peças de um sistema agêntico, o domínio de cada uma, e onde o MJRP está |
-| [engineering-canon](engineering-canon.md) | os três livros que fundamentam a Parte I do PRINCIPLES — destilados, com o que é universal separado do que é opinião de stack |
+| [engineering-canon](engineering-canon.md) | os quatro livros que fundamentam a Parte I do PRINCIPLES — destilados, com o que é universal separado do que é opinião de stack |
 | [spec-kit](spec-kit.md) | as três camadas com o mesmo nome (Spec Kit do GitHub, SpecKit do MJRP, uso real por projeto), a lista única de 10 artefatos, o que foi fundido de propósito, e as duas extensões do MJRP — PRD/story do BMAD e uat.md |
 | [agents-agentic-concepts](agents-agentic-concepts.md) | o que o campo chama de agente, os padrões agênticos, os cinco tipos de sistema, a taxonomia skills/MCP/RAG/memória — e onde as fontes discordam |
 | [graph-engineering-concept](graph-engineering-concept.md) | o fluxo do agente como grafo — os três padrões, a comparação loop × graph × swarm, e a pergunta única que escolhe entre eles |
