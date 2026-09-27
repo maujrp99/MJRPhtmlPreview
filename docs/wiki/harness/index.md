@@ -5,7 +5,7 @@ summary: as 18 páginas do harness que este projeto carrega — o que os campos 
 
 ## Definition
 
-Cópia carimbada (versão **2026-09-27**, fonte `55473fe`) das páginas do MJRP Harness que governam como uma instância funciona. **Não se edita aqui**: edite no harness e rode `new_project.py --refresh-kernel`. O doctor (I5) avisa quando o carimbo envelhece.
+Cópia carimbada (versão **2026-09-27**, fonte `4934c17`) das páginas do MJRP Harness que governam como uma instância funciona. **Não se edita aqui**: edite no harness e rode `new_project.py --refresh-kernel`. O doctor (I5) avisa quando o carimbo envelhece.
 
 | Página | O que responde |
 |---|---|
@@ -26,4 +26,4 @@ Cópia carimbada (versão **2026-09-27**, fonte `55473fe`) das páginas do MJRP 
 | [hooks-concept](hooks-concept.md) | hook como evento + script — a camada de determinismo dentro de um sistema probabilístico, e a regra que decide o que vai para hook e o que fica no prompt |
 | [loop-engineering-concept](loop-engineering-concept.md) | o loop como o que roda sem você — os 4 níveis, a matemática dos erros compostos, loop fixo × criador, e por que o gargalo é o verificador, não o modelo |
 | [harness-kaizen](harness-kaizen.md) | onde o harness falhou e o que se aprendeu com isso — o erro e a correção no mesmo lugar |
-| [design-canon](design-canon.md) | as fontes elevadas que fundamentam UX, UI e conteúdo explicativo no MJRP — organizadas em sete disciplinas com regras de ID estável que as skills citam em vez de recitar |
+| [design-canon](design-canon.md) | as fontes elevadas que fundamentam UX, UI e conteúdo explicativo no MJRP — organizadas em oito disciplinas com regras de ID estável que as skills citam em vez de recitar |

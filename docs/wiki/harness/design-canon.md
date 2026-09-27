@@ -1,17 +1,17 @@
 ---
 title: Cânone de design
 aliases: [design-canon, canone de design, cânone de UX, cânone de UI, ux canon, design canon]
-summary: as fontes elevadas que fundamentam UX, UI e conteúdo explicativo no MJRP — organizadas em sete disciplinas com regras de ID estável que as skills citam em vez de recitar
+summary: as fontes elevadas que fundamentam UX, UI e conteúdo explicativo no MJRP — organizadas em oito disciplinas com regras de ID estável que as skills citam em vez de recitar
 tags: [harness, design, ux, kernel]
 status: vivo
-atualizado: 2026-09-19
-fontes: [few-information-dashboard-design, tufte-visual-display, knaflic-storytelling-with-data, wexler-big-book-of-dashboards, shneiderman-the-eyes-have-it, nngroup-dashboards-preattentive, smashing-dashboard-decluttering, a11y-collective-accessible-charts, sigma-color-blindness, 925studios-whoop-breakdown, sahha-readiness-scores, nielsen-ten-heuristics, krug-dont-make-me-think, cooper-about-face, yablonski-laws-of-ux, google-apple-m3-hig, w3c-wcag-2-2, gigerenzer-risk-communication, case-calm-technology, cdc-clear-communication-index, andrews-info-we-trust]
+atualizado: 2026-09-27
+fontes: [few-information-dashboard-design, tufte-visual-display, knaflic-storytelling-with-data, wexler-big-book-of-dashboards, shneiderman-the-eyes-have-it, nngroup-dashboards-preattentive, smashing-dashboard-decluttering, a11y-collective-accessible-charts, sigma-color-blindness, 925studios-whoop-breakdown, sahha-readiness-scores, nielsen-ten-heuristics, krug-dont-make-me-think, cooper-about-face, yablonski-laws-of-ux, google-apple-m3-hig, w3c-wcag-2-2, gigerenzer-risk-communication, case-calm-technology, cdc-clear-communication-index, andrews-info-we-trust, design-council-double-diamond-knapp-sprint, baghai-three-horizons]
 ---
-<!-- kernel do MJRP Harness · versão 2026-09-27 · fonte 55473fe · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-09-27 · fonte 4934c17 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **cânone de design** é o corpo de referência externo que fundamenta as regras de UX, UI e
-conteúdo explicativo do MJRP — 21 fontes fichadas em `docs/sources/`, organizadas em sete
+conteúdo explicativo do MJRP — 23 fontes fichadas em `docs/sources/`, organizadas em oito
 disciplinas, cada regra com um **ID estável** que as skills de design citam em vez de recitar.
 A barra de qualidade não vem do gosto do agente: vem daqui. É **referência inicial, não teto** —
 o cânone cresce com o que os projetos-filho descobrem (ver § *Como o cânone evolui*).
@@ -126,6 +126,33 @@ o *porquê* mora lá e nesta página, nunca na skill.
 | **RC-08** | Funciona mesmo quando falha: sem dado, a tela diz o que falta e o que ainda vale, em vez de tela vazia ou número zerado. | produção | Case (princípio VI); Nielsen H9 |
 | **RC-09** | Tom não-clínico em dado de saúde: linguagem de bem-estar, sem vermelho/alarme por default; cor de alerta reservada ao que exige ação. | produção | Case; 925 Studios; palette-library (Zen/Calma) |
 
+### MP · Método de produção
+
+As sete disciplinas acima julgam **o artefato**. Esta julga **como ele foi produzido**: as regras de produção
+e o checklist são filtros convergentes — matam a opção ruim, não geram a boa. Onde o gosto do humano é o
+insumo que decide, entregar uma opção só lê como rigidez (achado do `mjrp-health-control`, 21/09/2026).
+
+| ID | Regra (testável) | Tipo | Fonte |
+|---|---|---|---|
+| **MP-01** | **Divergir antes de convergir.** Onde a decisão de tratamento visual ou de estrutura tem latitude (mais de uma solução defensável, e o humano decide pelo gosto), a skill produtora entrega **três opções** espalhadas sobre **um eixo nomeado**, igualmente acabadas, com a âncora no meio (o sistema como projetado), nomeadas por intenção — **Consolidar / Elevar / Transformar** — e cada uma com a régua *toca / preserva / arrisca*. O humano escolhe; só a escolhida segue para o checklist e o gate. Sem latitude (tela fechada por template e tokens), uma opção só — três seria teatro. | produção | Design Council (Double Diamond); Knapp (*Sprint*); Baghai, Coley e White (três horizontes) |
+
+Os três níveis, por intenção (do parecer):
+
+    Consolidar
+        apertar o que já existe · toca o mínimo · risco quase nulo
+
+    Elevar (a âncora)
+        o sistema como projetado · risco baixo
+
+    Transformar
+        reenquadrar · toca estrutura ou identidade · arrisca contraste ou calma, exige teste
+
+Cada opção entregue preenche a própria régua de uma linha — o que **toca**, o que **preserva**, o que
+**arrisca** — e é a régua, não o nome, que garante que quem produz e quem julga leiam o nível do mesmo jeito.
+
+O extremo Transformar se ancora em fonte (regra viva das skills: buscar antes de assumir), não em
+invenção solta.
+
 ## O que é opinião de gênero ou de contexto
 
 > **A regra de leitura:** o cânone vale para dashboard, formulário, fluxo e documento. O que só
@@ -154,7 +181,7 @@ O cânone é **referência inicial, não limitante** (MJRP, 19/09/2026). Três m
    `mjrp-skill-refiner` — o cânone guarda o *o que é*; a skill incorpora o *como* que o projeto
    ensinou. Skill viva aprende nos dois lugares.
 2. **Retroalimentação dos projetos-filho.** Achado de UX/UI num projeto-filho entra pela pasta
-   `docs/harness-feedback/` dele; o sensor do harness traz para o intake (EP-90 do `prd.md`);
+   `reports/harness-feedback/` dele; o sensor do harness traz para o intake (EP-90 do `prd.md`);
    o que vira regra sobe com o antes/depois como evidência. As cinco primeiras regras assim
    (HI-01, HI-02, DE-05, CO-04, CO-01/CO-03) vieram do `mjrp-health-control`.
 3. **Regra retirada não some.** Fica marcada *retirada*, com data e motivo, no `## History`; o
@@ -166,8 +193,8 @@ O cânone é **referência inicial, não limitante** (MJRP, 19/09/2026). Três m
   `docs/wiki/harness/`, e o I5 do `doctor` confere que chegou e que o carimbo não envelheceu.
 - **Lê-se sob demanda.** Quem vai desenhar uma tela, escrever o texto dela ou julgá-la abre;
   as skills de design citam o ID e mandam ler daqui. Nenhuma sessão carrega o cânone inteiro.
-- **As skills que citam:** `mjrp-ux-ui-designer` (2a — HI, DE-05, CP, IN), `mjrp-design-system`
-  (2b — AH-01/02/08, CP-07), `mjrp-interface-designer` (2c — HI, DE, CP, IN), `mjrp-content-designer`
+- **As skills que citam:** `mjrp-ux-ui-designer` (2a — HI, DE-05, CP, IN, MP-01), `mjrp-design-system`
+  (2b — AH-01/02/08, CP-07), `mjrp-interface-designer` (2c — HI, DE, CP, IN, MP-01), `mjrp-content-designer`
   (CO, AH-06/07, RC), `mjrp-ux-critic` (tudo, os dois tipos), `mjrp-infographic-designer` (CO, HI,
   AH no toolkit).
 - **Quando o cânone e o projeto discordarem, o projeto decide** — desde que a decisão esteja
@@ -193,6 +220,15 @@ O cânone é **referência inicial, não limitante** (MJRP, 19/09/2026). Três m
   no julgamento via HI-05/06, agora nasce certo; a alternativa "emendar CO-03" foi recusada porque
   CO-03 governa *onde* e CO-08 governa *quanto peso*. O gap do sparkline (A7) foi **subsumido em
   CO-04** (sparkline é forma da referência), sem ID novo — opção (a) do parecer.
+
+- **2026-09-27 11:18** · **MP-01 entra: divergir antes de convergir.** Parecer do `mjrp-health-control`
+  (`docs/wiki/feedback-from-other-projects/2026-09-21-design-skills-3-niveis-divergencia.md`): o MJRP achou as
+  skills de design rígidas — uma resposta "certa" passada pelo checklist, onde a decisão era de gosto. A proposta em
+  três níveis (Consolidar / Elevar / Transformar, nomes escolhidos por ele em 21/09) foi demonstrada no color-code
+  por domínio e aprovada lá. **Decisão dele (27/09):** vira regra com ID no cânone, numa disciplina nova, MP (método
+  de produção), em vez de cláusula na regra viva das skills — para a `mjrp-ux-critic` ter o ID a citar. Duas fichas
+  novas: Double Diamond + *Sprint* (divergir/convergir) e os três horizontes (os nomes). As skills refinadas em 22/09
+  tinham sido apagadas do Cowork por uma subida do repo; foram refeitas a partir do parecer.
 
 ## Related
 [[engineering-canon]] · palette-library · [[harness-elements]] · [[terms]] · [[harness-kaizen]] · [[doctor]]
