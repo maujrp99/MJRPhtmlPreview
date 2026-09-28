@@ -1,8 +1,22 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-09-27 · fonte 4934c17 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-09-28 · fonte e6a6ac9 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "The single declaration of structure by nature (ADR-0014). Vendored to every project with the kernel; structure_check.py, the doctor (W9), the pre-commit and the PreToolUse hook all read THIS file. Edit here, in the harness, never in a copy.",
-  "version": "2026-09-27",
+  "version": "2026-09-28",
   "rule_of_thumb": "agente precisa ler para saber o que é verdade → docs/ · resultado de olhar o projeto → reports/ · ainda sendo decidido ou mostrado → design/ · não é texto para gente → data/",
+  "screenshots": {
+    "rule": "screenshot: dado → data/raw/<assunto>/ · referência de como deve ser → design/references/<assunto>/ · evidência de UAT ou prova de entrega → reports/evidence/<TASK-ID>/ · nome: <TASK-ID|assunto>-<viewport|origem>-AAAA-MM-DD.<ext> · captura do agente entra no git só quando uma task a cita; dado sensível fica fora do git, como em data/raw",
+    "folder_names": [
+      "screenshots",
+      "screenshot",
+      "prints",
+      "print",
+      "captures",
+      "capturas",
+      "images",
+      "imagens",
+      "img"
+    ]
+  },
   "natures": {
     "docs": "MEMÓRIA",
     "reports": "OBSERVAÇÃO",
@@ -76,12 +90,14 @@
       "audits",
       "handoffs",
       "harness-feedback",
-      "presentations"
+      "presentations",
+      "evidence"
     ],
     "design": [
       "inception",
       "prototypes",
-      "proposals"
+      "proposals",
+      "references"
     ],
     "data": [
       "fixtures",
@@ -110,7 +126,9 @@
       "meta": "docs/raw/infographics",
       "content": "docs/raw/infographics",
       "code-app": "data/raw/infographics"
-    }
+    },
+    "evidence": "reports/evidence",
+    "references": "design/references"
   },
   "retired_folders": {
     "sessions": "aposentada em 09/09 — o histórico é docs/log.md; mova para _archive/",

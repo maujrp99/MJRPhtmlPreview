@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-09-27 · fonte 4934c17 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-09-28 · fonte e6a6ac9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 structure_check.py - the structure-by-nature sensor (ADR-0014, EP-09).
 
@@ -75,6 +75,14 @@ def _alias(aliases, low, profile):
     return to
 
 
+def _screenshot_note(low, rules):
+    """A folder named for images says nothing about its nature - point to the screenshot rule."""
+    shots = rules.get("screenshots") or {}
+    if low in shots.get("folder_names", []):
+        return f"pasta de imagem sem natureza — {shots['rule']}"
+    return None
+
+
 def _fix_hint(rel, to, is_dir):
     """The exact command to heal (git keeps the history; the human runs it or approves it)."""
     if not to or " " in to:
@@ -114,6 +122,8 @@ def _check_docs(root, rules, prof, profile, out):
             to = _suggest(name, rules, profile)
             if to:
                 dest = f" → {to}" + ("" if " " in to else "/") + _fix_hint(rel, to, e.is_dir())
+            elif e.is_dir() and _screenshot_note(low, rules):
+                dest = " — " + _screenshot_note(low, rules)
             else:
                 dest = " — decida a natureza (regra de bolso no structure_rules.json)"
             out.append(_finding(rel, f"fora da natureza de docs/ (MEMÓRIA){dest}", to))
@@ -169,6 +179,8 @@ def _check_root(root, rules, prof, out):
         to = _alias(aliases, low, None) if e.is_dir() and e.name not in prof["roots"] else None
         if to and isinstance(aliases.get(low), str):
             out.append(_finding(e.name + "/", f"pasta com nome de natureza fora de casa → {to}/" + _fix_hint(e.name, to, True), to))
+        elif e.is_dir() and e.name not in prof["roots"] and _screenshot_note(low, rules):
+            out.append(_finding(e.name + "/", _screenshot_note(low, rules)))
         elif e.is_file() and low in rules["retired_files"]:
             out.append(_finding(e.name, rules["retired_files"][low]))
 
@@ -182,7 +194,9 @@ def _check_subfolders(root, rules, out):
         for e in sorted(base.iterdir()):
             if e.name in tolerated or e.name.startswith(".") or e.name in IGNORE:
                 continue
-            if e.is_dir() and e.name not in subs:
+            if e.is_dir() and e.name not in subs and _screenshot_note(e.name.lower(), rules):
+                out.append(_finding(f"{top}/{e.name}/", _screenshot_note(e.name.lower(), rules)))
+            elif e.is_dir() and e.name not in subs:
                 out.append(_finding(f"{top}/{e.name}/", f"subpasta não declarada em {top}/ ({rules['natures'][top]}) — "
                                     f"as declaradas: {', '.join(subs)}; nova subpasta entra no structure_rules.json do harness"))
             elif e.is_file():
@@ -250,7 +264,12 @@ def judge_path(root, rel, rules=None):
                 return _finding(rel, rules["retired_folders"][low])
             to = _alias(aliases, low, profile) if len(parts) > 2 else None
             to = to or _suggest(parts[-1], rules, profile)
-            dest = f" → {to}" if to else " — decida a natureza (regra de bolso no structure_rules.json)"
+            if to:
+                dest = f" → {to}"
+            elif len(parts) > 2 and _screenshot_note(low, rules):
+                dest = " — " + _screenshot_note(low, rules)
+            else:
+                dest = " — decida a natureza (regra de bolso no structure_rules.json)"
             return _finding(rel, f"fora da natureza de docs/ (MEMÓRIA){dest}", to)
         inner = "/".join(parts[1:])
         if any(inner == sk or inner.startswith(sk + "/") for sk in rules["skip_inside_docs"]):
@@ -276,8 +295,12 @@ def judge_path(root, rel, rules=None):
     if len(parts) >= 2 and top.lower() in aliases and top not in prof["roots"] and isinstance(aliases.get(top.lower()), str):
         to = aliases[top.lower()]
         return _finding(rel, f"pasta com nome de natureza fora de casa → {to}/", to)
+    if len(parts) >= 2 and top not in prof["roots"] and _screenshot_note(top.lower(), rules):
+        return _finding(rel, _screenshot_note(top.lower(), rules))
     if top in rules["subfolders"]:
         subs = rules["subfolders"][top]
+        if len(parts) >= 3 and parts[1] not in subs and _screenshot_note(parts[1].lower(), rules):
+            return _finding(rel, _screenshot_note(parts[1].lower(), rules))
         if len(parts) == 2 and parts[1] not in tolerated:
             return _finding(rel, f"arquivo solto em {top}/ — vai numa das subpastas: {', '.join(subs)}")
         if len(parts) >= 3 and parts[1] not in subs:

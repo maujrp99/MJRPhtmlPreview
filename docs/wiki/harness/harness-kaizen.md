@@ -4,10 +4,10 @@ aliases: [harness-kaizen, lições, licoes, aprendizados, o que não funcionou, 
 summary: onde o harness falhou e o que se aprendeu com isso — o erro e a correção no mesmo lugar
 tags: [harness, memoria, kaizen]
 status: em formação
-atualizado: 2026-09-19
+atualizado: 2026-09-28
 fontes: [2026-claude-code-auto-memory]
 ---
-<!-- kernel do MJRP Harness · versão 2026-09-27 · fonte 4934c17 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-09-28 · fonte e6a6ac9 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O registro do que o harness **não pegou** e do que se aprendeu com isso. Achado e lição moram
@@ -38,6 +38,33 @@ deixando o ponteiro. Lição que só mora aqui é lição que ninguém aplica.
 > próprio harness`.
 
 ## Findings
+
+- **2026-09-28 09:21** · **O harness não tinha catálogo de componentes de interface — cada protótipo
+  reinventa tabela, caixa recolhível e filtro, e nada garante que o build use o mesmo que o protótipo.**
+  Levantado pelo MJRP como kaizen: elementos básicos (tabela com ordenação e filtro, caixa
+  expansível/recolhível, card, abas, barra de filtro, estado vazio…) deveriam nascer como artefatos
+  iniciais do projeto e ser reaproveitados em protótipo e interface. Evidência no próprio harness: o
+  Control Center reinventou cards recolhíveis e abas a cada versão (v1 → v3.1); o [[design-canon]] diz
+  *como* uma tela deve ser, mas nenhum artefato diz *o que já existe* para reaproveitar. **A lição:**
+  uso garantido não vem de regra na skill (é o vazio de verificação registrado em 16/09 no `MEMORY.md`),
+  vem de duas coisas — o componente ser o **caminho mais fácil antes** de a tela existir, e um **sensor
+  que acusa o desvio depois**, com rigor crescente por fase: protótipo rápido (kit pronto embutido,
+  só aviso — tem de continuar rápido); protótipo no gate de protótipo de UI (princípio I.13: verificação
+  com ID no `mjrp-ux-critic`, P1 bloqueia; desvio justificado vira candidato ao catálogo, não dívida);
+  build (sensor de marca no doctor e no pre-commit, frescor da cópia vendorizada, testes de contrato de
+  teclado/ARIA/celular na suíte do filho). A base comum: **um único código** do protótipo ao build,
+  vindo do kernel — sem tradução entre fases — e uma **marca estável** por componente
+  (`data-mjrp="…"`) que torna o uso contável. **Limite:** o sensor garante presença, não bom uso; se a
+  tabela era a escolha certa segue com o critic e o humano. Estado (2026-09-28 09:40): o MJRP encaixou no escopo do
+  EP-07 (Discovery & Prototipação), depois do EP-08 1b — `docs/specs/prd.md`. **Correção do MJRP (2026-09-28 09:42):**
+  a regra "reaproveitar antes de criar" com P1 bloqueando no gate foi rejeitada — *"mata
+  criatividade, não pode ser diretiva"*. Vira **lembrete**: verificar também a alternativa de
+  reaproveitar, e criar componente novo segue legítimo. A critic lembra, nunca bloqueia por isso.
+  É a segunda vez do mesmo vício (ver o achado de 2026-09-21 19:00): em fase de design a skill
+  **oferece** a opção, não impõe — o que se garante é que o reaproveitamento seja *considerado*,
+  não que seja *usado* No build (2026-09-28 09:51), o MJRP decidiu: o sensor reprova só **infidelidade ao
+  protótipo** — quando o protótipo aprovado usou um componente do catálogo e o build reescreveu a
+  peça em vez de importar o mesmo código. Reaproveitamento nunca é cobrado; fidelidade ao aprovado, sim.
 
 - **2026-09-21 19:00** · **O harness não tinha caminho de "ideia → tela para reagir → requisito", e o agente
   escreveu regra onde devia oferecer.** O EP-08 (Control Center) nasceu de uma ideia em alto
