@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-09-28 · fonte e6a6ac9 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-09-28 · fonte 73f1075 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "The single declaration of structure by nature (ADR-0014). Vendored to every project with the kernel; structure_check.py, the doctor (W9), the pre-commit and the PreToolUse hook all read THIS file. Edit here, in the harness, never in a copy.",
   "version": "2026-09-28",
   "rule_of_thumb": "agente precisa ler para saber o que é verdade → docs/ · resultado de olhar o projeto → reports/ · ainda sendo decidido ou mostrado → design/ · não é texto para gente → data/",
@@ -16,6 +16,15 @@
       "imagens",
       "img"
     ]
+  },
+  "sdd": {
+    "files": [
+      "spec.md",
+      "plan.md",
+      "tasks.md"
+    ],
+    "history_dir": "milestones",
+    "rule": "a feature ativa mora plana em docs/specs/ (spec.md, plan.md, tasks.md); feature nova acumula no mesmo arquivo com IDs globais; docs/specs/milestones/<id>/ é histórico congelado"
   },
   "natures": {
     "docs": "MEMÓRIA",

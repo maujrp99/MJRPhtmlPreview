@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-09-28 · fonte e6a6ac9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-09-28 · fonte 73f1075 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 structure_check.py - the structure-by-nature sensor (ADR-0014, EP-09).
 
@@ -83,6 +83,16 @@ def _screenshot_note(low, rules):
     return None
 
 
+def _sdd_note(parts_under_docs, rules):
+    """spec/plan/tasks.md in a subfolder of docs/specs/ (other than the frozen history) - the next
+    session's onboarding reads the flat ones and would start blind."""
+    sdd = rules.get("sdd") or {}
+    p = list(parts_under_docs)
+    if len(p) > 2 and p[0] == "specs" and p[-1].lower() in sdd.get("files", []) and p[1] != sdd.get("history_dir"):
+        return f"spec/plan/tasks numa subpasta de docs/specs/ — {sdd['rule']}"
+    return None
+
+
 def _fix_hint(rel, to, is_dir):
     """The exact command to heal (git keeps the history; the human runs it or approves it)."""
     if not to or " " in to:
@@ -156,6 +166,9 @@ def _check_docs(root, rules, prof, profile, out):
                 to = _alias(aliases, low, profile)
                 out.append(_finding(rel + "/", f"fora da natureza de docs/ (MEMÓRIA) → {to}/" + _fix_hint(rel, to, True), to))
                 flagged_dirs.append(rel_docs)
+            continue
+        if _sdd_note(rel_docs.split("/"), rules):
+            out.append(_finding(rel, _sdd_note(rel_docs.split("/"), rules)))
             continue
         if low in retired_files:
             out.append(_finding(rel, retired_files[low]))
@@ -274,6 +287,8 @@ def judge_path(root, rel, rules=None):
         inner = "/".join(parts[1:])
         if any(inner == sk or inner.startswith(sk + "/") for sk in rules["skip_inside_docs"]):
             return None
+        if _sdd_note(parts[1:], rules):
+            return _finding(rel, _sdd_note(parts[1:], rules))
         if first == "raw":                                 # raw keeps its own shape: only DATA leaves it
             if Path(low_name).suffix in rules["data_extensions"]:
                 return _finding(rel, "dado dentro de docs/ (MEMÓRIA) → data/raw/ (ou data/fixtures/ se os testes leem)", "data/raw")
