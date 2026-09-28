@@ -4,10 +4,10 @@ aliases: [design-canon, canone de design, cânone de UX, cânone de UI, ux canon
 summary: as fontes elevadas que fundamentam UX, UI e conteúdo explicativo no MJRP — organizadas em oito disciplinas com regras de ID estável que as skills citam em vez de recitar
 tags: [harness, design, ux, kernel]
 status: vivo
-atualizado: 2026-09-27
-fontes: [few-information-dashboard-design, tufte-visual-display, knaflic-storytelling-with-data, wexler-big-book-of-dashboards, shneiderman-the-eyes-have-it, nngroup-dashboards-preattentive, smashing-dashboard-decluttering, a11y-collective-accessible-charts, sigma-color-blindness, 925studios-whoop-breakdown, sahha-readiness-scores, nielsen-ten-heuristics, krug-dont-make-me-think, cooper-about-face, yablonski-laws-of-ux, google-apple-m3-hig, w3c-wcag-2-2, gigerenzer-risk-communication, case-calm-technology, cdc-clear-communication-index, andrews-info-we-trust, design-council-double-diamond-knapp-sprint, baghai-three-horizons]
+atualizado: 2026-09-28
+fontes: [few-information-dashboard-design, tufte-visual-display, knaflic-storytelling-with-data, wexler-big-book-of-dashboards, shneiderman-the-eyes-have-it, nngroup-dashboards-preattentive, smashing-dashboard-decluttering, a11y-collective-accessible-charts, sigma-color-blindness, 925studios-whoop-breakdown, sahha-readiness-scores, nielsen-ten-heuristics, krug-dont-make-me-think, cooper-about-face, yablonski-laws-of-ux, google-apple-m3-hig, w3c-wcag-2-2, gigerenzer-risk-communication, case-calm-technology, cdc-clear-communication-index, andrews-info-we-trust, design-council-double-diamond-knapp-sprint, baghai-three-horizons, tmap-crud-test, kaplan-nngroup-empty-states]
 ---
-<!-- kernel do MJRP Harness · versão 2026-09-28 · fonte 936107a · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-09-28 · fonte 9349494 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **cânone de design** é o corpo de referência externo que fundamenta as regras de UX, UI e
@@ -98,6 +98,8 @@ o *porquê* mora lá e nesta página, nunca na skill.
 | **IN-06** | Estados vazio, carregando, erro e offline existem e dizem o que fazer — tela sem estado vazio desenhado é achado. | produção | Nielsen H1, H9; Cooper |
 | **IN-07** | Interatividade custa acessibilidade: o estático é o default; interação é camada adicional que não remove o acesso ao dado. | julgamento | A11Y Collective |
 | **IN-08** | O fim do fluxo é desenhado com cuidado (Peak-End): a última tela confirma, resume e aponta o próximo passo. | julgamento | Yablonski |
+| **IN-09** | Toda entidade que o usuário mantém tem, no protótipo, onde **criar, ver, editar e excluir/inativar** — ou a ausência é decisão escrita. Teste: a matriz entidade × operação (entidades do `data-model.md`) sem célula vazia sem motivo. | produção | TMAP (teste CRUD); Kaplan/NN/g |
+| **IN-10** | O protótipo mostra o **primeiro uso com o sistema vazio** — o caminho de "zero" até "pronto para o dia a dia", cada vazio apontando a ação que o preenche. Dado de exemplo pronto esconde esse caminho. | produção | Kaplan/NN/g |
 
 ### AH · Acessibilidade e honestidade
 
@@ -229,6 +231,13 @@ O cânone é **referência inicial, não limitante** (MJRP, 19/09/2026). Três m
   de produção), em vez de cláusula na regra viva das skills — para a `mjrp-ux-critic` ter o ID a citar. Duas fichas
   novas: Double Diamond + *Sprint* (divergir/convergir) e os três horizontes (os nomes). As skills refinadas em 22/09
   tinham sido apagadas do Cowork por uma subida do repo; foram refeitas a partir do parecer.
+- **2026-09-28 13:15** · **IN-09 e IN-10 entram — completude, não só qualidade do que está na tela.** Parecer do
+  `mjrp-pedroso-construction-sw`: protótipo aprovado em três auditorias da `mjrp-ux-critic` sem onde
+  criar uma obra; a passada de estrutura feita depois achou mais 12 lacunas. O cânone julgava o que
+  está na tela e não perguntava o que falta nela. IN-09 (matriz entidade × operação, fonte TMAP) e
+  IN-10 (primeiro uso com o sistema vazio, fonte Kaplan/NN/g); criação ausente de entidade central é
+  P0 na critic. A 2c passa a exigir o `info-arch.md` com a matriz e as jornadas — inclusive sobre
+  protótipo que já existia (Inception).
 
 ## Related
 [[engineering-canon]] · palette-library · [[harness-elements]] · [[terms]] · [[harness-kaizen]] · [[doctor]]
