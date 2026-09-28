@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-09-10
 fontes: []
 ---
-<!-- kernel do MJRP Harness · versão 2026-09-28 · fonte 73f1075 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-09-28 · fonte 936107a · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 **Perfil** é o que o projeto **entrega**, e é o que o campo `profile:` do contrato declara:

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-09-28 · fonte 73f1075 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-09-28 · fonte 936107a · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 doctor.py - the computational sensor of the harness.
 
@@ -1442,6 +1442,95 @@ def w9_structure(root, rep):
             rep.note("W9", "estrutura: todos os projetos vizinhos conformes")
 
 
+GIT_LOCK_MINUTES = 10      # a lock older than this with no git running is an orphan
+BRANCH_AHEAD_MAX = 10      # work parked on a side branch this far ahead of the principal one
+
+
+def _orphan_git_locks(root, now=None):
+    """(relative path, minutes) of *.lock files in .git older than GIT_LOCK_MINUTES."""
+    import time
+    gitdir = Path(root) / ".git"
+    if not gitdir.is_dir():
+        return []
+    now = now or time.time()
+    found = []
+    for f in (list(gitdir.glob("*.lock")) + list((gitdir / "refs").rglob("*.lock"))
+              + list(gitdir.glob("objects/*.lock"))):       # maintenance.lock: gc parado
+        try:
+            age = (now - f.stat().st_mtime) / 60
+        except OSError:
+            continue
+        if age > GIT_LOCK_MINUTES:
+            found.append((f.relative_to(root).as_posix(), int(age)))
+    return found
+
+
+def _principal_branch(root):
+    code, out = sh(["git", "symbolic-ref", "--short", "refs/remotes/origin/HEAD"], root)
+    if code == 0 and out.strip():
+        return out.strip().split("/", 1)[-1]
+    for b in ("main", "master"):
+        if sh(["git", "rev-parse", "--verify", "-q", f"refs/heads/{b}"], root)[0] == 0:
+            return b
+    return None
+
+
+def w10_sessions(root, rep):
+    """W10 - concurrent agent sessions on one repo: orphan git locks, sessions that ended without
+    the closing handoff, more than one session active, work parked on a side branch."""
+    inc = ("26-27/09: sessões paralelas no fin-control varreram o índice uma da outra e deixaram "
+           "`.git/index.lock` órfão em 6 de 7 filhos; o MJRP-curated-content ficou 17 dias sem "
+           "conseguir commitar por um HEAD.lock de 11/09")
+    top = git_toplevel(root)
+    if top is None:
+        return
+    if top.resolve() != Path(root).resolve():
+        rep.note("W10", "subprojeto aninhado — travas e sessões são do repo pai")
+        return
+    locks = _orphan_git_locks(root)
+    hoje = date.today().strftime("%Y%m%d")
+    for rel, mins in locks:
+        rep.warn("W10", f"trava de git órfã: {rel} (há {mins} min) — se nenhum git estiver rodando, "
+                        f"sarar: mv {rel} {rel}.orphan-{hoje}", inc)
+    sys.dont_write_bytecode = True
+    try:
+        import session_lease
+        ls = session_lease.leases(root)
+    except ModuleNotFoundError:
+        ls = []
+    ativas = [l for l, s in ls if s == "active"]
+    for l, s in ls:
+        if s == "stale":
+            rep.warn("W10", f"sessão terminou sem fechamento (sem handoff): {l.get('session')} · "
+                            f"escopo: {l.get('scope') or '(não declarado)'} · último sinal {l.get('heartbeat')} — "
+                            f"confira o que ficou sem commit e libere: session_lease.py release --session <id>", inc)
+    if len(ativas) > 1:
+        rep.warn("W10", f"{len(ativas)} sessões ativas neste repo agora: "
+                        + "; ".join(f"{l.get('session')} ({l.get('scope') or 'sem escopo'})" for l in ativas)
+                        + " — commit só por pathspec", inc)
+    principal = _principal_branch(root)
+    code, cur = sh(["git", "rev-parse", "--abbrev-ref", "HEAD"], root)
+    cur = (cur or "").strip()
+    if principal and code == 0 and cur not in ("", "HEAD", principal):
+        c2, n = sh(["git", "rev-list", "--count", f"{principal}..HEAD"], root)
+        ahead = int(n.strip()) if c2 == 0 and n.strip().isdigit() else 0
+        if ahead > BRANCH_AHEAD_MAX:
+            rep.warn("W10", f"trabalho parado na branch `{cur}`, {ahead} commit(s) à frente da `{principal}` — "
+                            f"integre na principal ou declare o prazo da branch", inc)
+    if not locks and not [1 for l, s in ls if s == "stale"] and len(ativas) <= 1:
+        rep.note("W10", f"sessões: nenhuma trava órfã · {len(ativas)} sessão ativa registrada")
+    if (read_yaml((Path(root) / CONTRACT).read_text(encoding="utf-8")) or {}).get("mjrp_harness", {}).get("profile") == "meta":
+        try:
+            import structure_check
+            filhos = structure_check.all_projects(Path(root))[1:]
+        except Exception:
+            filhos = []
+        com_trava = [f"{c.name} ({len(_orphan_git_locks(c))})" for c in filhos if _orphan_git_locks(c)]
+        if com_trava:
+            rep.warn("W10", f"{len(com_trava)} projeto(s) com trava de git órfã: {', '.join(com_trava)} — "
+                            f"rode o doctor de cada um para o comando que sara", inc)
+
+
 def run(root, skip_sensors):
     rep = Report()
     cfile = root / CONTRACT
@@ -1480,6 +1569,7 @@ def run(root, skip_sensors):
     w6_charter_not_migrated(root, rep)
     w8_cowork_marker(root, cfg, rep)
     w9_structure(root, rep)
+    w10_sessions(root, rep)
     _daily_checks_ledger(root, cfg, rep)
     return rep, (1 if rep.errors else 0)
 

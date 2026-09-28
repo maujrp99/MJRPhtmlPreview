@@ -6,7 +6,7 @@ tags: [harness, sensores, verificacao]
 status: em formação
 atualizado: 2026-09-14
 ---
-<!-- kernel do MJRP Harness · versão 2026-09-28 · fonte 73f1075 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-09-28 · fonte 936107a · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **doctor** é o sensor do harness: um script que lê a instância e devolve verde,
@@ -130,6 +130,14 @@ pegado (ADR-0002, emendada pela ADR-0007): checagem sem incidente é opinião co
   que um projeto novo, em qualquer AI Platform, comece com a estrutura certa — é o que motivou
   desenhar o `new_project.py`, um scaffolding determinístico rodado pelo Zé antes de abrir
   qualquer IA (ver BACKLOG e ADR pendente sobre "como um projeto começa, de verdade").
+
+- **2026-09-28 12:37** · **W10 — sessões concorrentes no mesmo repo** (parecer do fin-control, 27/09). Avisa,
+  nunca reprova: trava de git órfã (`.git/*.lock`, `refs/**`, `objects/maintenance.lock` com mais de 10
+  min), com o comando que sara (`mv … .orphan-AAAAMMDD` — renomear passa onde apagar é recusado);
+  sessão que terminou sem handoff (lease de `session_lease.py` sem release e sem sinal há mais de 12 h);
+  mais de uma sessão ativa; trabalho parado numa branch mais de 10 commits à frente da principal. Na
+  fonte (`meta`), também lista os filhos com trava órfã. Primeira rodada: `objects/maintenance.lock` de
+  19/09 no próprio harness e de 11/09 no MJRP-curated-content — o `git gc` automático parado desde então.
 
 ## Related
 [[harness-elements]] · [[harness-kaizen]] · skill-distribution · ADR-0002 · ADR-0007
