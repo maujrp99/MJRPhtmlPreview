@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-09-28 · fonte 9349494 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-02 · fonte cfce28d · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 doctor.py - the computational sensor of the harness.
 
@@ -1531,6 +1531,29 @@ def w10_sessions(root, rep):
                             f"rode o doctor de cada um para o comando que sara", inc)
 
 
+def w11_prototype_inventory(root, rep):
+    """W11 - the prototype inventory (info-arch.md): every item ends in a destination. The prototype
+    is a baseline, not a mold - what is checked is destination, never sameness."""
+    inc = ("02/10/2026, EP-07: o que o humano aprovou no protótipo se perdia no caminho até o build — "
+           "nada ligava o item da tela ao requisito; caso de origem no brainstorming do YouTube Control Center")
+    sys.dont_write_bytecode = True
+    try:
+        import SDD_chain_artifacts_check as sdd
+    except ModuleNotFoundError:
+        return
+    try:
+        gaps = sdd.inventory_gaps(root)
+    except Exception as e:
+        rep.warn("W11", f"inventário do protótipo não avaliado ({e})", inc)
+        return
+    if gaps is None:
+        return
+    for g in gaps:
+        rep.warn("W11", g.replace("inventario: ", "inventário do protótipo: "), inc)
+    if not gaps:
+        rep.note("W11", "inventário do protótipo: todo item com destino")
+
+
 def run(root, skip_sensors):
     rep = Report()
     cfile = root / CONTRACT
@@ -1570,6 +1593,7 @@ def run(root, skip_sensors):
     w8_cowork_marker(root, cfg, rep)
     w9_structure(root, rep)
     w10_sessions(root, rep)
+    w11_prototype_inventory(root, rep)
     _daily_checks_ledger(root, cfg, rep)
     return rep, (1 if rep.errors else 0)
 

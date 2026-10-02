@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-09-28
 fontes: [2026-claude-code-auto-memory]
 ---
-<!-- kernel do MJRP Harness · versão 2026-09-28 · fonte 9349494 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-02 · fonte cfce28d · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O registro do que o harness **não pegou** e do que se aprendeu com isso. Achado e lição moram
@@ -38,6 +38,22 @@ deixando o ponteiro. Lição que só mora aqui é lição que ninguém aplica.
 > próprio harness`.
 
 ## Findings
+
+- **2026-10-02 18:53** · **O git pela ponte da AI Platform não apaga as próprias travas — a causa das travas órfãs
+  em todos os filhos.** Sem a permissão de apagar concedida na sessão, o git commita, mas não consegue
+  remover `HEAD.lock`, `index.lock`, `next-index-*.lock`, `objects/maintenance.lock` nem os
+  `tmp_obj_*` que cria: o harness tinha 1.626 temporários acumulados e um `index.lock` de 29/09 que
+  impediu as duas passadas agendadas do inventário de commitarem. O W10 (28/09) mostrava a trava e o
+  `mv` que sara, mas tratava o sintoma. **A lição:** sessão que vai operar git pela ponte pede a
+  permissão de apagar no começo (era a proposta 4 do parecer do fin-control, de 27/09, aceita só como
+  higiene) — e o onboarding precisa dizer isso, não o handoff.
+
+- **2026-10-02 18:53** · **O harness tinha a ida do protótipo, não a volta.** A Inception (21/09) ensinou o harness a
+  ver antes de definir; nada levava o que o humano aprovou no protótipo até o build — o `info-arch.md`
+  era escrito como se a tela não existisse, e item aprovado podia sumir sem ninguém decidir. Parecer
+  vindo do brainstorming do YouTube Control Center; o titular corrigiu a leitura do agente duas vezes:
+  não é achar o que falta (isso é o IN-09/IN-10), é **não perder o que existe** — e o protótipo é
+  **baseline, não molde**. Virou o mapeamento reverso: inventário com destino por item, W11 no doctor.
 
 - **2026-09-28 09:21** · **O harness não tinha catálogo de componentes de interface — cada protótipo
   reinventa tabela, caixa recolhível e filtro, e nada garante que o build use o mesmo que o protótipo.**
