@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-09-28
 fontes: [2026-claude-code-auto-memory]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-02 · fonte cfce28d · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-02 · fonte 64f0cf9 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O registro do que o harness **não pegou** e do que se aprendeu com isso. Achado e lição moram
@@ -46,7 +46,8 @@ deixando o ponteiro. Lição que só mora aqui é lição que ninguém aplica.
   impediu as duas passadas agendadas do inventário de commitarem. O W10 (28/09) mostrava a trava e o
   `mv` que sara, mas tratava o sintoma. **A lição:** sessão que vai operar git pela ponte pede a
   permissão de apagar no começo (era a proposta 4 do parecer do fin-control, de 27/09, aceita só como
-  higiene) — e o onboarding precisa dizer isso, não o handoff.
+  higiene) — e o onboarding precisa dizer isso, não o handoff. **Corrigido (2026-10-02 19:01):** a `mjrp-onboarding`
+  pede a permissão no começo, o `AGENTS.md` e o template do `new_project.py` dizem o mesmo.
 
 - **2026-10-02 18:53** · **O harness tinha a ida do protótipo, não a volta.** A Inception (21/09) ensinou o harness a
   ver antes de definir; nada levava o que o humano aprovou no protótipo até o build — o `info-arch.md`

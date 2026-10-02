@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-09-17
 fontes: [github/spec-kit, BMAD, feedback-from-other-projects/spec-kit, feedback-from-other-projects/speckit-artifact-reconciliation]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-02 · fonte cfce28d · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-02 · fonte 64f0cf9 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 **SpecKit** é a adaptação do MJRP ao Spec Kit do GitHub: os **10 documentos vivos** de `docs/specs/` — a cadeia `prd → story → spec → plan → tasks → uat`, em que cada um deriva do anterior, mais o contexto durável que a cadeia consulta, `constitution`, `arch`, `data-model` e `design-system`. Três coisas têm o mesmo nome e confundi-las gera achado errado: **Spec Kit** (com espaço) é o método original do GitHub, `constitution → specify → plan → tasks → implement`; **SpecKit** (sem espaço) é esta adaptação; e o **uso real de cada projeto**, que pode acrescentar arquivos de apoio (um diagrama, uma planilha) sem que isso mude a lista.
