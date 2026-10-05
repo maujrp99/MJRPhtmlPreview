@@ -1,3 +1,7 @@
+---
+status: Done
+imports: ["[[S-01]]", "[[S-02]]", "[[S-03]]", "[[S-04]]", "[[S-05]]", "[[S-06]]", "[[S-07]]", "[[S-08]]", "[[S-09]]"]
+---
 # Specification: MJRPhtmlPreview
 
 > Documento de Especificação Técnica do Produto (PRD/Spec). Fonte da Verdade para o que está sendo construído.

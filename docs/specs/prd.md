@@ -72,7 +72,66 @@ AI-generated HTML (from Cowork, Claude Code, ChatGPT, etc.) needs to be previewe
 *Extraia do § Requisitos acima o que o charter marcava como fora — o texto original os
 trazia juntos, e separá-los é julgamento, não mecânica.*
 
-## Stories
+## Requisitos por épico
 
-O backlog de produto mora em [`story.md`](story.md); os milestones, no
-[`ROADMAP.md`](../../ROADMAP.md).
+O backlog de produto — cada requisito é um nó: um arquivo em `docs/specs/requirements/<pasta do épico>/<ID>.md`, com
+status, prioridade e arestas no frontmatter, nas seções `## pt-BR` e `## en` (kernel `requirements-graph`). Aqui fica o
+mapa: cada épico declara a pasta dos seus requisitos (`folder::`) e o resultado do [`ROADMAP.md`](../../ROADMAP.md) que
+serve (`serves::`), e embute os seus requisitos. Os épicos seguem os quatro objetivos de § *Objetivo e métricas*.
+
+> **Migrado em 2026-10-05** do `story.md` (arquivado em `_archive/2026-10-05-story-md/story.md`): `US-NN` → `S-NN`,
+> mesmo número. As features entregues estão em `docs/specs/features/` (F01 = M1–M3.5 + sessão 02/26 + M6, F02 = M4,
+> F03 = M5).
+
+### Transversais
+
+**Não-funcionais** — valem para todas as features e não são importados por nenhuma: cada um é um arquivo
+`docs/specs/requirements/nfr/NFR-xx.md` (vindos de `spec.md` §3 NFR01–NFR04; NFR05–NFR07 eram as stories S-07, S-08, S-09).
+
+![[NFR-01]]
+
+![[NFR-02]]
+
+![[NFR-03]]
+
+![[NFR-04]]
+
+### EP-01 · Preview instantâneo
+folder:: ep-01-instant-preview
+serves:: [[ROADMAP#^OUT-01]] ^EP-01
+
+![[S-01]]
+
+![[S-07]]
+
+![[S-08]]
+
+![[S-09]]
+
+![[S-10]]
+
+![[S-11]]
+
+### EP-02 · Salvar no Google Drive
+folder:: ep-02-google-drive-save
+serves:: [[ROADMAP#^OUT-02]] ^EP-02
+
+![[S-03]]
+
+![[S-06]]
+
+### EP-03 · Salvar localmente e exportar
+folder:: ep-03-local-save-and-export
+serves:: [[ROADMAP#^OUT-03]] ^EP-03
+
+![[S-02]]
+
+![[S-04]]
+
+![[S-05]]
+
+### EP-04 · Edição de texto no preview
+folder:: ep-04-inline-text-editing
+serves:: [[ROADMAP#^OUT-04]] ^EP-04
+
+![[S-12]]

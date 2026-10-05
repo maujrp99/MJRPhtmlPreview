@@ -1,7 +1,7 @@
 # Tasks: M5 — Load & Edit
 
 **Status**: Completed
-**Plan Reference**: [plan.md](../m5/plan.md)
+**Plan Reference**: [plan.md](plan.md)
 
 ## Pre-Implementation
 - [x] Confirm spec.md and plan.md are APPROVED (Gate 1 & 2 ✅)

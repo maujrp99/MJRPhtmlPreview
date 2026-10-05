@@ -2,6 +2,13 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`. Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-10-05 16:32] session — grafo de requisitos: backlog virou nós, spec/plan/tasks viraram feature (S-79 do harness)
+
+> Participantes: MJRP + Claude (Cowork, sessão do harness) · Branch: main
+> Session: https://claude.ai/code/session_01UFhRr8vY3DcgNwoXzoEzLx
+
+- Pedido do MJRP no harness (2026-10-05 13:2x: "endereça tudo o que for necessário pra não ficar pendência"): este projeto passou para o grafo de requisitos, como o harness. O `story.md` virou nós em `docs/specs/requirements/<pasta do épico>/`, em pt-BR e em inglês; o `spec.md`/`plan.md`/`tasks.md` planos foram para `docs/specs/features/F01-…/` (e outras pastas, se havia); o PRD ganhou a seção `## Requisitos por épico` e o ROADMAP, as âncoras `^OUT-NN`. Status de cada nó pela evidência (commit que entregou, aceite registrado); sensor do grafo VERDE. O mapa velho→novo, os status e as perguntas em aberto estão em `reports/audits/2026-10-05-graph-migration-report.md`. O `story.md` original está em `_archive/2026-10-05-story-md/`.
+
 ## [2026-09-27 11:21] decision — kernel do harness atualizado: MP-01 no design-canon e `data/canonical/`
 
 > Participantes: MJRP + Claude (Cowork, sessão do harness) · Branch: main

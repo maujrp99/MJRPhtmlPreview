@@ -1,3 +1,7 @@
+---
+status: Done
+imports: ["[[S-10]]"]
+---
 # Specification: M4 — Markdown & Mermaid Render
 
 > **Status**: ✅ APPROVED (2026-02-26 20:09)

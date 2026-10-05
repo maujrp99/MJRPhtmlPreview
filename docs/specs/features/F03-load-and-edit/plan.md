@@ -1,7 +1,7 @@
 # Plan: M5 — Load & Edit
 
 **Status**: Draft
-**Spec Reference**: [spec.md](../m5/spec.md)
+**Spec Reference**: [spec.md](spec.md)
 
 ## Architecture Approach
 We will extend the existing modular architecture:
