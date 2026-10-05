@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte a8e8514 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte c2453c9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """requirements_graph_check.py -- checks the requirements graph of a project against its single declaration,
 requirements_graph_rules.json (S-63, kernel page requirements-graph).
 
@@ -191,7 +191,7 @@ class Graph:
                     self.find("feature_files", f"{fd.name}: falta {f}")
             cur = None
             for line in body.splitlines():
-                m = re.match(r"^(?:#{2,6}\s+|[-*]\s+\[?)(REQ-\d{2})\b", line)
+                m = re.match(r"^(?:#{2,6}\s+|[-*]\s+(?:\*\*)?\[?)(REQ-\d{2,})\b", line)
                 if m:
                     cur = m.group(1)
                     feat["reqs"].setdefault(cur, [])
@@ -202,7 +202,7 @@ class Graph:
             if tasks.exists():
                 cur = None
                 for line in tasks.read_text(encoding="utf-8").splitlines():
-                    m = re.match(r"^(?:#{2,6}\s+|[-*]\s+(?:\[[ xX]\]\s+)?\[?)(TASK-\d{2})\b", line)
+                    m = re.match(r"^(?:#{2,6}\s+|[-*]\s+(?:\[[ xX]\]\s+)?(?:\*\*)?\[?)(TASK-\d{2,})\b", line)
                     if m:
                         cur = m.group(1)
                         feat["tasks"].setdefault(cur, [])
@@ -211,7 +211,7 @@ class Graph:
                             feat.setdefault("open_tasks", []).append(cur)
                     m = re.search(r"implements::\s*(.+)$", line)
                     if cur and m:
-                        feat["tasks"][cur].extend(local_ids(m.group(1), r"REQ-\d{2}"))
+                        feat["tasks"][cur].extend(local_ids(m.group(1), r"REQ-\d{2,}"))
             self.features[fid] = feat
 
     def load(self):
@@ -262,6 +262,13 @@ class Graph:
                 if node["type"] not in srcs:
                     continue
                 targets = node["edges"].get(edge["name"], [])
+                if edge.get("to") == "acceptance":
+                    # S-79: an acceptance is an anchor of uat.md or a log entry, not a node -- resolved by
+                    # acceptance_resolves (the uat.md anchors were reported as missing targets before)
+                    raw = node.get("accepted_in", "")
+                    if raw and not self.acceptance_resolves(raw):
+                        self.find("target_exists", f"{nid} —accepted_in→ {raw}: aceite não encontrado (âncora do uat.md ou entrada do log)")
+                    continue
                 for t in targets:
                     self.check_target(nid, edge, t)
                 if not self.enforced(edge, node["status"]):

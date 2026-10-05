@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte a8e8514 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte c2453c9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """SDD_chain_artifacts_check.py -- rastreabilidade de IDs na cadeia SDD (prd -> spec -> plan ->
 tasks; projeto ainda nao migrado: prd -> story -> spec -> plan -> tasks).
 
