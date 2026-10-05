@@ -4,6 +4,8 @@
 
 **Where the Work Stopped.** Projeto criado por `new_project.py` em 2026-09-15. Nada foi implementado ainda - o próximo passo é preencher VISION.md e, se houver PRD, decidir a primeira feature.
 
+**Harness, 2026-10-05 16:58.** Este projeto está no grafo de requisitos (S-79 do harness): o backlog são os nós em `docs/specs/requirements/`, spec/plan/tasks moram em `docs/specs/features/`; mapa e perguntas abertas em `reports/audits/2026-10-05-graph-migration-report.md`. O `SDD_chain_artifacts_check.py` foi aposentado (S-77 do harness) e o kernel atualizado; o `.gitignore` ignora `.mjrp/`. Ver `docs/log.md`.
+
 **Estrutura por natureza (2026-09-27 00:05).** Aplicada pelo harness (EP-09) — ver `docs/log.md`.
 
 **Kernel atualizado (2026-09-27 11:21).** PRINCIPLES I.14, [[engineering-canon]] ampliado e MP-01 no [[design-canon]] — ver `docs/log.md`.

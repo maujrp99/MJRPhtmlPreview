@@ -2,6 +2,13 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`. Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-10-05 16:58] session — estado e links depois do grafo de requisitos (harness, S-77/S-79)
+
+> Participantes: MJRP + Claude (Cowork, sessão do harness) · Branch: main
+> Session: https://claude.ai/code/session_01UFhRr8vY3DcgNwoXzoEzLx
+
+- Depois do trabalho do harness de hoje: `## Now` atualizado com o estado (grafo de requisitos, SDD_chain aposentado); links que apontavam para `story.md`/`spec.md`/`tasks.md` planos corrigidos para os nós e a pasta da feature.
+
 ## [2026-10-05 16:47] session — rastro dos sensores e backup do refresh no git (S-77 do harness)
 
 > Participantes: MJRP + Claude (Cowork, sessão do harness) · Branch: main

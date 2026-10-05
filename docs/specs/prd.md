@@ -2,7 +2,7 @@
 
 > O que o produto **é**, para quem, com que objetivo, e **o que ele explicitamente não é**.
 > Documento **vivo** — ao contrário do charter, que era um retrato do kickoff. Alimenta o
-> [`story.md`](story.md); não o substitui.
+> [`requirements/`](requirements/); não os substitui.
 >
 > *Migrado do `docs/specs/prd.md` em 2026-09-15 pelo `charter_to_prd.py`, no retrofit do MJRP Harness.*
 > *De onde veio cada parte: *Justification (Business Case)* → Contexto e encaixe estratégico · *Main Goals and Success Metrics* → Objetivo e métricas · *High-Level Scope* → Requisitos · *Main Stakeholders* → Papéis e ferramentas · *Risks and Constraints* → Premissas e questões em aberto · *AI Tooling* → Papéis e ferramentas.*
