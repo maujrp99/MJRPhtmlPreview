@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-09-28
 fontes: [2026-claude-code-auto-memory]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-02 · fonte 64f0cf9 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-05 · fonte a8e8514 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O registro do que o harness **não pegou** e do que se aprendeu com isso. Achado e lição moram
@@ -38,6 +38,15 @@ deixando o ponteiro. Lição que só mora aqui é lição que ninguém aplica.
 > próprio harness`.
 
 ## Findings
+
+- **2026-10-04 14:21** · **Uma compactação de contexto quase apagou decisões do MJRP — o registro dependia de hábito.**
+  As respostas do passo 10 da S-63 só sobreviveram no resumo automático da AI Platform; o log e o `## Now`
+  não as tinham, e o F1 passava porque media a data do `MEMORY.md`, não o conteúdo. O MJRP perguntou se a
+  solução contra perda de contexto tinha rodado: não — a S-61 estava em Backlog. **Correção:** a S-61
+  implementada no mesmo dia (`commit-msg` com entrada obrigatória no log, `## Now` julgado pelo conteúdo,
+  hooks de diário e retomada, regra na `mjrp-onboarding` para a sessão remota) — [[memory-architecture]].
+  **Lição:** regra que depende de o agente lembrar falha justamente quando o contexto some; ela tem que
+  morar onde roda sempre — aqui, no git.
 
 - **2026-10-02 18:53** · **O git pela ponte da AI Platform não apaga as próprias travas — a causa das travas órfãs
   em todos os filhos.** Sem a permissão de apagar concedida na sessão, o git commita, mas não consegue
@@ -99,7 +108,7 @@ deixando o ponteiro. Lição que só mora aqui é lição que ninguém aplica.
   abrindo — a skill dessas fases **oferece, recomenda e pergunta**; regra fixa ali mata o que a
   fase deveria produzir; (2) a regra ainda cabe, **restringindo o agente**, nunca o humano ou o
   processo — "não inventar dado como real" fica; "para quando…" sai; (3) o vocabulário é o do
-  humano. A regra de escrita entrou na `mjrp-skill-refiner` (é ela que escreve as skills) e no
+  humano. A regra de escrita entrou na `mjrp-crafting-skills` (é ela que escreve as skills) e no
   Ways of Working; a inspeção semântica com esse critério achou 11 ajustes em svpg,
   ux-ui-designer, prompt e lifecycle — todos troca de modal, não reescrita. **Mecanismo:** o
   parecer veio de um subprojeto aninhado (`apps/control-center/docs/harness-feedback/`), que o
@@ -545,7 +554,7 @@ deixando o ponteiro. Lição que só mora aqui é lição que ninguém aplica.
 
 - **2026-09-12 12:20** · **Nem toda skill que nomeia uma plataforma está violando a regra
   plataforma-agnóstica — a `mjrp-adr` já era exceção ao critério (d), e a varredura do #40 achou
-  a mesma forma no critério (a).** A `mjrp-skill-refiner` nomeia Cowork, Claude Code e Antigravity
+  a mesma forma no critério (a).** A `mjrp-crafting-skills` nomeia Cowork, Claude Code e Antigravity
   de propósito: o assunto dela **é** empacotar skills para cada uma dessas plataformas
   especificamente — trocar por "AI Platform" quebraria a instrução, não a tornaria mais genérica.
   A mesma varredura também achou dois sentidos diferentes para a palavra "Gemini": a plataforma

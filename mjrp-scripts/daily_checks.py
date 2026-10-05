@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-02 · fonte 64f0cf9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte a8e8514 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """daily_checks.py -- rastro DATADO (aberto/resolvido) de aviso e erro, compartilhado por
 sensores informativos (SDD_chain_artifacts_check.py) e pelo proprio doctor.py.
 

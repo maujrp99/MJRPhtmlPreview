@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-09-14
 fontes: []
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-02 · fonte 64f0cf9 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-05 · fonte a8e8514 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 A **cadeia de intenção** que ordena todo documento do MJRP que declara para onde se vai:
@@ -134,7 +134,7 @@ deixa de descrever o que o projeto é (isso subiu para o **Objetivo**) e passa a
 
 **Onde a mudança bate.** A cadeia é declarada aqui, mas o template do `VISION.md` é reproduzido em
 outros cinco lugares: [[vision-document]] (a página que declara o template), `VISION.md`, a
-`mjrp-project-bootstrap` (que escreve o VISION de todo projeto novo), a `mjrp-onboarding` (que abre
+`mjrp-pdlc-bootstrap` (que escreve o VISION de todo projeto novo), a `mjrp-pdlc-onboarding` (que abre
 toda síntese de sessão pelo campo do WHY) e o `new_project.py`. Enquanto a propagação não acontece,
 esta página e o template divergem — por isso o status é *em formação*.
 

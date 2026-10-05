@@ -1,0 +1,17 @@
+#!/bin/sh
+# cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte a8e8514 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# commit-msg - every commit brings a new entry in the project log (S-61). Born 2026-10-03/04: commits
+# without a log entry, and decisions that survived a context compaction only in the AI Platform's summary.
+# It runs wherever git runs, so it guards local and cloud sessions alike.
+#
+# Installed per clone by:  git config core.hooksPath mjrp-scripts/hooks   (new_project.py does it)
+# Bypass is the human's call, never the agent's:  git commit --no-verify
+ROOT=$(git rev-parse --show-toplevel) || exit 0
+CHECK="$ROOT/mjrp-scripts/log_entry_check.py"
+[ -f "$CHECK" ] || exit 0
+command -v python3 >/dev/null 2>&1 || exit 0
+AMEND=""
+case "$(ps -o args= -p "$PPID" 2>/dev/null)" in
+  *--amend*) AMEND="--amend" ;;
+esac
+cd "$ROOT" && python3 "$CHECK" $AMEND

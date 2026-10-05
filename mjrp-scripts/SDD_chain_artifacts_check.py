@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-02 · fonte 64f0cf9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
-"""SDD_chain_artifacts_check.py -- rastreabilidade de IDs na cadeia SDD (prd -> story -> spec ->
-plan -> tasks).
+# cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte a8e8514 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+"""SDD_chain_artifacts_check.py -- rastreabilidade de IDs na cadeia SDD (prd -> spec -> plan ->
+tasks; projeto ainda nao migrado: prd -> story -> spec -> plan -> tasks).
+
+03/10/2026 (S-62): os requisitos passaram a morar no proprio prd.md; o story.md sai da cadeia nos
+projetos migrados. O script nao muda -- a cadeia e os globs sao do contrato de cada projeto.
 
 NUNCA e sensor do A1 (nao entra em `sensors:` do .mjrp-project.yml -- A1 trata qualquer saida
 != 0 como FAIL, e este aviso e por natureza informativo, BACKLOG #58). Chamado a mao ou pelo

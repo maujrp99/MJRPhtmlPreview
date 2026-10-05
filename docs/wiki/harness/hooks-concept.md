@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-09-11
 fontes: [agentic-lab-claude-code-hooks-explained, don-woodlock-what-is-harness-engineering, quintanilha-o-que-e-harness, austin-marchese-karpathy-method, pasquadev-harness-e-loop-engineering, fernanda-kipper-harness-alem-do-claude-md]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-02 · fonte 64f0cf9 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-05 · fonte a8e8514 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 Um **hook** é um evento que dispara um script: **o evento responde *quando* o código roda; o
@@ -143,6 +143,12 @@ complexity for you. Engineering is not dead; you're just abstracting up a layer.
 - **O MJRP já tem dois**, desde 09/09 (BACKLOG #9): `SessionStart` roda o `doctor` — é o que faz o
   aviso de arquivo sem commit (W4) chegar sozinho —, e `Stop` bloqueia o fim do turno sem critério
   de saída. O segundo é o que torna o princípio II.4 (*critério de saída*) **executável**, não só escrito.
+- **Desde 04/10, mais cinco — e um limite descoberto** (S-61). `PreCompact`, `SessionStart` (só na
+  retomada depois de compactar), um segundo `Stop` e `PostToolUse` (Skill) rodam o `session_journal.py`;
+  o quinto é um hook do **git**, o `commit-msg`. O limite: hook de AI Platform só roda onde a plataforma
+  carrega as configurações do projeto. A sessão remota que alcança o repo por ponte não carrega — prova:
+  o `Stop` de critério de saída nunca bloqueou nela. Hook do git roda onde o git roda, em toda sessão;
+  por isso a regra que não pode falhar (todo commit com entrada no log) mora nele.
 - **O exercício "poderia ser um hook?" já foi feito uma vez aqui**, ao contrário: na revisão do
   `AGENTS.md` de 10/09, uma instrução que mandava o agente fazer o que o sensor reprovava saiu do
   texto — o mecanismo (I2) é a regra, a prosa era o pedido redundante.

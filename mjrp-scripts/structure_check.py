@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-02 · fonte 64f0cf9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte a8e8514 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 structure_check.py - the structure-by-nature sensor (ADR-0014, EP-09).
 
@@ -84,13 +84,19 @@ def _screenshot_note(low, rules):
 
 
 def _sdd_note(parts_under_docs, rules):
-    """spec/plan/tasks.md in a subfolder of docs/specs/ (other than the frozen history) - the next
-    session's onboarding reads the flat ones and would start blind."""
+    """spec/plan/tasks.md where no agent looks for them. Since S-63 (2026-10-04) each feature has its folder,
+    docs/specs/features/Fxx-slug/; docs/specs/milestones/<id>/ is the frozen history; flat files in docs/specs/ are
+    the previous model, accepted until the project's refresh. Anything else - another subfolder, a feature folder off
+    the Fxx-slug pattern - is where the next session would not find the spec."""
     sdd = rules.get("sdd") or {}
     p = list(parts_under_docs)
-    if len(p) > 2 and p[0] == "specs" and p[-1].lower() in sdd.get("files", []) and p[1] != sdd.get("history_dir"):
-        return f"spec/plan/tasks numa subpasta de docs/specs/ — {sdd['rule']}"
-    return None
+    if len(p) <= 2 or p[0] != "specs" or p[-1].lower() not in sdd.get("files", []):
+        return None
+    if p[1] == sdd.get("history_dir"):
+        return None
+    if p[1] == sdd.get("features_dir") and len(p) == 4 and re.match(sdd.get("feature_pattern", "^$"), p[2]):
+        return None
+    return f"spec/plan/tasks fora da pasta da feature — {sdd['rule']}"
 
 
 def _fix_hint(rel, to, is_dir):

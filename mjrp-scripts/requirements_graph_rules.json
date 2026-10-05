@@ -1,0 +1,270 @@
+{
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte a8e8514 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_about": "Single declaration of the requirements graph (S-63, kernel page requirements-graph). The sensor reads this file; the kernel page explains it for humans. Edges are written in one direction only; the inverse is computed. Each edge is enforced only from the status declared in 'enforced_from' (lesson of SDD_chain_artifacts_check: checking every pair everywhere produced 366 false positives).",
+  "version": 1,
+  "paths": {
+    "requirements": "docs/specs/requirements",
+    "features": "docs/specs/features",
+    "prd": "docs/specs/prd.md",
+    "roadmap": "ROADMAP.md",
+    "info_arch": "docs/specs/info-arch.md",
+    "behavior": "docs/specs/behavior.md",
+    "uat": "docs/specs/uat.md",
+    "nfr_folder": "nfr"
+  },
+  "edge_syntax": {
+    "file_node": "YAML frontmatter key in the node's own file: `epic: \"[[prd#^EP-01]]\"`, lists for many targets",
+    "inline_node": "Inline field on the line under the node inside its document: `serves:: [[ROADMAP#^OUT-01]]` (epics in prd.md, releases in ROADMAP.md)",
+    "block_anchor": "`^ID` at the end of the paragraph or list item that holds the node (outcomes, releases, observable states); letters, digits and hyphens only"
+  },
+  "statuses": [
+    "Backlog",
+    "Prioritized",
+    "Ready",
+    "In progress",
+    "Done",
+    "Accepted"
+  ],
+  "off_track_statuses": [
+    "Deferred"
+  ],
+  "_off_track": "valid statuses outside the lifecycle order: never count as reached for enforced_from, never open (MJRP, 2026-10-04 14:28: Deferred joins the rules)",
+  "open_feature_statuses": [
+    "Ready",
+    "In progress"
+  ],
+  "node_types": {
+    "outcome": {
+      "id_pattern": "^OUT-\\d{2}$",
+      "lives_in": "roadmap",
+      "form": "block_anchor"
+    },
+    "release": {
+      "id_pattern": "^REL-\\d{2}$",
+      "lives_in": "roadmap",
+      "form": "block_anchor",
+      "optional": true,
+      "fields": [
+        "kind",
+        "date"
+      ]
+    },
+    "epic": {
+      "id_pattern": "^EP-\\d{2}$",
+      "lives_in": "prd",
+      "form": "inline_node"
+    },
+    "requirement": {
+      "id_pattern": "^(S|UC|EA)-\\d{2,}$",
+      "lives_in": "requirements",
+      "form": "file_node",
+      "fields": [
+        "id",
+        "type",
+        "format",
+        "status"
+      ]
+    },
+    "nfr": {
+      "id_pattern": "^NFR-\\d{2}$",
+      "lives_in": "requirements",
+      "form": "file_node",
+      "fields": [
+        "id",
+        "type",
+        "status"
+      ]
+    },
+    "feature": {
+      "id_pattern": "^F\\d{2}$",
+      "lives_in": "features",
+      "form": "folder",
+      "folder_pattern": "^F\\d{2}-[a-z0-9-]+$",
+      "files": [
+        "spec.md",
+        "plan.md",
+        "tasks.md"
+      ]
+    },
+    "spec_req": {
+      "id_pattern": "^REQ-\\d{2}$",
+      "lives_in": "feature:spec.md",
+      "form": "local_id"
+    },
+    "task": {
+      "id_pattern": "^TASK-\\d{2}$",
+      "lives_in": "feature:tasks.md",
+      "form": "local_id"
+    },
+    "observable_state": {
+      "id_pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "lives_in": [
+        "info_arch",
+        "behavior"
+      ],
+      "form": "block_anchor",
+      "note": "a situation of the system surface the human sees and judges: a screen state of the judged prototype (info-arch.md, visual surface) or a behavior state (behavior.md, non-visual surface: command output, exit code, generated file, hook block, API response, agent behavior). MJRP, 2026-10-04 14:41: one rule for every requirement, no exemption by project type or by date. A link with a path (apps/<app>/docs/specs/info-arch#^x) resolves in that nested project."
+    },
+    "test": {
+      "lives_in": "tests or uat",
+      "form": "path_or_uat_entry"
+    }
+  },
+  "edges": [
+    {
+      "name": "serves",
+      "from": "epic",
+      "to": "outcome",
+      "min": 1,
+      "max": 1,
+      "enforced_from": "always"
+    },
+    {
+      "name": "epic",
+      "from": "requirement",
+      "to": "epic",
+      "min": 1,
+      "max": 1,
+      "enforced_from": "always"
+    },
+    {
+      "name": "planned_for",
+      "from": [
+        "requirement",
+        "epic"
+      ],
+      "to": "release",
+      "min": 0,
+      "max": 1,
+      "enforced_from": "always",
+      "note": "on an epic it is a shortcut for all its requirements; the requirement overrides"
+    },
+    {
+      "name": "points_to",
+      "from": "requirement",
+      "to": "observable_state",
+      "min": 1,
+      "max": null,
+      "enforced_from": "Ready"
+    },
+    {
+      "name": "imports",
+      "from": "feature",
+      "to": "requirement",
+      "min": 1,
+      "max": null,
+      "enforced_from": "always"
+    },
+    {
+      "name": "implements",
+      "from": "task",
+      "to": "spec_req",
+      "min": 1,
+      "max": null,
+      "enforced_from": "always"
+    },
+    {
+      "name": "verified_by",
+      "from": "spec_req",
+      "to": "test",
+      "min": 1,
+      "max": null,
+      "enforced_from": "Done"
+    },
+    {
+      "name": "supersedes",
+      "from": "requirement",
+      "to": "requirement",
+      "min": 0,
+      "max": null,
+      "enforced_from": "always",
+      "note": "required when a Done requirement changes: the change is a new requirement that supersedes the old one"
+    },
+    {
+      "name": "delivered_by",
+      "from": "requirement",
+      "to": "commit",
+      "min": 0,
+      "max": null,
+      "enforced_from": "always",
+      "note": "the commit that delivered a requirement with no Done feature (meta work, or delivered before the graph); evidence for Done"
+    },
+    {
+      "name": "accepted_in",
+      "from": "requirement",
+      "to": "acceptance",
+      "min": 0,
+      "max": 1,
+      "enforced_from": "always",
+      "note": "the human's acceptance: an entry of uat.md ([[uat#^UAT-xx]]) or of the log ('log YYYY-MM-DD HH:MM'); evidence for Accepted"
+    }
+  ],
+  "constraints": [
+    {
+      "id": "one_open_feature",
+      "text": "a requirement is imported by at most one open feature (MJRP, 2026-10-04: requirement -> feature 0..1 open at a time)"
+    },
+    {
+      "id": "feature_has_requirement",
+      "text": "a feature imports 1..n requirements"
+    },
+    {
+      "id": "nfr_not_imported",
+      "text": "an NFR is never imported by a feature; it constrains all of them and is checked in review with constitution.md"
+    },
+    {
+      "id": "spec_req_implemented",
+      "text": "every REQ of a feature is implemented by at least one TASK of the same feature"
+    },
+    {
+      "id": "feature_single_release",
+      "text": "all requirements imported by one feature are planned for the same release (when the project declares releases)"
+    },
+    {
+      "id": "target_exists",
+      "text": "every edge target resolves: file, heading or block anchor exists"
+    },
+    {
+      "id": "evidence_done",
+      "text": "a Done or Accepted requirement has evidence: a Done feature imports it, or delivered_by names a commit that exists"
+    },
+    {
+      "id": "evidence_accepted",
+      "text": "an Accepted requirement has accepted_in pointing to the human's acceptance (uat.md entry or log entry)"
+    },
+    {
+      "id": "status_stale",
+      "text": "an In progress requirement has an open feature, or activity in stale_days (a commit on the node or its feature, or a log entry citing it) — time rule, daily pass"
+    },
+    {
+      "id": "ready_state_changed",
+      "text": "the observable state a Ready requirement points to did not change after the requirement was last touched — time rule, daily pass"
+    },
+    {
+      "id": "state_judged",
+      "text": "a Ready requirement that points to a screen state (info-arch.md, nested included) points to a state an approved prototype shows: the state's block ID is in a shows:: line of the record in § Protótipos aprovados. Behavior states are exempt (MJRP, 2026-10-04)"
+    },
+    {
+      "id": "feature_done_tasks_open",
+      "text": "a Done feature has no open task"
+    },
+    {
+      "id": "node_folder",
+      "text": "requirement files live in the folder their epic declares with folder:: in prd.md (ep-NN-<english-slug>/), NFRs in nfr/; dormant while no epic declares folder:: (S-123, MJRP 2026-10-05)"
+    },
+    {
+      "id": "bilingual",
+      "text": "every node has a non-empty `## <lang>` section for each language in `languages` (S-110)"
+    }
+  ],
+  "defaults": {
+    "stale_days": 14,
+    "_note": "the contract overrides: mjrp_harness.requirements.stale_days"
+  },
+  "_evidence": "S-67 (MJRP, 2026-10-04): status asks for evidence, one rule for every project — the feature for code-app work, the commit for meta work or work delivered before the graph.",
+  "languages": [
+    "pt-BR",
+    "en"
+  ],
+  "_languages": "S-110 (MJRP, 2026-10-05 09:39): every requirement and NFR node carries one `## <lang>` section per language, same file, same ID; the contract's mjrp_harness.requirements.languages overrides ([] turns it off)"
+}

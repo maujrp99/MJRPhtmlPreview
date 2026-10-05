@@ -1,4 +1,4 @@
-<!-- cópia carimbada do MJRP Harness · versão 2026-10-02 · fonte 64f0cf9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte a8e8514 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # PRINCIPLES — as regras que regulam a ação no MJRP
 
 > Princípio é **a regra que regula a ação e serve de base ao método**; visão é para onde se vai;
@@ -87,16 +87,17 @@ específico da linguagem ou do framework dele.
     tarefa não está pronta, mesmo com o código certo.
 
 13. **Tela que se especifica é tela que se viu antes.** Spec de feature que cria ou altera tela não
-    avança pro Plan sem um protótipo visual aprovado pelo humano — referência salva em `spec.md`
-    (`## UI Prototype Reference`). *O como* (19/09): o protótipo sai da **ferramenta de prototipagem
-    declarada no contrato** (`tools.prototyping`, receita na `mjrp-interface-designer`), passa pela
-    **`mjrp-ux-critic`** contra o [[design-canon]] (nenhum P0 aberto) e só então chega ao dono;
-    HTML/React cru da própria AI Platform é último recurso, declarado no spec. Não substitui o 12
+    avança pro Plan sem um protótipo visual aprovado pelo humano — registrado no `info-arch.md`
+    § *Protótipos aprovados*, uma entrada por versão, com `shows::` listando os estados que ele
+    mostra. *O como* (19/09): o protótipo sai da **ferramenta de prototipagem
+    declarada no contrato** (`tools.prototyping`, receita na `mjrp-designing-interfaces`), passa pela
+    **`mjrp-critiquing-ux`** contra o [[design-canon]] (nenhum P0 aberto) e só então chega ao dono;
+    HTML/React cru da própria AI Platform é último recurso, declarado no registro. Não substitui o 12
     (verificação Playwright pós-implementação) — cobre a ponta oposta: decidir a tela **antes** de
     especificar, não confirmar que ela renderiza depois de pronta; o mesmo cânone julga as duas
-    pontas. *O teste:* existe referência de protótipo, vista e aprovada pelo dono, datada, presente
-    em `spec.md` cobrindo a tela nova, com o veredito do juiz — sem isso, spec.md está incompleta
-    mesmo com REQs certos.
+    pontas. *O teste:* todo estado de tela para o qual aponta um requisito Ready aparece no
+    `shows::` de um protótipo visto e aprovado pelo dono, datado, com o veredito do juiz (o sensor
+    do grafo confere) — sem isso, a feature não avança mesmo com REQs certos.
 
 14. **Segredo nunca no código.** Chave de API, token, senha e credencial vêm do ambiente — variável
     de ambiente, `.env` fora do versionamento, secret manager ou as propriedades do script — e

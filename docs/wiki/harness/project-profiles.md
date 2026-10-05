@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-09-10
 fontes: []
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-02 · fonte 64f0cf9 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-05 · fonte a8e8514 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 **Perfil** é o que o projeto **entrega**, e é o que o campo `profile:` do contrato declara:
@@ -48,9 +48,9 @@ A cadeia de derivação é a espinha: **todo artefato deriva de um pai**, e é i
 duplicação e drift.
 
 ```
-VISION.md → ROADMAP.md → story.md → arch.md / data-model.md → info-arch.md → design-system.md
+VISION.md → prd.md (requisitos por épico) → ROADMAP.md → arch.md / data-model.md → info-arch.md → design-system.md
                                                                                     │
-                            uma story por vez entra no ciclo SDD ↓
+                            um requisito por vez entra no ciclo SDD ↓
                         spec.md → plan.md → tasks.md → src/ + tests/
 ```
 
@@ -59,15 +59,15 @@ As fases, com os gates que exigem aprovação humana (⛔):
 | Fase | O que acontece | Gate |
 |---|---|---|
 | **0 · Setup** | git, estrutura, documentos de identidade, configs de IA | ⛔ Foundation |
-| **1 · Discovery** | validar valor, primeiras stories INVEST, esqueleto de arquitetura | — |
+| **1 · Discovery** | validar valor, primeiros requisitos em nível de problema, esqueleto de arquitetura | — |
 | **2 · Design** | info-arch → design-system → protótipo (opcional) | ⛔ info-arch |
-| **3 · Ciclo SDD** *(por story)* | Specify → Plan → Tasks → Implement | ⛔ ×3 |
+| **3 · Ciclo SDD** *(por requisito)* | Specify → Plan → Tasks → Implement | ⛔ ×3 |
 | **4 · Qualidade** | auditoria de fim de sprint, dívida, regressão | — |
 | **5 · Deploy** | preview, smoke, produção | — |
 | **6 · Docs & fechamento** | specs atualizadas, tag, roadmap avança | — |
 
-**O processo escala; o invariante não.** O caminho mínimo é Setup → constitution → uma story SDD
-enxuta → loop de build → handoff. As fases avançadas entram quando o projeto as merece — trabalho
+**O processo escala; o invariante não.** O caminho mínimo é Setup → constitution → um requisito SDD
+enxuto → loop de build → handoff. As fases avançadas entram quando o projeto as merece — trabalho
 multiagente, complexidade de UI, feature de risco.
 
 ### A porta *brownfield* — refletir a realidade, não o ideal
@@ -107,8 +107,8 @@ Você especifica **uma vez** o que um dossiê de música sempre contém — seç
 barra de qualidade, formatos, destinos. Essa especificação é **compilada numa skill**. Todo dossiê
 depois disso é uma **execução**, não um projeto.
 
-> **Corolário:** num projeto de conteúdo, **as skills do `toolkit/` são o código-fonte**. Mudar
-> como um dossiê se parece é trabalho de `mjrp-skill-refiner` — não de reescrever os dossiês
+> **Corolário:** num projeto de conteúdo, **as skills do `mjrp-personal/` são o código-fonte**. Mudar
+> como um dossiê se parece é trabalho de `mjrp-crafting-skills` — não de reescrever os dossiês
 > antigos.
 
 Três gates, **todos no nível do tipo**: ⛔ **Identity** (o que entra e o que não entra no projeto)
@@ -123,15 +123,16 @@ um álbum por vez.
 
 - **O contrato declara o perfil.** `profile: code-app | content | meta` no `.mjrp-project.yml`, e o
   `doctor.py` valida contra esse domínio (I1). O caminho de adoção não entra no contrato.
-- **A `mjrp-project-lifecycle` orquestra**, e é a fonte operacional: esta página é o mapa
+- **A `mjrp-pdlc` orquestra**, e é a fonte operacional: esta página é o mapa
   conceitual, ela é o passo a passo. Onde as duas divergirem, a skill vence.
-- **A `mjrp-onboarding` ramifica por perfil** na Phase −1 — Modo Código × Modo Conteúdo.
+- **A `mjrp-pdlc-onboarding` ramifica por perfil** na Phase −1 — Modo Código × Modo Conteúdo.
 - **⚠️ O que ainda não bate.** O `README.md` § 2 ensina `mjrp_project:` com `type:` e `path:`; o
   contrato real deste repositório é `mjrp_harness:` com `profile:`. **Dois schemas com o mesmo
   nome de arquivo** — está entre os *Candidatos* do `docs/specs/prd.md` e é decisão do MJRP. Enquanto não se resolve, o que o
   `doctor.py` valida é o `profile:`.
 
 ## History
+- **2026-10-04 00:00** — MJRP (S-62): os requisitos passam para o PRD, por épico, em qualquer formato; o `story.md` sai da cadeia.
 
 > A decisão mora na página do assunto que ela muda, com data (ADR-0008). As entradas abaixo
 > vieram **inteiras** do `MEMORY.md` na migração do BACKLOG #28a (09/09/2026) — nada foi

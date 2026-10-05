@@ -1,7 +1,7 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-02 · fonte 64f0cf9 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte a8e8514 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "The single declaration of structure by nature (ADR-0014). Vendored to every project with the kernel; structure_check.py, the doctor (W9), the pre-commit and the PreToolUse hook all read THIS file. Edit here, in the harness, never in a copy.",
-  "version": "2026-09-28",
+  "version": "2026-10-04",
   "rule_of_thumb": "agente precisa ler para saber o que é verdade → docs/ · resultado de olhar o projeto → reports/ · ainda sendo decidido ou mostrado → design/ · não é texto para gente → data/",
   "screenshots": {
     "rule": "screenshot: dado → data/raw/<assunto>/ · referência de como deve ser → design/references/<assunto>/ · evidência de UAT ou prova de entrega → reports/evidence/<TASK-ID>/ · nome: <TASK-ID|assunto>-<viewport|origem>-AAAA-MM-DD.<ext> · captura do agente entra no git só quando uma task a cita; dado sensível fica fora do git, como em data/raw",
@@ -18,13 +18,15 @@
     ]
   },
   "sdd": {
-    "files": [
-      "spec.md",
-      "plan.md",
-      "tasks.md"
-    ],
-    "history_dir": "milestones",
-    "rule": "a feature ativa mora plana em docs/specs/ (spec.md, plan.md, tasks.md); feature nova acumula no mesmo arquivo com IDs globais; docs/specs/milestones/<id>/ é histórico congelado"
+      "files": [
+          "spec.md",
+          "plan.md",
+          "tasks.md"
+      ],
+      "history_dir": "milestones",
+      "features_dir": "features",
+      "feature_pattern": "^F\\d{2}-[a-z0-9-]+$",
+      "rule": "cada feature tem a sua pasta docs/specs/features/Fxx-slug/ com spec.md, plan.md e tasks.md (S-63, grafo de requisitos); docs/specs/milestones/<id>/ é histórico congelado; spec, plan e tasks planos em docs/specs/ são o modelo anterior, aceito até o refresh do projeto"
   },
   "natures": {
     "docs": "MEMÓRIA",
@@ -106,7 +108,8 @@
       "inception",
       "prototypes",
       "proposals",
-      "references"
+      "references",
+      "diagrams"
     ],
     "data": [
       "fixtures",
@@ -151,7 +154,7 @@
   },
   "name_patterns": [
     {
-      "regex": "(^ux-audit|quality_assessment|audit-report|^audit-|-audit-\\d{4})",
+      "regex": "(^ux-audit|quality_assessment|audit-report|^audit-|-audit-\\d{4}|-audit\\.(md|html)$|-code-quality\\.md$|-quality-review\\.md$|-bootstrap-report\\.md$)",
       "to": "reports/audits"
     },
     {

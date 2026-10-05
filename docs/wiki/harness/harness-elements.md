@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-09-14
 fontes: [pasquadev-loop-engineering, anthropic-context-engineering, ibm-skills-mcp-rag-memory, fowler-guides-sensors]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-02 · fonte 64f0cf9 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-05 · fonte a8e8514 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 As **onze peças** que compõem o entorno de um modelo de linguagem para que ele produza trabalho
@@ -34,7 +34,7 @@ Uma tabela para ver de relance, e depois cada uma com detalhe.
 | 8 | Governança | Harness | escrita, não mecanizada |
 | 9 | Guardrails | Plataforma | emprestado; nada nosso |
 | 10 | Observabilidade | — | não existe |
-| 11 | Orquestração | Harness | em prosa, na `mjrp-project-lifecycle` |
+| 11 | Orquestração | Harness | em prosa, na `mjrp-pdlc` |
 
 ---
 
@@ -74,7 +74,7 @@ cada sessão. Trocar guide por sensor é o que baixa a conta.
 (mesa → arquivo), *select* (arquivo → mesa), *compress* (encolher), *isolate* (dividir entre
 agentes).
 
-**No MJRP.** A `mjrp-onboarding` é o *select*; o handoff é o *write*; o *compress* é da
+**No MJRP.** A `mjrp-pdlc-onboarding` é o *select*; o handoff é o *write*; o *compress* é da
 Plataforma; o *isolate* é a fábrica, que ainda não existe. **Ninguém mede** quanto custa o
 carregamento — e por *context rot*, excesso não é só caro, é pior.
 
@@ -128,7 +128,7 @@ avisa que quebrou. Que skill disparou, que ferramenta foi chamada, quanto custou
 ### 11 · Orquestração
 **O que é.** Quem roteia entre as fases: passa o estado, escolhe o próximo papel, para nos gates.
 
-**No MJRP.** Existe em **prosa**, na `mjrp-project-lifecycle` — um orquestrador executado por
+**No MJRP.** Existe em **prosa**, na `mjrp-pdlc` — um orquestrador executado por
 leitura, não por código. **Entre fases, grafo** (o fluxo é conhecido de antemão); **dentro de cada
 fase, loop** (o trabalho do papel é exploratório).
 

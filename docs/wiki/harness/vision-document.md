@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-09-11
 fontes: [productplan-vision-vs-strategy, productcompass-vision-strategy-goals]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-02 · fonte 64f0cf9 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-05 · fonte a8e8514 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O documento que responde **por que este projeto existe e onde ele quer chegar**. Estado, medição, configuração e ordem de execução moram em outros lugares e são apontados daqui.
@@ -32,7 +32,7 @@ aí ninguém confia nela para decidir nada.
 ## O template
 
 Quatro campos, nesta ordem, em **todo** `VISION.md` do MJRP — declarado no topo do próprio
-documento e ensinado pela `mjrp-project-bootstrap`:
+documento e ensinado pela `mjrp-pdlc-bootstrap`:
 
 | Campo | Responde | Horizonte | Tamanho |
 |---|---|---|---|
@@ -51,7 +51,7 @@ visão; não a substituem.
 **A regra que dá sentido ao template:** *Propósito*, *Visão* e *Objetivo* são **citados como
 estão**, não resumidos. São os três campos que um agente reproduz quando perguntam "por que este
 projeto existe, onde ele quer chegar e qual a meta?", e o *Propósito* é a primeira frase de toda
-síntese de `mjrp-onboarding` — quem mexe no específico sem saber para que o todo serve quebra
+síntese de `mjrp-pdlc-onboarding` — quem mexe no específico sem saber para que o todo serve quebra
 invariante sem perceber. Um campo que precisa de paráfrase para fazer sentido sozinho não está pronto.
 
 ## How MJRP uses it

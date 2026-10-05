@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-02 · fonte 64f0cf9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte a8e8514 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 doctor.py - the computational sensor of the harness.
 
@@ -341,7 +341,7 @@ SCHEMA = {
     "tech_stack": dict,    # 15/09: a tecnologia do PRODUTO - nao tinha campo, e ia parar no stack:
     "models": dict, "environment": dict, "sensors": dict,
     "orchestration": str, "source": str,
-    # `inventory`: as pastas que a skill mjrp-inventory audita (09/09). Entrou no contrato
+    # `inventory`: as pastas que a skill mjrp-inventorying-folders audita (09/09). Entrou no contrato
     # before the schema - W3 flagged it, which is exactly its job.
     "inventory": list,
     "locale": dict,        # 10/09: timezone, labels, content - what skills and sensors read instead of assuming
@@ -355,6 +355,13 @@ SCHEMA = {
     # sweeps into docs/wiki/feedback-from-other-projects/ - folder names, siblings of this repo.
     "children": list,
     "children_root": str,  # optional: where the children live when they are not siblings of this repo
+    # 03/10 (S-62): format of the requirements (story | use-case | ears), written by new_project.py - W3 flagged it
+    # in every new project until 04/10. 04/10 (S-67): stale_days - days without activity that make an In progress
+    # requirement stale for the requirements graph sensor.
+    "requirements": dict,
+    # 04/10 (MJRP): the content profile's fields, written by new_project.py since 09/09 - W3 flagged them in every
+    # content project ("campo desconhecido"); the onboarding skill carried a note explaining the warning.
+    "content_root": str, "session_history": str, "destinations": list,
 }
 ENUMS = {
     "profile": {"code-app", "content", "meta"},
@@ -504,6 +511,16 @@ def _wiki_targets(root):
     if dec.is_dir():
         for f in dec.glob("[0-9]*.md"):
             targets.add("adr-%s" % f.stem.split("-")[0])
+    # 04/10, S-63: the requirements graph links nodes by file name - a requirement or NFR file
+    # ([[S-07]]), a spec document ([[prd#^EP-01]], [[info-arch#^state]]) or a root document
+    # ([[ROADMAP#^OUT-01]]). Incident: the first new_project.py run with the graph template went
+    # red on I3 for links that are correct. Whether the #^anchor exists is the graph sensor's job.
+    specs = root / "docs" / "specs"
+    if specs.is_dir():
+        for f in list(specs.glob("*.md")) + list((specs / "requirements").rglob("*.md")):  # S-123: one folder per epic
+            targets.add(f.stem.lower())
+    for f in root.glob("*.md"):
+        targets.add(f.stem.lower())
     return targets
 
 
@@ -528,8 +545,10 @@ def i3_links(root, rep):
         sem_codigo = re.sub(r"```.*?```", "", txt, flags=re.S)
         sem_codigo = re.sub(r"`[^`\n]*`", "", sem_codigo)
         for m in re.finditer(r"\[\[([^\]|]+?)(?:\|[^\]]*)?\]\]", sem_codigo):
-            target = m.group(1).strip().lower()
+            target = m.group(1).strip().split("#", 1)[0].strip().lower()
             nw += 1
+            if not target:
+                continue  # [[#heading]] - a link inside the same page
             if targets and target not in targets:
                 rep.fail("I3", f"{doc.relative_to(root)}: wikilink [[{m.group(1).strip()}]] não resolve "
                                f"(nem página em docs/wiki/, nem alias, nem ADR)", inc_wiki)
@@ -587,8 +606,45 @@ def w6_charter_not_migrated(root, rep):
     if linhas > 10 and not prd.exists():
         rep.warn("W6", f"CHARTER.md tem {linhas} linhas (não é o stub de 5 linhas do retrofit) e "
                        f"não existe docs/specs/prd.md — CHARTER.md foi substituído pelo PRD "
-                       f"(mjrp-project-bootstrap, PRD Writing Guide); se é retrofit em andamento, "
+                       f"(mjrp-pdlc-bootstrap, reference/prd-guide.md); se é retrofit em andamento, "
                        f"ignore", inc)
+
+
+def log_rel(root):
+    """The project's log, relative to its root: `mjrp_harness.session_history` in the contract (content projects keep
+    it in Core/log.md), default docs/log.md."""
+    rel = "docs/log.md"
+    contract = Path(root) / CONTRACT
+    if contract.exists():
+        try:
+            data = read_yaml(contract.read_text(encoding="utf-8")) or {}
+            rel = str((data.get("mjrp_harness") or {}).get("session_history") or rel).strip()
+        except Exception:
+            pass
+    return rel
+
+
+def now_behind_log(root, now_body):
+    """S-61 (MJRP, 2026-10-04 14:11): the CONTENT of ## Now, not the file's date. Returns a message when the newest
+    time written in ## Now (YYYY-MM-DD HH:MM) is older than the newest log entry, else None. Born 2026-10-04: the
+    file was newer than the last commit while its ## Now still said a step already committed was pending."""
+    stamp = re.compile(r"(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2})")
+    now_times = [" ".join(m) for line in (now_body or []) for m in stamp.findall(line)]
+    try:
+        log = (Path(root) / log_rel(root)).read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return None
+    # entries written by a scheduled pass (type `inventory`) are not session state: the daily inventory would turn F1
+    # red every morning before anyone worked.
+    log_times = [" ".join(m[:2]) for m in re.findall(r"^## \[(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2})\] (\S+)", log, re.MULTILINE)
+                 if m[2] != "inventory"]
+    if not log_times or now_body is None:
+        return None
+    newest_log, newest_now = max(log_times), (max(now_times) if now_times else None)
+    if newest_now is None or newest_now < newest_log:
+        return (f"MEMORY.md: o ## Now para em {newest_now or 'nenhuma hora escrita'}, a última entrada do "
+                f"{log_rel(root)} é de {newest_log} — atualize o ## Now com o estado de agora (S-61)")
+    return None
 
 
 def now_section(text):
@@ -992,9 +1048,9 @@ def f1_memory(root, rep, cfg=None):
     if voltou:
         rep.fail("F1", f"MEMORY.md tem seção que a ADR-0008 esvaziou: {', '.join(voltou)} — "
                        f"decisão mora na página do assunto, não aqui", inc_08)
-    code, out = sh(["git", "log", "-1", "--format=%ct"], root)
-    if code == 0 and out.isdigit() and os.path.getmtime(cur) < int(out) - 60:
-        rep.fail("F1", "MEMORY.md é mais velho que o último commit — houve trabalho sem registrar", inc)
+    behind = now_behind_log(root, now_section(texto))
+    if behind:
+        rep.fail("F1", behind, inc)
     rep.note("F1", f"MEMORY.md: {len(linhas)} linhas (contagem informativa — o veredito é a forma)")
 
 
@@ -1266,7 +1322,7 @@ DESCRIPTION_MARGIN = 950          # within 8% of the ceiling: one edit away from
 #
 # It was 200, a number I invented and wrote into ADR-0002 as criterion. When the 53 skills were
 # actually rewritten to meet it, the Zé looked at the result and said the opposite of what I had
-# assumed: the build-framework skills are the ones he expects to APPEAR ON THEIR OWN, so they are
+# assumed: the mjrp-sw-factory (ex-build-framework) skills are the ones he expects to APPEAR ON THEIR OWN, so they are
 # where the trigger list earns its cost. I then proposed 650 - a number calibrated on the very
 # cut he had just rejected. Two invented numbers in one day is enough.
 #
@@ -1321,7 +1377,10 @@ def w1_descriptions(rep, skill_files):
 # Lista em código, não no contrato — mantém o critério da ADR-0002 §4 (determinístico, sem rede,
 # sem julgamento). Proxy de "revisada" é a data do último commit do SKILL.md fonte, mesma lógica
 # que F3/W2 já usam para git: não é prova de revisão substantiva, é o único sinal que já existe.
-BOUNDARY_SKILLS = {"mjrp-onboarding", "mjrp-project-bootstrap"}
+# 04/10, S-63: mjrp-project-bootstrap renomeada mjrp-pdlc-bootstrap; o nome antigo fica enquanto
+# projeto-filho tiver a pasta antiga instalada (some quando o kernel de todos for atualizado).
+# 04/10, S-72: mjrp-onboarding renomeada mjrp-pdlc-onboarding; mesma regra para o nome antigo.
+BOUNDARY_SKILLS = {"mjrp-onboarding", "mjrp-pdlc-onboarding", "mjrp-pdlc-bootstrap", "mjrp-project-bootstrap"}
 BOUNDARY_STALE_DAYS = 30
 
 

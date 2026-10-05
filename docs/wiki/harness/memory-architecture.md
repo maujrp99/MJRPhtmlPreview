@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-09-10
 fontes: [2026-claude-code-auto-memory, 2026-04-04-karpathy-llm-wiki, 2023-10-memgpt-virtual-context, 2025-cline-memory-bank, 2023-09-coala-cognitive-architectures-language-agents, 2025-anthropic-effective-context-engineering]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-02 · fonte 64f0cf9 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-05 · fonte a8e8514 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 A memória do harness é o que persiste **fora da janela** e precisa ser trazido de volta. Esta
@@ -31,9 +31,9 @@ com papéis que não se sobrepõem:
 Mais a ADR para decisão grande com alternativas e consequências ([[adr-practice]]), e o
 [[harness-kaizen]] para achado sobre o próprio harness — onde o erro e a lição moram juntos.
 
-**O que fecha o ciclo são as skills.** A `mjrp-onboarding` é o *select*: lê `## Now` +
+**O que fecha o ciclo são as skills.** A `mjrp-pdlc-onboarding` é o *select*: lê `## Now` +
 `## Ways of Working` + `wiki/index.md` (camada 1, sempre), abre a página do assunto sob demanda, e
-nunca lê o log inteiro. A `mjrp-save-context-handoff` é o *write*, e escreve **nesta ordem**: o
+nunca lê o log inteiro. A `mjrp-saving-context` é o *write*, e escreve **nesta ordem**: o
 `## Now`, a decisão na página, a linha datada no log — a memória antes do log, porque um save que
 só escreve no log deixa a próxima sessão sem estado.
 
@@ -225,7 +225,7 @@ de B é precisar de página para cada assunto; o preço de A é ter dois lugares
   `Accepted`). Ponteiros de supersessão entraram na 0005 e na 0006 — "uma memória só" durou dois dias.
 - **2026-09-08 22:19** · **As skills viram item próprio: 28d.** Estavam escondidas dentro do 28c e o Zé pegou.
   `mjrp-onboarding` (o *select*: lê o MEMORY, que hoje não lê; página conforme a tarefa) e
-  `mjrp-save-context-handoff` (o *write*: decisão na página + linha no log). **É o item que fecha** —
+  `mjrp-saving-context` (o *write*: decisão na página + linha no log). **É o item que fecha** —
   sem ele a arquitetura existe no disco e ninguém a opera.
 - **2026-09-07** · O `MEMORY.md` nasce **por projeto**; este é o primeiro e vira o modelo do
   bootstrap.
@@ -250,8 +250,21 @@ de B é precisar de página para cada assunto; o preço de A é ter dois lugares
   ela muda. Assunto **sem página** fica inteiro no `log.md` até o MJRP indicar que merece uma:
   não se cria página por conta própria.
 - **O `log.md` responde *quando***, e só. Consulta-se por data ou `grep`; ninguém o lê inteiro.
+- **Documento vivo diz só o que é verdade agora** (PRD, spec, página da wiki). Explicação — o porquê, o contexto, como se chegou ali — vai para uma seção `## Notas` antes da `## History`, apontada de onde é necessária; o que mudou vira uma linha datada e condensada na `## History` no fim; um parágrafo por linha (o editor quebra na janela; `unwrap_md.py --check`). Estado de trabalho não se digita em documento: vem dos nós (`gen_prd_status.py`). Quem confere é a `mjrp-auditing-docs`; quem conserta, a `mjrp-syncing-docs`.
 - **Correção sobre como o MJRP trabalha** vai para `## Ways of Working`, na hora, com data e hora
   de Brasília — não no fim da sessão.
+- **O que só está na conversa não está na memória** (S-61). A compactação de contexto apaga o que
+  não foi escrito no repositório; por isso cada decisão do MJRP vai para o log assim que ele responde,
+  e o `## Now` acompanha. Quatro mecanismos guardam isso:
+  - o hook git `commit-msg` (`log_entry_check.py`) recusa commit sem entrada nova no log do projeto que
+    ele toca — roda em toda sessão, local ou remota, porque o git roda onde o repositório está;
+  - o F1 do doctor e o `check_docs` comparam a hora mais recente escrita no `## Now` com a da última
+    entrada do log, e não a data do arquivo;
+  - nas sessões que carregam os hooks do projeto, o `session_journal.py` grava o diário da sessão antes
+    da compactação (`.mjrp/diary/`), devolve `## Now`, log e diário depois dela, bloqueia o fim do turno
+    com resposta do MJRP sem registro e conta o uso de cada skill em `data/raw/skill-usage.csv`;
+  - na sessão que não carrega esses hooks (a remota, que alcança o repo por ponte), a regra mora na
+    `mjrp-pdlc-onboarding`: registrar cada decisão antes de seguir.
 
 ## History
 
@@ -273,7 +286,7 @@ de B é precisar de página para cada assunto; o preço de A é ter dois lugares
   `mjrp-onboarding` abre a sessão pelo `MEMORY.md → ## Now`, **antes do log**, em três camadas
   (*progressive disclosure*): sempre `## Now` + `## Ways of Working` + `wiki/index.md` como
   roteador; sob demanda a página do assunto; deliberado o `log.md`, que **nunca se lê inteiro**.
-  A `mjrp-save-context-handoff` escreve as três: `## Now` (sobrescreve, ≤ 20 linhas), a decisão
+  A `mjrp-saving-context` escreve as três: `## Now` (sobrescreve, ≤ 20 linhas), a decisão
   na página `## History` do assunto, e a linha datada no `log.md` — nesta ordem, com a memória
   **antes** da entrada de sessão. *Motivo:* até aqui a arquitetura existia no disco e nenhuma
   skill a operava — a volta `contexto → memória → contexto` não acontecia, e um save que só
@@ -326,6 +339,14 @@ de B é precisar de página para cada assunto; o preço de A é ter dois lugares
   números de 08/09 preservados de propósito. **A lição:** página de pesquisa que vira página de
   verdade não se atualiza sozinha — enquanto o desenho estava sendo decidido, "em formação" era
   honesto; depois de implementado, a mesma frase virou desinformação com carimbo de wiki.
+- **2026-10-05 11:54** · **Documento vivo diz só o que é verdade agora** (S-124; MJRP, 2026-10-05, a partir da auditoria do PRD: 25 afirmações desatualizadas, a maioria status digitado à mão e explicação no corpo). Explicação em `## Notas`, passado em `## History`, um parágrafo por linha, estado gerado dos nós. Regra permanente; os outros documentos entram quando cada um for auditado.
+- **2026-10-04 14:21** · **A memória passa a ser cobrada por mecanismo, não por hábito (S-61).** Em 04/10 uma
+  compactação de contexto achou as últimas respostas do MJRP só no resumo da AI Platform: não estavam
+  no log nem no `MEMORY.md`, e o `## Now` dava como pendente um passo já commitado — o F1 passava
+  porque media a data do arquivo, não o que ele dizia. Decisões do MJRP (2026-10-04 14:11): todo commit
+  traz entrada nova no log, menos o que só toca derivado; o `## Now` é julgado pelo conteúdo; a sessão
+  remota não carrega os hooks do projeto, então nela valem o `commit-msg` e a regra da onboarding; o uso
+  de skill é contado num arquivo versionado. O mecanismo está em *How MJRP uses it*.
 
 ## Related
 [[context-vs-memory]] · [[terms]] · [[harness-elements]] · recurring-pains · ADR-0001 · ADR-0005 · ADR-0006 · ADR-0008
