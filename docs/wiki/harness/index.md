@@ -1,11 +1,11 @@
 ---
 title: Kernel do MJRP Harness
-summary: as 22 páginas do harness que este projeto carrega — o que os campos do VISION, a memória, o perfil e os sensores significam
+summary: as 23 páginas do harness que este projeto carrega — o que os campos do VISION, a memória, o perfil e os sensores significam
 ---
 
 ## Definition
 
-Cópia carimbada (versão **2026-10-05**, fonte `b6f90ca`) das páginas do MJRP Harness que governam como uma instância funciona. **Não se edita aqui**: edite no harness e rode `new_project.py --refresh-kernel`. O doctor (I5) avisa quando o carimbo envelhece.
+Cópia carimbada (versão **2026-10-05**, fonte `5fcc318`) das páginas do MJRP Harness que governam como uma instância funciona. **Não se edita aqui**: edite no harness e rode `new_project.py --refresh-kernel`. O doctor (I5) avisa quando o carimbo envelhece.
 
 | Página | O que responde |
 |---|---|
@@ -31,3 +31,4 @@ Cópia carimbada (versão **2026-10-05**, fonte `b6f90ca`) das páginas do MJRP 
 | [knowledge-graph-concept](knowledge-graph-concept.md) | o que é um knowledge graph, o que é ontologia e como ela difere de taxonomia e vocabulário controlado; tripla, RDF × grafo de propriedades, schema × instância, e validação por formas |
 | [linked-notes-concept](linked-notes-concept.md) | o modelo de notas atômicas e densamente ligadas que o Obsidian popularizou — de onde vem, os nomes que ele tem, os mecanismos (wikilink, backlink, embed, block ID, MOC) e como o harness o usa como a leitura humana do grafo |
 | [git-governance](git-governance.md) | como se commita, ramifica e marca versão num projeto do harness — tipos e formato do commit, os commits de cada estágio do SDD, branches, tags, regras de brownfield, e o que os hooks exigem |
+| [spreadsheet-standard](spreadsheet-standard.md) |  |
