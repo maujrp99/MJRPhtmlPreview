@@ -2,6 +2,13 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`. Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-10-05 18:53] session — cópias antigas de skills arquivadas; o GEMINI.md aponta para as skills do harness
+
+> Participantes: MJRP + Claude (Cowork, sessão do harness) · Branch: main
+> Session: https://claude.ai/code/session_01UFhRr8vY3DcgNwoXzoEzLx
+
+- Decisão do MJRP (2026-10-05 18:5x, "arquivar e apontar"): as cópias antigas de skills, workflows e rules que viviam no projeto (`.agent/`, e `skills/` quando havia) foram para `_archive/2026-10-05-legacy-agent/` com `git mv` — um agente que abria o projeto lia nomes aposentados dali. O `GEMINI.md` agora aponta para as skills do MJRP Harness instaladas na AI Platform.
+
 ## [2026-10-05 18:48] session — `.mjrp/` sai do índice do git (correção)
 
 > Participantes: MJRP + Claude (Cowork, sessão do harness) · Branch: main

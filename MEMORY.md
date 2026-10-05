@@ -4,7 +4,7 @@
 
 **Where the Work Stopped.** Projeto criado por `new_project.py` em 2026-09-15. Nada foi implementado ainda - o próximo passo é preencher VISION.md e, se houver PRD, decidir a primeira feature.
 
-**Harness, 2026-10-05 18:48.** Este projeto está no grafo de requisitos (S-79 do harness): o backlog são os nós em `docs/specs/requirements/`, spec/plan/tasks moram em `docs/specs/features/`; mapa e perguntas abertas em `reports/audits/2026-10-05-graph-migration-report.md`. O `SDD_chain_artifacts_check.py` foi aposentado (S-77 do harness) e o kernel atualizado; o `.gitignore` ignora `.mjrp/`. Ver `docs/log.md`.
+**Harness, 2026-10-05 18:53.** Cópias antigas de skills (`.agent/`) arquivadas em `_archive/2026-10-05-legacy-agent/`. Este projeto está no grafo de requisitos (S-79 do harness): o backlog são os nós em `docs/specs/requirements/`, spec/plan/tasks moram em `docs/specs/features/`; mapa e perguntas abertas em `reports/audits/2026-10-05-graph-migration-report.md`. O `SDD_chain_artifacts_check.py` foi aposentado (S-77 do harness) e o kernel atualizado; o `.gitignore` ignora `.mjrp/`. Ver `docs/log.md`.
 
 **Estrutura por natureza (2026-09-27 00:05).** Aplicada pelo harness (EP-09) — ver `docs/log.md`.
 

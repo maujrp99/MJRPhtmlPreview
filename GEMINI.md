@@ -9,20 +9,21 @@ Antes de qualquer trabalho, leia:
 - docs/specs/prd.md (escopo, milestones, restrições)
 - docs/specs/constitution.md (regras técnicas e stack)
 - docs/specs/design-system.md (tokens visuais Minimal Dark)
-- docs/specs/tasks.md (backlog atual)
+- docs/specs/requirements/ (backlog, um nó por requisito) e docs/specs/features/<F-ID>/tasks.md (tarefas)
 
 ## Sobre o Projeto
 MJRPhtmlPreview é um visualizador de HTML client-side com save para Google Drive e download local (Obsidian vault). Arquitetura: single HTML file SPA, sem backend, vanilla JS.
 
-## Workflows Disponíveis
-Quando executar tarefas, siga os workflows em .agent/workflows/:
-- mjrp-sdd.md — Fluxo SDD completo (Specify → Plan → Tasks → Implement)
-- mjrp-debug.md — Protocolo de debug
-- mjrp-onboarding.md — Carregamento de contexto
+## Skills do harness
+As cópias antigas de skills e workflows que viviam em `.agent/` foram arquivadas em `_archive/2026-10-05-legacy-agent/` (2026-10-05). Use as skills do MJRP Harness instaladas na AI Platform:
+- `mjrp-pdlc-onboarding` — carregamento de contexto no início da sessão
+- `mjrp-specifying-sdd-artifacts` e `mjrp-implementing-tasks` — fluxo SDD (spec → plan → tasks → implement); `mjrp-ensuring-sdd` confere os gates
+- `mjrp-debugging` — protocolo de debug
+- `mjrp-saving-context` — fechamento da sessão
 
 ## Regras
 - Siga Conventional Commits (feat, fix, docs, refactor, vibe, chore)
-- Nunca implemente sem task em docs/specs/tasks.md
+- Nunca implemente sem task num docs/specs/features/<F-ID>/tasks.md
 - Consulte constitution.md antes de sugerir dependências
 - Filosofia vanilla-first: sem dependências externas salvo necessidade absoluta
 - Arquitetura single HTML file para MVP (CSS + JS inline)
