@@ -23,6 +23,6 @@ mjrp_harness:
     placeholder: "true"  # troque pelo lint/test/build reais assim que a stack existir
   kernel:                    # as páginas da wiki do harness que este projeto carrega (I5)
     version: 2026-10-05
-    source: c2453c9
+    source: b6f90ca
     pages: [base-concept, vision-document, memory-architecture, context-vs-memory, project-profiles, terms, doctor, adr-practice, harness-concept, harness-elements, engineering-canon, spec-kit, agents-agentic-concepts, graph-engineering-concept, hooks-concept, loop-engineering-concept, harness-kaizen, design-canon, requirements-graph, knowledge-graph-concept, linked-notes-concept, git-governance]
-    vendored: [PRINCIPLES.md, mjrp-scripts/doctor.py, mjrp-scripts/structure_rules.json, mjrp-scripts/structure_check.py, mjrp-scripts/path_guard.py, mjrp-scripts/hooks/pre-commit, mjrp-scripts/session_lease.py, mjrp-scripts/SDD_chain_artifacts_check.py, mjrp-scripts/daily_checks.py, mjrp-scripts/log_entry_check.py, mjrp-scripts/hooks/commit-msg, mjrp-scripts/session_journal.py, mjrp-scripts/requirements_graph_check.py, mjrp-scripts/requirements_graph_rules.json]     # copias carimbadas fora da wiki (PRINCIPLES.md, doctor.py) - I5 confere
+    vendored: [PRINCIPLES.md, mjrp-scripts/doctor.py, mjrp-scripts/structure_rules.json, mjrp-scripts/structure_check.py, mjrp-scripts/path_guard.py, mjrp-scripts/hooks/pre-commit, mjrp-scripts/session_lease.py, mjrp-scripts/prototype_inventory.py, mjrp-scripts/daily_checks.py, mjrp-scripts/log_entry_check.py, mjrp-scripts/hooks/commit-msg, mjrp-scripts/session_journal.py, mjrp-scripts/requirements_graph_check.py, mjrp-scripts/requirements_graph_rules.json]     # copias carimbadas fora da wiki (PRINCIPLES.md, doctor.py) - I5 confere

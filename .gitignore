@@ -29,3 +29,6 @@ Thumbs.db
 *.log
 npm-debug.log*
 images/
+# new_project.py --refresh-kernel
+.mjrp/
+__pycache__/

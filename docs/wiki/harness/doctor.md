@@ -6,7 +6,7 @@ tags: [harness, sensores, verificacao]
 status: em formação
 atualizado: 2026-09-14
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-05 · fonte c2453c9 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-05 · fonte b6f90ca · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **doctor** é o sensor do harness: um script que lê a instância e devolve verde,
@@ -141,7 +141,8 @@ pegado (ADR-0002, emendada pela ADR-0007): checagem sem incidente é opinião co
 - **2026-10-02 18:53** · **W11 — inventário do protótipo.** Quando o `info-arch.md` tem `## Inventário do protótipo`,
   avisa item sem destino: coberto/evoluído sem REQ (ou com REQ que não existe no spec), cortado sem
   motivo, pendente com o spec aprovado. Nunca cobra igualdade com o protótipo. A lógica mora no
-  `SDD_chain_artifacts_check.py`, agora copiado para os filhos junto com o `daily_checks.py`.
+  `prototype_inventory.py` (desde 2026-10-05, S-77: saiu do `SDD_chain_artifacts_check.py`, aposentado),
+  copiado para os filhos junto com o `daily_checks.py`.
 
 ## Related
 [[harness-elements]] · [[harness-kaizen]] · skill-distribution · ADR-0002 · ADR-0007

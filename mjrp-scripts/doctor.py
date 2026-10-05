@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte c2453c9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte b6f90ca · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 doctor.py - the computational sensor of the harness.
 
@@ -348,9 +348,8 @@ SCHEMA = {
     "memory": dict,        # 10/09: pending_expiry_days, layer0_budget_chars - the form of ## Now (F1)
     "kernel": dict,        # 14/09: version, source, pages - the wiki kernel this project carries (I5)
     "tools": dict,         # 14/09: category -> tool, one per category (docs/wiki/tools-catalog.md)
-    # 16/09: chain, globs, id_patterns - read by SDD_chain_artifacts_check.py, never by A1 (BACKLOG
-    # #58) - that script warns, it does not gate, so it lives outside `sensors:` on purpose.
-    "sdd_chain": dict,
+    # 16/09-05/10: "sdd_chain" (read by SDD_chain_artifacts_check.py) retired with it in S-77 - the
+    # requirements graph (requirements_graph_check.py) replaced the chain.
     # 19/09 (EP-07): the child projects whose docs/harness-feedback/ the harness_feedback_check.py
     # sweeps into docs/wiki/feedback-from-other-projects/ - folder names, siblings of this repo.
     "children": list,
@@ -1597,7 +1596,7 @@ def w11_prototype_inventory(root, rep):
            "nada ligava o item da tela ao requisito; caso de origem no brainstorming do YouTube Control Center")
     sys.dont_write_bytecode = True
     try:
-        import SDD_chain_artifacts_check as sdd
+        import prototype_inventory as sdd   # S-77: extracted from the retired SDD_chain_artifacts_check
     except ModuleNotFoundError:
         return
     try:
