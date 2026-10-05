@@ -2,6 +2,13 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`. Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-10-05 18:48] session — `.mjrp/` sai do índice do git (correção)
+
+> Participantes: MJRP + Claude (Cowork, sessão do harness) · Branch: main
+> Session: https://claude.ai/code/session_01UFhRr8vY3DcgNwoXzoEzLx
+
+- A entrada de 16:47 disse que o `.mjrp/` (cache dos sensores) tinha saído do índice; não saiu — o commit por caminho levou o arquivo do disco de volta. Agora sai de fato (`git rm --cached`); o arquivo fica no disco e o `.gitignore` já o ignora.
+
 ## [2026-10-05 16:58] session — estado e links depois do grafo de requisitos (harness, S-77/S-79)
 
 > Participantes: MJRP + Claude (Cowork, sessão do harness) · Branch: main
