@@ -2,6 +2,13 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`. Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-10-05 16:47] session — rastro dos sensores e backup do refresh no git (S-77 do harness)
+
+> Participantes: MJRP + Claude (Cowork, sessão do harness) · Branch: main
+> Session: https://claude.ai/code/session_01UFhRr8vY3DcgNwoXzoEzLx
+
+- Depois do refresh do kernel de hoje (S-77 do harness): o rastro dos sensores em `daily-checks/` entra no git, como no harness; o backup do `.claude/settings.json` que o refresh fez em `_backups/` também; `.mjrp/` (cache dos sensores) saiu do índice — o `.gitignore` já o ignora, o arquivo continua no disco.
+
 ## [2026-10-05 16:32] session — grafo de requisitos: backlog virou nós, spec/plan/tasks viraram feature (S-79 do harness)
 
 > Participantes: MJRP + Claude (Cowork, sessão do harness) · Branch: main
