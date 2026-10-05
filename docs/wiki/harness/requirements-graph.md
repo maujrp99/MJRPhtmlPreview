@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-10-04
 fontes: [design/proposals/requirements-knowledge-graph-proposal.md, kernel/knowledge-graph-concept, kernel/linked-notes-concept, kernel/graph-engineering-concept, kernel/spec-kit]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-05 · fonte 5fcc318 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-05 · fonte 2dfec41 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **grafo de requisitos** é a documentação do PDLC tratada como grafo de conhecimento: cada requisito, épico,

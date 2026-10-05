@@ -6,7 +6,7 @@ tags: [harness, sensores, verificacao]
 status: em formação
 atualizado: 2026-09-14
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-05 · fonte 5fcc318 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-05 · fonte 2dfec41 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **doctor** é o sensor do harness: um script que lê a instância e devolve verde,
@@ -143,6 +143,8 @@ pegado (ADR-0002, emendada pela ADR-0007): checagem sem incidente é opinião co
   motivo, pendente com o spec aprovado. Nunca cobra igualdade com o protótipo. A lógica mora no
   `prototype_inventory.py` (desde 2026-10-05, S-77: saiu do `SDD_chain_artifacts_check.py`, aposentado),
   copiado para os filhos junto com o `daily_checks.py`.
+- **2026-10-05 17:56** · **daily-checks/ continua no git.** MJRP decidiu, depois da explicação das implicações: o rastro datado de aviso e erro (`daily-checks/sensor-*.md`) segue versionado no harness e nos filhos, e entra no commit de quem rodou o doctor — o histórico de quando cada problema abriu e fechou fica no git, ao custo do "M" entre sessões. Alternativas recusadas: `.gitignore`; commitar só no fechamento da sessão.
+- **2026-10-05 18:55** · **W12 — skill aposentada em documento vivo.** Avisa quando README, AGENTS/CLAUDE/GEMINI, MEMORY, VISION, ROADMAP, specs, wiki ou contrato citam uma skill aposentada ou renomeada; registro (seções de histórico, entrada datada, tarefa feita, linha que diz aposentada ou já nomeia a sucessora, pastas de registro e logs) fica com o nome da época. A lista é uma só, `retired_skills.json`, a mesma que o `build_plugin.py --check` usa no corpo das skills (S-56). Nasceu de outra sessão respondendo com `mjrp-adr` e `mjrp-system-architect` depois do EP-10.
 
 ## Related
 [[harness-elements]] · [[harness-kaizen]] · skill-distribution · ADR-0002 · ADR-0007

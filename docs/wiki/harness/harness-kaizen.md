@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-09-28
 fontes: [2026-claude-code-auto-memory]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-05 · fonte 5fcc318 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-05 · fonte 2dfec41 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O registro do que o harness **não pegou** e do que se aprendeu com isso. Achado e lição moram
@@ -38,6 +38,16 @@ deixando o ponteiro. Lição que só mora aqui é lição que ninguém aplica.
 > próprio harness`.
 
 ## Findings
+
+- **2026-10-05 17:37** · **Uma proposta só caía em `design/proposals/` se o agente acertasse.** A proposta de entrada da
+  aba Wiki do Control Center se chamava `wiki-entry-options.html`: a regra de nome do `structure_rules.json`
+  (`proposal` → `design/proposals`) só valia dentro de `docs/`, e o nome nem dizia "proposal". O MJRP perguntou
+  como garantir que toda proposta, HTML ou PNG, vá para lá. **Correção:** regra nova `name_decides` — o arquivo
+  cujo nome termina em `-proposal` só mora em `design/proposals/`, julgado na raiz, em `design/` e em
+  `reports/` (código fica de fora); vale no hook de escrita, no pre-commit e no W9 (estrutura fora da
+  natureza); as duas skills que propõem em três níveis nomeiam `<eixo>-proposal.<ext>`. Primeiro achado: dois
+  diagramas `*-skill-roles-proposal` em `design/diagrams/`. **Lição:** lugar garantido é o que o nome do
+  arquivo carrega; instrução na skill sem sensor é esperança.
 
 - **2026-10-04 14:21** · **Uma compactação de contexto quase apagou decisões do MJRP — o registro dependia de hábito.**
   As respostas do passo 10 da S-63 só sobreviveram no resumo automático da AI Platform; o log e o `## Now`

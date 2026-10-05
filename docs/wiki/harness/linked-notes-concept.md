@@ -7,7 +7,7 @@ status: vivo
 atualizado: 2026-10-04
 fontes: [2020-matuschak-evergreen-notes, 2020-milo-linking-your-thinking-maps-of-content, 2026-obsidian-help-internal-links, 2026-04-04-karpathy-llm-wiki]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-05 · fonte 5fcc318 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-05 · fonte 2dfec41 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O modelo **"Obsidian-like"** é organizar conhecimento em **notas atômicas e densamente ligadas**, em arquivos de texto

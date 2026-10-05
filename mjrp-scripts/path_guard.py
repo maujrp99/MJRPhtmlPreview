@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte 5fcc318 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte 2dfec41 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 path_guard.py - the PreToolUse hook of the structure by nature (EP-09, fatia 5).
 

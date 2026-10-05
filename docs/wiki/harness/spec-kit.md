@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-10-04
 fontes: [github/spec-kit, BMAD, feedback-from-other-projects/spec-kit, feedback-from-other-projects/speckit-artifact-reconciliation]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-05 · fonte 5fcc318 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-05 · fonte 2dfec41 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 **SpecKit** é a adaptação do MJRP ao Spec Kit do GitHub: os **9 documentos vivos** de `docs/specs/` — a cadeia `prd → spec → plan → tasks → uat`, em que cada um deriva do anterior (os requisitos são nós, um arquivo cada, e o PRD é o mapa deles; spec, plan e tasks moram na pasta de cada feature), mais o contexto durável que a cadeia consulta, `constitution`, `arch`, `data-model` e `design-system`. Três coisas têm o mesmo nome e confundi-las gera achado errado: **Spec Kit** (com espaço) é o método original do GitHub, `constitution → specify → plan → tasks → implement`; **SpecKit** (sem espaço) é esta adaptação; e o **uso real de cada projeto**, que pode acrescentar arquivos de apoio (um diagrama, uma planilha) sem que isso mude a lista.
@@ -15,7 +15,7 @@ fontes: [github/spec-kit, BMAD, feedback-from-other-projects/spec-kit, feedback-
 ## Details
 
 ### 1. A lista única — decidida em 17/09/2026
-Até 16/09 o glossário dizia 6 artefatos e a skill `mjrp-sdd-speckit` dizia 7, e nenhum dos dois citava `prd.md`, que os projetos usavam. A reconciliação:
+Até 16/09 o glossário dizia 6 artefatos e a skill `mjrp-sdd-speckit` (hoje `mjrp-specifying-sdd-artifacts`) dizia 7, e nenhum dos dois citava `prd.md`, que os projetos usavam. A reconciliação:
 
 | Artefato | Papel | Origem |
 |---|---|---|

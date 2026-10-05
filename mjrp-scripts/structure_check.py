@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte 5fcc318 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte 2dfec41 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 structure_check.py - the structure-by-nature sensor (ADR-0014, EP-09).
 
@@ -191,6 +191,24 @@ def _check_docs(root, rules, prof, profile, out):
                                     + _fix_hint(rel, to, False), to))
 
 
+def _name_decides(rel, rules):
+    """The destination a file's NAME imposes (e.g. *-proposal.html -> design/proposals), or None when
+    the name decides nothing or the file is already there. Only for loose files at the root and inside
+    the declared artifact roots (design/, reports/) - code folders are never judged by name."""
+    nd = rules.get("name_decides")
+    if not nd:
+        return None
+    parts = Path(rel).parts
+    if len(parts) > 1 and parts[0] not in nd.get("scope_roots", []):
+        return None
+    low = parts[-1].lower()
+    folder = "/".join(parts[:-1])
+    for pat in nd["patterns"]:
+        if re.search(pat["regex"], Path(low).stem) and not (folder == pat["to"] or folder.startswith(pat["to"] + "/")):
+            return pat["to"]
+    return None
+
+
 def _check_root(root, rules, prof, out):
     aliases = rules["folder_aliases"]
     for e in sorted(root.iterdir()):
@@ -202,6 +220,9 @@ def _check_root(root, rules, prof, out):
             out.append(_finding(e.name + "/", _screenshot_note(low, rules)))
         elif e.is_file() and low in rules["retired_files"]:
             out.append(_finding(e.name, rules["retired_files"][low]))
+        elif e.is_file() and _name_decides(e.name, rules):
+            to = _name_decides(e.name, rules)
+            out.append(_finding(e.name, f"o nome diz a natureza → {to}/", to))
 
 
 def _check_subfolders(root, rules, out):
@@ -220,6 +241,13 @@ def _check_subfolders(root, rules, out):
                                     f"as declaradas: {', '.join(subs)}; nova subpasta entra no structure_rules.json do harness"))
             elif e.is_file():
                 out.append(_finding(f"{top}/{e.name}", f"arquivo solto em {top}/ — vai numa das subpastas: {', '.join(subs)}"))
+            elif e.is_dir() and e.name in subs:
+                for f in sorted(e.rglob("*")):
+                    if f.is_file() and not any(x.startswith(".") or x in IGNORE for x in f.relative_to(root).parts):
+                        rel = f.relative_to(root).as_posix()
+                        to = _name_decides(rel, rules)
+                        if to:
+                            out.append(_finding(rel, f"o nome diz a natureza → {to}/", to))
 
 
 def _check_tree(root, out):
@@ -327,6 +355,9 @@ def judge_path(root, rel, rules=None):
         if len(parts) >= 3 and parts[1] not in subs:
             return _finding(rel, f"subpasta não declarada em {top}/ — as declaradas: {', '.join(subs)}; "
                                  f"nova subpasta entra no structure_rules.json do harness")
+    to = _name_decides(rel, rules)
+    if to:
+        return _finding(rel, f"o nome diz a natureza → {to}/", to)
     return None
 
 

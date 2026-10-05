@@ -1,4 +1,4 @@
-<!-- cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte 5fcc318 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte 2dfec41 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # PRINCIPLES — as regras que regulam a ação no MJRP
 
 > Princípio é **a regra que regula a ação e serve de base ao método**; visão é para onde se vai;

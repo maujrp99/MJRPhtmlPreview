@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte 5fcc318 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte 2dfec41 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 doctor.py - the computational sensor of the harness.
 
@@ -1612,6 +1612,29 @@ def w11_prototype_inventory(root, rep):
         rep.note("W11", "inventário do protótipo: todo item com destino")
 
 
+def w12_retired_names(root, rep):
+    """W12 - no live document sends the agent to a skill that no longer exists (records keep the name of their time)."""
+    inc = ("05/10/2026: depois do EP-10/EP-11 renomear 46 skills, outra sessão respondeu com nomes aposentados "
+           "(mjrp-adr, mjrp-system-architect) — o README, 16 cabeçalhos de folder-index e ponteiros vivos em cinco "
+           "filhos tinham escapado de uma varredura que só cobria as skills")
+    sys.dont_write_bytecode = True
+    try:
+        import retired_names_check as rnc
+    except ModuleNotFoundError:
+        return
+    try:
+        hits = rnc.retired_mentions(root)
+    except Exception as e:
+        rep.warn("W12", f"nomes de skill aposentada não avaliados ({e})", inc)
+        return
+    if hits:
+        sample = " · ".join(f"{f}:{n} {o} → {s}" for f, n, o, s in hits[:4])
+        rep.warn("W12", f"{len(hits)} menção(ões) viva(s) a skill aposentada/renomeada — {sample}"
+                        f"{' …' if len(hits) > 4 else ''} (python3 mjrp-scripts/retired_names_check.py . lista todas)", inc)
+    else:
+        rep.note("W12", "nenhum documento vivo cita skill aposentada")
+
+
 def run(root, skip_sensors):
     rep = Report()
     cfile = root / CONTRACT
@@ -1652,6 +1675,7 @@ def run(root, skip_sensors):
     w9_structure(root, rep)
     w10_sessions(root, rep)
     w11_prototype_inventory(root, rep)
+    w12_retired_names(root, rep)
     _daily_checks_ledger(root, cfg, rep)
     return rep, (1 if rep.errors else 0)
 
