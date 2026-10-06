@@ -7,11 +7,11 @@ status: vivo
 atualizado: 2026-09-28
 fontes: [few-information-dashboard-design, tufte-visual-display, knaflic-storytelling-with-data, wexler-big-book-of-dashboards, shneiderman-the-eyes-have-it, nngroup-dashboards-preattentive, smashing-dashboard-decluttering, a11y-collective-accessible-charts, sigma-color-blindness, 925studios-whoop-breakdown, sahha-readiness-scores, nielsen-ten-heuristics, krug-dont-make-me-think, cooper-about-face, yablonski-laws-of-ux, google-apple-m3-hig, w3c-wcag-2-2, gigerenzer-risk-communication, case-calm-technology, cdc-clear-communication-index, andrews-info-we-trust, design-council-double-diamond-knapp-sprint, baghai-three-horizons, tmap-crud-test, kaplan-nngroup-empty-states]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-05 · fonte 2dfec41 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-06 · fonte 7b92583 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **cânone de design** é o corpo de referência externo que fundamenta as regras de UX, UI e
-conteúdo explicativo do MJRP — 23 fontes fichadas em `docs/sources/`, organizadas em oito
+conteúdo explicativo do MJRP — 23 fontes fichadas em `docs/wiki/sources/`, organizadas em oito
 disciplinas, cada regra com um **ID estável** que as skills de design citam em vez de recitar.
 A barra de qualidade não vem do gosto do agente: vem daqui. É **referência inicial, não teto** —
 o cânone cresce com o que os projetos-filho descobrem (ver § *Como o cânone evolui*).
@@ -36,7 +36,7 @@ Cada regra tem três partes: **ID** (estável — nunca se renumera; regra retir
 - **julgamento** — não dá para impor na produção; só se pega na crítica. É o que só a
   `mjrp-critiquing-ux` verifica.
 
-A `mjrp-critiquing-ux` verifica os dois tipos. A fonte de cada regra é a ficha em `docs/sources/`;
+A `mjrp-critiquing-ux` verifica os dois tipos. A fonte de cada regra é a ficha em `docs/wiki/sources/`;
 o *porquê* mora lá e nesta página, nunca na skill.
 
 ### HI · Hierarquia
@@ -178,7 +178,7 @@ O cânone é **referência inicial, não limitante** (MJRP, 19/09/2026). Três m
    projeto não estiver coberta por um ID daqui, buscar na web se existe fonte elevada para ela
    antes de decidir por conta própria* — e registrar o que achou, inclusive o que decidiu não
    usar (mesma disciplina do tools-catalog). Fonte nova que sustenta regra nova vira ficha em
-   `docs/sources/` e regra com ID aqui. **E a skill também muda** (emenda do MJRP, 19/09): se o
+   `docs/wiki/sources/` e regra com ID aqui. **E a skill também muda** (emenda do MJRP, 19/09): se o
    contexto do projeto revelou conceitos ou regras que ajudam de verdade, a skill se refina com a
    `mjrp-crafting-skills` — o cânone guarda o *o que é*; a skill incorpora o *como* que o projeto
    ensinou. Skill viva aprende nos dois lugares.

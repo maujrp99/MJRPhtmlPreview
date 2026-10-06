@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte 2dfec41 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-06 · fonte 7b92583 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 doctor.py - the computational sensor of the harness.
 
@@ -254,6 +254,8 @@ def normalize_skill_text(text):
         if len(val) >= 2 and val[0] == val[-1] and val[0] in "\"'":
             q = val[0]
             val = val[1:-1].replace("\\" + q, q)
+            if q == '"':   # 05/10: the AI Platform writes the description as a JSON-like string ending in \n
+                val = val.replace("\\n", " ").replace("\\t", " ")
         if key == "name":
             continue
         val = re.sub(r"\s+", " ", val).strip()

@@ -7,12 +7,12 @@ status: vivo
 atualizado: 2026-09-27
 fontes: [pragmatic-programmer, clean-code, clean-architecture, refactoring]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-05 · fonte 2dfec41 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-06 · fonte 7b92583 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **cânone** é o corpo de referência que fundamenta os princípios de engenharia do MJRP: *The
 Pragmatic Programmer* (Andrew Hunt e David Thomas), *Clean Code* e *Clean Architecture* (Robert
-C. Martin) e *Refactoring* (Martin Fowler; ficha em `docs/sources/1999-fowler-refactoring.md`), que dá nome aos sinais de
+C. Martin) e *Refactoring* (Martin Fowler; ficha em `docs/wiki/sources/1999-fowler-refactoring.md`), que dá nome aos sinais de
 código ruim e à refatoração que resolve cada um. O `PRINCIPLES.md` carrega **a regra e o teste**; esta página carrega **o porquê e o
 detalhe**, lida por quem vai desenhar — não por toda sessão. Nem tudo aqui é universal, e o que
 não é está marcado: ver § *O que é opinião de stack*.

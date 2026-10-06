@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte 2dfec41 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-06 · fonte 7b92583 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """retired_names_check.py - no live document sends the agent to a skill that no longer exists.
 
 The skill bodies are checked by build_plugin.py --check (S-56). This script checks the rest: the documents an agent
@@ -10,7 +10,7 @@ had escaped a sweep that covered only the skills.
 
 What it does not judge - records keep the name of their time: sections ## History / ## Histórico / ## Findings /
 ## Lições; dated entries ("- **2026-..."); a done task ("- [x]"); a line that says the skill was retired or renamed;
-the folders of records (_archive, _backups, reports, docs/raw, docs/sources, docs/decisions, design/proposals,
+the folders of records (_archive, _backups, reports, docs/originals, docs/wiki/sources, docs/decisions, design/proposals,
 docs/specs/requirements, the feedback folder, evals) and the logs. The vendored kernel (docs/wiki/harness/) is fixed
 at its source in the harness.
 
@@ -26,7 +26,7 @@ from pathlib import Path
 
 LIST_FILE = Path(__file__).resolve().parent / "retired_skills.json"
 EXTS = {".md", ".yml", ".yaml"}
-SKIP_DIRS = ("_archive/", "_backups/", "dist/", "node_modules/", "reports/", "docs/raw/", "docs/sources/",
+SKIP_DIRS = ("_archive/", "_backups/", "dist/", "node_modules/", "reports/", "docs/originals/", "docs/wiki/sources/",
              "docs/decisions/", "design/proposals/", "docs/specs/requirements/", "docs/wiki/harness/",
              "docs/wiki/feedback-from-other-projects/", "mjrp-skills/", "daily-checks/", ".mjrp/")
 SKIP_NAMES = ("log.md", "SESSION_HISTORY.md", "harness-kaizen.md", "folder-index.md")

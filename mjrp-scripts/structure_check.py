@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte 2dfec41 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-06 · fonte 7b92583 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 structure_check.py - the structure-by-nature sensor (ADR-0014, EP-09).
 
@@ -158,7 +158,7 @@ def _check_docs(root, rules, prof, profile, out):
             continue
         rel = f"docs/{rel_docs}"
         low = p.name.lower()
-        if top == "raw":                                   # raw keeps its own shape: only DATA leaves it
+        if top == "originals":                             # originals keeps its own shape: only DATA leaves it (ADR-0016)
             if p.is_file() and p.suffix.lower() in rules["data_extensions"]:
                 out.append(_finding(rel, "dado dentro de docs/ (MEMÓRIA) → data/raw/ (ou data/fixtures/ se os testes leem)", "data/raw"))
             continue
@@ -323,7 +323,7 @@ def judge_path(root, rel, rules=None):
             return None
         if _sdd_note(parts[1:], rules):
             return _finding(rel, _sdd_note(parts[1:], rules))
-        if first == "raw":                                 # raw keeps its own shape: only DATA leaves it
+        if first == "originals":                           # originals keeps its own shape: only DATA leaves it (ADR-0016)
             if Path(low_name).suffix in rules["data_extensions"]:
                 return _finding(rel, "dado dentro de docs/ (MEMÓRIA) → data/raw/ (ou data/fixtures/ se os testes leem)", "data/raw")
             return None

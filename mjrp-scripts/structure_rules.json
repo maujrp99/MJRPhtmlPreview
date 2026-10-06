@@ -1,7 +1,7 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-05 · fonte 2dfec41 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-06 · fonte 7b92583 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "The single declaration of structure by nature (ADR-0014). Vendored to every project with the kernel; structure_check.py, the doctor (W9), the pre-commit and the PreToolUse hook all read THIS file. Edit here, in the harness, never in a copy.",
-  "version": "2026-10-05",
+  "version": "2026-10-06",
   "rule_of_thumb": "agente precisa ler para saber o que é verdade → docs/ · resultado de olhar o projeto → reports/ · ainda sendo decidido ou mostrado → design/ · não é texto para gente → data/",
   "screenshots": {
     "rule": "screenshot: dado → data/raw/<assunto>/ · referência de como deve ser → design/references/<assunto>/ · evidência de UAT ou prova de entrega → reports/evidence/<TASK-ID>/ · nome: <TASK-ID|assunto>-<viewport|origem>-AAAA-MM-DD.<ext> · captura do agente entra no git só quando uma task a cita; dado sensível fica fora do git, como em data/raw",
@@ -64,7 +64,7 @@
         "folder-index.md",
         "index.md",
         "README.md",
-        "raw"
+        "originals"
       ]
     },
     "meta": {
@@ -83,8 +83,7 @@
         "folder-index.md",
         "index.md",
         "README.md",
-        "raw",
-        "sources",
+        "originals",
         "diagrams.md"
       ]
     },
@@ -103,8 +102,7 @@
         "folder-index.md",
         "index.md",
         "README.md",
-        "raw",
-        "sources"
+        "originals"
       ]
     }
   },
@@ -147,8 +145,8 @@
     "inception": "design/inception",
     "fixtures": "data/fixtures",
     "infographics": {
-      "meta": "docs/raw/infographics",
-      "content": "docs/raw/infographics",
+      "meta": "docs/originals/infographics",
+      "content": "docs/originals/infographics",
       "code-app": "data/raw/infographics"
     },
     "evidence": "reports/evidence",
@@ -203,7 +201,7 @@
     "wiki/harness",
     "wiki/kernel",
     "wiki/feedback-from-other-projects",
-    "sources"
+    "wiki/sources"
   ],
-  "_raw_note": "docs/raw/ is the Karpathy chain in every profile (original source TEXT the agent reads: drafts, requirements, transcripts); a DATA file (xlsx, csv...) inside it still goes to data/raw/."
+  "_originals_note": "docs/originals/ (ADR-0016; was docs/raw/) is the Karpathy chain in every profile (original source TEXT the agent reads: drafts, requirements, transcripts); a DATA file (xlsx, csv...) inside it still goes to data/raw/."
 }

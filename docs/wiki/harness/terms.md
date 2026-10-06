@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-09-14
 fontes: []
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-05 · fonte 2dfec41 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-06 · fonte 7b92583 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # Termos — o glossário
 
@@ -84,7 +84,7 @@ está na última seção, separado de propósito.
 | **Memória decisória** | Por que decidimos X e o que foi descartado. Casa: `docs/decisions/` — um arquivo por decisão, imutável; decisão nova supersede, não edita. |
 | **Memória episódica** | "Experiência de ciclos de decisão anteriores" *(CoALA)* — o que aconteceu. No MJRP, `docs/log.md`, que **acrescenta** por checkpoint. |
 | **Memória procedural** | Como se faz. O CoALA distingue a implícita (nos pesos do modelo) da **explícita, escrita no código do agente** — as skills do MJRP são exatamente isso, distribuídas em dois pacotes: o do ciclo de software e o toolkit, que usa o mesmo mecanismo fora dele. |
-| **Memória semântica** | "O conhecimento do agente sobre o mundo e sobre si" *(CoALA)* — fatos do domínio. No MJRP, o SpecKit, `docs/diagrams.md` (a fonte Mermaid, não os PNGs), `docs/sources/` e **este glossário**. |
+| **Memória semântica** | "O conhecimento do agente sobre o mundo e sobre si" *(CoALA)* — fatos do domínio. No MJRP, o SpecKit, `docs/diagrams.md` (a fonte Mermaid, não os PNGs), `docs/wiki/sources/` (as fichas de fontes) e **este glossário**. |
 | **Modos de falha de contexto** | Poisoning (lixo entra na memória), distraction (janela grande demais), confusion (supérfluo influencia), clash (contradição na janela). Todos os quatro já ocorreram no MJRP. *(Breunig, via LangChain)* |
 | **Operações de contexto** | As quatro de context engineering: **write** (mesa → arquivo), **select** (arquivo → mesa), **compress** (encolher a mesa), **isolate** (dividir a mesa entre agentes). No MJRP: handoff/checkpoint, onboarding/progressive disclosure, compactação, e a fábrica. *(LangChain)* |
 | **Orçamento de atenção** | O limite real do contexto: o transformer cria n² relações para n tokens, e a atenção se dilui. Por isso a regra é "o menor conjunto possível de tokens de alto sinal". *(Anthropic)* |
@@ -153,8 +153,8 @@ está na última seção, separado de propósito.
 | **[Agente e agêntico — os conceitos](agents-agentic-concepts.md)** | Um **agente** é software que não apenas responde: decide e age. |
 | **[Arquitetura de memória](memory-architecture.md)** | A memória do harness é o que persiste **fora da janela** e precisa ser trazido de volta. |
 | **Biblioteca de paletas MJRP** | A **MJRP Personal Palette Library** é o conjunto de paletas curadas para output com a identidade visual pessoal do MJRP — infográficos de reunião, dossiês, decks, site pessoal. |
-| **[Cânone de design](design-canon.md)** | O **cânone de design** é o corpo de referência externo que fundamenta as regras de UX, UI e conteúdo explicativo do MJRP — 23 fontes fichadas em `docs/sources/`, organizadas em oito disciplinas, cada regra com um **ID estável** que as skills de design citam em vez de recitar. |
-| **[Cânone de engenharia](engineering-canon.md)** | O **cânone** é o corpo de referência que fundamenta os princípios de engenharia do MJRP: *The Pragmatic Programmer* (Andrew Hunt e David Thomas), *Clean Code* e *Clean Architecture* (Robert C. Martin) e *Refactoring* (Martin Fowler; ficha em `docs/sources/1999-fowler-refactoring.md`), que dá nome aos sinais de código ruim e à refatoração que resolve cada um. |
+| **[Cânone de design](design-canon.md)** | O **cânone de design** é o corpo de referência externo que fundamenta as regras de UX, UI e conteúdo explicativo do MJRP — 23 fontes fichadas em `docs/wiki/sources/`, organizadas em oito disciplinas, cada regra com um **ID estável** que as skills de design citam em vez de recitar. |
+| **[Cânone de engenharia](engineering-canon.md)** | O **cânone** é o corpo de referência que fundamenta os princípios de engenharia do MJRP: *The Pragmatic Programmer* (Andrew Hunt e David Thomas), *Clean Code* e *Clean Architecture* (Robert C. Martin) e *Refactoring* (Martin Fowler; ficha em `docs/wiki/sources/1999-fowler-refactoring.md`), que dá nome aos sinais de código ruim e à refatoração que resolve cada um. |
 | **Catálogo de ferramentas** | O **catálogo** é a **prateleira**: o registro vivo do que a MJRP já tem à mão, para o agente consultar **antes de pesquisar na web**. |
 | **[Conceitos base](base-concept.md)** | A **cadeia de intenção** que ordena todo documento do MJRP que declara para onde se vai: **Propósito → Visão → Objetivo → Roadmap**. |
 | **[Contexto e memória](context-vs-memory.md)** | **Contexto** é o conjunto de tokens presentes na janela do modelo **nesta chamada**: estado momentâneo, finito, reconstruído a cada turno. |
