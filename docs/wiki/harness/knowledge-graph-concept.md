@@ -7,7 +7,7 @@ status: vivo
 atualizado: 2026-10-04
 fontes: [2021-hogan-et-al-knowledge-graphs, 1993-gruber-portable-ontology-specifications, 1998-studer-benjamins-fensel-knowledge-engineering, 2017-w3c-shacl]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-06 · fonte 7b92583 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-07 · fonte 3d3763e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 Um **knowledge graph** é um grafo de dados sobre um domínio: os **nós** são as entidades de interesse e as

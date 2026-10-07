@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-06 · fonte 7b92583 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-07 · fonte 3d3763e · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 structure_check.py - the structure-by-nature sensor (ADR-0014, EP-09).
 
@@ -250,6 +250,62 @@ def _check_subfolders(root, rules, out):
                             out.append(_finding(rel, f"o nome diz a natureza → {to}/", to))
 
 
+def _diagram_theme_note(parts, rules):
+    """What is wrong with a path under design/diagrams/ (the declared diagram_themes), or None.
+    A diagram lives in a theme folder: design/diagrams/<theme>/AAAA-MM-DD-HHMM-<name>.(png|svg)."""
+    dt = rules.get("diagram_themes")
+    if not dt:
+        return None
+    root = Path(dt["root"]).parts
+    parts = tuple(parts)
+    if parts[:len(root)] != root or len(parts) <= len(root):
+        return None
+    rest = parts[len(root):]
+    themes = dt["themes"]
+    tolerated = set(rules["tolerated_in_every_folder"])
+    if len(rest) == 1:
+        if rest[0] in tolerated or rest[0].startswith(".") or rest[0] in IGNORE:
+            return None
+        return f"diagrama solto em {dt['root']}/ — vai num tema: {', '.join(themes)} (o render_diagram.js --theme gera o caminho)"
+    if rest[0] not in themes:
+        return (f"tema de diagrama não declarado em {dt['root']}/ — os declarados: {', '.join(themes)}; "
+                f"tema novo entra no structure_rules.json do harness, com o OK do MJRP")
+    if len(rest) > 2:
+        return "um tema é uma pasta só, sem subpastas"
+    if rest[1] in tolerated or rest[1].startswith(".") or rest[1] in IGNORE:
+        return None
+    if not re.match(dt["name_regex"], rest[1]):
+        return "nome fora do padrão AAAA-MM-DD-HHMM-<name>.(png|svg) — o render_diagram.js gera o nome certo"
+    return None
+
+
+def _check_diagram_themes(root, rules, out):
+    dt = rules.get("diagram_themes")
+    if not dt:
+        return
+    base = root / dt["root"]
+    if not base.is_dir():
+        return
+    reported = set()
+    for f in sorted(base.rglob("*")):
+        rel = f.relative_to(root)
+        if any(x.startswith(".") or x in IGNORE for x in rel.parts[len(Path(dt["root"]).parts):]):
+            continue
+        if f.is_dir():
+            continue
+        note = _diagram_theme_note(rel.parts, rules)
+        if not note:
+            continue
+        first = rel.parts[len(Path(dt["root"]).parts)]
+        if len(rel.parts) > len(Path(dt["root"]).parts) + 1 and first not in dt["themes"]:
+            if first in reported:
+                continue
+            reported.add(first)
+            out.append(_finding(f"{dt['root']}/{first}/", note))
+        else:
+            out.append(_finding(rel.as_posix(), note))
+
+
 def _check_tree(root, out):
     tree = root / "mjrp-scripts" / "tree.py"
     if not (tree.exists() and (root / "mjrp-scripts" / "structure.yml").exists()):
@@ -273,6 +329,7 @@ def check(root, rules=None):
     _check_docs(root, rules, prof, profile, out)
     _check_root(root, rules, prof, out)
     _check_subfolders(root, rules, out)
+    _check_diagram_themes(root, rules, out)
     if profile == "meta":
         _check_tree(root, out)
     return profile, out
@@ -355,6 +412,9 @@ def judge_path(root, rel, rules=None):
         if len(parts) >= 3 and parts[1] not in subs:
             return _finding(rel, f"subpasta não declarada em {top}/ — as declaradas: {', '.join(subs)}; "
                                  f"nova subpasta entra no structure_rules.json do harness")
+        note = _diagram_theme_note(parts, rules)
+        if note:
+            return _finding(rel, note)
     to = _name_decides(rel, rules)
     if to:
         return _finding(rel, f"o nome diz a natureza → {to}/", to)

@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-09-28
 fontes: [2026-claude-code-auto-memory]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-06 · fonte 7b92583 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-07 · fonte 3d3763e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O registro do que o harness **não pegou** e do que se aprendeu com isso. Achado e lição moram
@@ -38,6 +38,24 @@ deixando o ponteiro. Lição que só mora aqui é lição que ninguém aplica.
 > próprio harness`.
 
 ## Findings
+
+- **2026-10-07 11:07** · **O coach perguntava os quatro riscos como "baixo, médio ou alto" — risco sem teste é chute.** Na 1b do
+  Control Center, a `mjrp-coaching-pm` só nomeava os riscos; não tinha procedimento para transformá-los em teste. O MJRP
+  corrigiu (*"como vc ajuda o PM a pensar nessas 4 dimensões ... pra testar valor, usabilidade e viabilidade técnica?"*) e
+  pediu que o processo da Discovery fosse estruturado e escrito no harness, com o handbook dele como fonte (#harness_kaizen).
+  **Correção:** página do kernel [[product-discovery]] — a v2 do Handbook MJRP de Product Discovery: Rapid em 5 passos, Full
+  com catálogo de 12 técnicas, cada risco com "o que precisa ser verdade · evidência · teste mais barato", decisão matar ·
+  iterar · avançar. Falta o `reference/` da skill, depois da leitura do MJRP. **Lição:** quando a skill só nomeia um
+  conceito, o agente preenche o vazio com a pergunta mais fácil; o processo tem de dizer o que se pergunta e o que se produz.
+
+- **2026-10-06 16:06** · **Resultado e épico não tinham categoria — o filtro por tema dependia de alguém ler o título.** Ao
+  definir os dois resultados do Control Center (ver e governar), o MJRP notou que ambos são "Gestão Visual Virtual" e
+  pediu que todo resultado do ROADMAP e todo épico venham com uma tag que os classifique (#harness_kaizen).
+  **Correção:** campo `tags::` — resultado com 1 a 3, épico herda e soma até 3 próprias, vocabulário livre (formato e
+  quantidade); regra `tags` no sensor do grafo e no selftest, `--tags` lista com a herança; página
+  [[requirements-graph]], verbetes no [[terms]], modelos da `mjrp-pdlc-bootstrap` e a `mjrp-coaching-pm` escrevem o
+  campo. **Lição:** categoria que mora só na cabeça do humano não aparece na tela; se vai ser filtro, é campo com
+  sensor.
 
 - **2026-10-05 17:37** · **Uma proposta só caía em `design/proposals/` se o agente acertasse.** A proposta de entrada da
   aba Wiki do Control Center se chamava `wiki-entry-options.html`: a regra de nome do `structure_rules.json`

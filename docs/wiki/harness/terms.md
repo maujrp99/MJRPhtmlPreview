@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-09-14
 fontes: []
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-06 · fonte 7b92583 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-07 · fonte 3d3763e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # Termos — o glossário
 
@@ -59,12 +59,14 @@ está na última seção, separado de propósito.
 |---|---|
 | **ADR** | *Architecture Decision Record* — um arquivo por decisão em `docs/decisions/NNNN-*.md`, imutável; decisão nova supersede, não edita. É a memória decisória com casa. *(MADR)* |
 | **`AGENTS.md`** | Formato aberto de instruções para qualquer agente de código (Linux Foundation; 60+ ferramentas). Canônico no MJRP; `CLAUDE.md` e `GEMINI.md` o importam e acrescentam só o que é da ferramenta. |
+| **GVV — Gestão Visual Virtual** (*VVM, virtual visual management*) | A gestão visual levada para uma tela: o estado do trabalho (dos agentes, do roadmap, da saúde do harness) visto e decidido numa aplicação web e mobile, sem abrir a IDE nem o terminal. É a categoria dos dois resultados do Control Center (MJRP, 2026-10-06). |
 | **Kernel** (`docs/wiki/harness/`) | As páginas da wiki do harness que **todo projeto carrega** — cópia carimbada (versão + fonte no contrato, campo `kernel:`) do que governa a instância: o que os campos do VISION, a memória, o perfil e os sensores significam. O `new_project.py` copia, `--refresh-kernel` atualiza, o doctor (I5) avisa quando envelhece. Mesmo mecanismo da herança do `PRINCIPLES.md`. |
 | **Objetivo** (`VISION.md`) | O **WHAT** da [[base-concept|cadeia de intenção]]: a meta de curto a médio prazo que leva à visão, e o que se entrega para chegar lá. |
 | **PRD** (`docs/specs/prd.md`) | *Product Requirements Document* — o que o produto **é**, para quem, com que objetivo, e **o que ele explicitamente não é**. Documento **vivo**, ao contrário do charter, que era um retrato do kickoff. Carrega os **Epics** e, desde 03/10/2026, os **requisitos por épico** (no formato do projeto: user story, caso de uso ou EARS) (as soluções do `ROADMAP.md`), a seção *Entregue* e os *Candidatos* (o intake de achados — Epic *Enhancements*). Pela regra do BMAD: existe quando **mais de um épico não pode divergir** — no MJRP, quando mais de um agente trabalha no mesmo produto. *(Atlassian; BMAD)* |
 | **Princípio** (`PRINCIPLES.md`) | O **fundamento do agente e do humano** — o que deve ser seguido nos projetos MJRP. Pelo dicionário do próprio arquivo: *a regra que regula a ação e serve de base ao método*. Não é "como se decide": decisão com alternativa e consequência é ADR. |
 | **Propósito** (`VISION.md`) | O **WHY** da [[base-concept|cadeia de intenção]]: a razão de ser — a necessidade que se quer resolver. Sem prazo. |
 | **Roadmap** (`ROADMAP.md`) | O **HOW** da [[base-concept|cadeia de intenção]]: os **resultados** que o produto persegue, em Now / Next / Later — quem sente, hoje, medida e solução ou opções por item; sem data, sem estado. "Pronto" é a medida mover, não o trabalho terminar (v0 em 17/09/2026). |
+| **Tag de categoria** (`tags::`) | A classificação de um **resultado** do `ROADMAP.md` e de um **épico** do PRD: de 1 a 3 tags por resultado (`tags:: #visual-management`), em inglês e kebab-case; o épico herda as do resultado que serve e pode somar até 3 próprias. Vocabulário livre: o sensor do grafo confere formato e quantidade (regra `tags`). Serve para filtrar e agrupar resultados por categoria na gestão visual. Ver [[requirements-graph]]. (MJRP, 2026-10-06) |
 | **Visão** (`VISION.md`) | O **WHERE** da [[base-concept|cadeia de intenção]]: o horizonte a alcançar, uma instanciação do propósito. O documento que a carrega é o [[vision-document]]. |
 
 ## Contexto e memória
@@ -176,6 +178,7 @@ está na última seção, separado de propósito.
 | **[O doctor](doctor.md)** | O **doctor** é o sensor do harness: um script que lê a instância e devolve verde, amarelo ou vermelho por critério nomeado. |
 | **Opções para construir agentes — as quatro abordagens** | Existem **quatro caminhos** para construir um agente de IA hoje, e eles variam num único eixo central: quanto de infraestrutura, loop de execução e orquestração você **possui** versus quanto o provedor **cuida para você**. |
 | **[Perfis de projeto](project-profiles.md)** | **Perfil** é o que o projeto **entrega**, e é o que o campo `profile:` do contrato declara: `code-app` (software), `content` (vault, dossiê, pipeline editorial) ou `meta` (o próprio harness). |
+| **[Product Discovery — do problema à decisão (Rapid × Full)](product-discovery.md)** | A **Discovery** (FASE 1b do PDLC) é a fase em que o responsável pelo produto (o PM), com o agente coach, transforma o que a Inception mostrou numa decisão: o problema que vale resolver, o resultado que se quer mover e como medi-lo, os quatro riscos do produto convertidos em testes, a premissa mais arriscada e o desenho do teste dela — e então **matar, iterar ou avançar**. |
 | **Revisão de essencialidade — o que o harness mantém** | A revisão em que o MJRP decidiu que **o harness entra no próprio SDD**: ganha `docs/specs/prd.md` escrito do zero, o `ROADMAP.md` é reescrito do zero a partir do que o `VISION.md` promete, e o `BACKLOG.md` é arquivado — seu papel de intake passa ao PRD (Epic *Enhancements*), a numeração recomeça do zero. |
 | **Skill standard** | A **skill** is a written procedure the agent (LLM/code) loads when the task calls for it — explicit procedural memory ([[terms]]). |
 | **[Spec Kit e SpecKit — o SDD do MJRP](spec-kit.md)** | **SpecKit** é a adaptação do MJRP ao Spec Kit do GitHub: os **9 documentos vivos** de `docs/specs/` — a cadeia `prd → spec → plan → tasks → uat`, em que cada um deriva do anterior (os requisitos são nós, um arquivo cada, e o PRD é o mapa deles; spec, plan e tasks moram na pasta de cada feature), mais o contexto durável que a cadeia consulta, `constitution`, `arch`, `data-model` e `design-system`. |

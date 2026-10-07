@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-06 · fonte 7b92583 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-07 · fonte 3d3763e · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """requirements_graph_check.py -- checks the requirements graph of a project against its single declaration,
 requirements_graph_rules.json (S-63, kernel page requirements-graph).
 
@@ -15,12 +15,15 @@ Informational until it proves quiet (S-63 step 7): exits 0 and prints the findin
 are findings and 2 when the project has no requirements graph yet (contract: 0 passed, 1 failed, 2 not
 evaluable). Python 3 stdlib only (constitution, ADR-0015: this is core).
 
+Tags (MJRP 2026-10-06): every outcome carries 1-3 category tags (`tags:: #a #b` in its ROADMAP section); every
+epic inherits them and may add up to 3 of its own. Free vocabulary: format and count only. --tags lists them.
+
 Evidence (S-67, MJRP 2026-10-04): a status is checked against reality, never trusted. In progress needs an open
 feature or recent activity; Done needs a Done feature or `delivered_by:` with the commit; Accepted also needs
 `accepted_in:` pointing to the human's acceptance; Ready is warned when its observable state changed afterwards.
 
 Usage:
-  python3 mjrp-scripts/requirements_graph_check.py [root] [--strict] [--summary] [--rules path]
+  python3 mjrp-scripts/requirements_graph_check.py [root] [--strict] [--summary] [--tags] [--rules path]
   python3 mjrp-scripts/requirements_graph_check.py [root] --staged          (pre-commit: exit 1 on a contradiction in a staged node)
   python3 mjrp-scripts/requirements_graph_check.py [root] --changed --gate  (Stop hook: exit 2 on a contradiction in an uncommitted node)
 """
@@ -86,6 +89,9 @@ class Graph:
     def find(self, rule, msg):
         self.findings.append((rule, msg))
 
+    def tags_field(self):
+        return (self.rules.get("tags") or {}).get("field", "tags")
+
     def type_of(self, nid):
         for name, t in self.types.items():
             pat = t.get("id_pattern")
@@ -98,17 +104,31 @@ class Graph:
         path = self.p.get(key)
         if not path or not path.exists():
             return
+        section, tags_in, anchors_in = 0, {}, {}
         for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+            if HEADING.match(line):
+                section += 1
+            f = INLINE_FIELD.match(BLOCK_ANCHOR.sub("", line))
+            if f and f.group(1) == self.tags_field():
+                tags_in.setdefault(section, []).extend(f.group(2).replace(",", " ").split())
             m = BLOCK_ANCHOR.search(line)
             if not m:
                 continue
             nid = m.group(1)
+            anchors_in.setdefault(section, []).append(nid)
             t = self.type_of(nid)
             if key in ("info_arch", "behavior") and t is None:
                 t = "observable_state"
             if t in wanted_types:
                 edges = {}
                 self.nodes[nid] = {"type": t, "file": path.name, "status": None, "edges": edges}
+        # tags (MJRP, 2026-10-06): the `tags::` line of an outcome's section belongs to the outcome anchored in it
+        for sec, tags in tags_in.items():
+            outs = [a for a in anchors_in.get(sec, []) if (self.nodes.get(a) or {}).get("type") == "outcome"]
+            if len(outs) == 1:
+                self.nodes[outs[0]]["tags"] = tags
+            elif len(outs) > 1:
+                self.find("tags", f"{', '.join(outs)}: uma linha `tags::` numa seção com mais de um resultado — um resultado por seção")
 
     def load_inline_nodes(self, key, node_type):
         """Nodes that live inside a document: the heading names them, the paragraph below carries the inline
@@ -132,6 +152,8 @@ class Graph:
             f = INLINE_FIELD.match(BLOCK_ANCHOR.sub("", line))
             if f and f.group(1) == "folder":
                 self.nodes[current]["folder"] = f.group(2).strip().strip("`").strip("/")
+            elif f and f.group(1) == self.tags_field():
+                self.nodes[current].setdefault("tags", []).extend(f.group(2).replace(",", " ").split())
             elif f:
                 self.nodes[current]["edges"].setdefault(f.group(1), []).extend(link_targets(f.group(2)))
             a = BLOCK_ANCHOR.search(line)
@@ -280,6 +302,38 @@ class Graph:
                     self.find(f"edge_{edge['name']}", f"{nid}: no máximo {edge['max']} aresta '{edge['name']}', tem {len(targets)}")
             if node["type"] == "epic" and not node.get("anchored", True):
                 self.find("anchor", f"{nid}: o parágrafo abaixo do heading não termina com ^{nid}")
+
+    def effective_tags(self, nid):
+        """An outcome's own tags; an epic's own tags plus those of the outcome it serves (MJRP, 2026-10-06)."""
+        node = self.nodes.get(nid) or {}
+        tags = list(node.get("tags", []))
+        if node.get("type") == "epic" and (self.rules.get("tags") or {}).get("epic_inherits", True):
+            for _, out in node["edges"].get("serves", []):
+                tags += [t for t in (self.nodes.get(out) or {}).get("tags", []) if t not in tags]
+        return tags
+
+    def check_tags(self):
+        """MJRP, 2026-10-06: every outcome carries 1-3 category tags; every epic inherits them and may add up to 3
+        of its own. Free vocabulary -- only the format and the count are checked."""
+        spec = self.rules.get("tags")
+        if not spec:
+            return
+        pat = re.compile(spec.get("pattern", r"^#[a-z0-9]+(-[a-z0-9]+)*$"))
+        limits = {"outcome": spec.get("outcome", {}), "epic": spec.get("epic_own", {})}
+        for nid, node in self.nodes.items():
+            if node["type"] not in limits:
+                continue
+            own, lim = node.get("tags", []), limits[node["type"]]
+            for t in own:
+                if not pat.match(t):
+                    self.find("tags", f"{nid}: tag '{t}' fora do formato (#kebab-case em inglês, ex.: #visual-management)")
+            if len(set(own)) != len(own):
+                self.find("tags", f"{nid}: tag repetida em `{spec.get('field', 'tags')}::`")
+            if len(own) < lim.get("min", 0):
+                self.find("tags", f"{nid}: resultado sem tag — declare de {lim.get('min', 1)} a {lim.get('max', 3)} em `{spec.get('field', 'tags')}:: #tag` na seção dele no ROADMAP")
+            if lim.get("max") is not None and len(own) > lim["max"]:
+                what = "tags próprias" if node["type"] == "epic" else "tags"
+                self.find("tags", f"{nid}: {len(own)} {what}, o máximo é {lim['max']}")
 
     def release_of(self, rid):
         node = self.nodes.get(rid) or {}
@@ -555,6 +609,7 @@ class Graph:
         self.load()
         self.check_node_folder()
         self.check_node_edges()
+        self.check_tags()
         self.check_features()
         self.check_evidence()
         return self.findings
@@ -620,6 +675,13 @@ def main(argv):
     n_nodes = len(g.nodes)
     if "--summary" in argv:
         g.summary()
+    if "--tags" in argv:
+        # MJRP, 2026-10-06: the category of each outcome and epic -- an epic shows its own tags plus the inherited ones
+        print("[requirements_graph] tags por resultado e épico:")
+        for nid in sorted(n for n, v in g.nodes.items() if v["type"] in ("outcome", "epic")):
+            v = g.nodes[nid]
+            serves = ", ".join(t for _, t in v["edges"].get("serves", []))
+            print(f"  {nid}{' → ' + serves if serves else ''}: {' '.join(g.effective_tags(nid)) or '(sem tag)'}")
     if not findings:
         print(f"[requirements_graph] VERDE — {n_nodes} nó(s), {len(g.features)} feature(s), nenhuma regra violada")
         return 0

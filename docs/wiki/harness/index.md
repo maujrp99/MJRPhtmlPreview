@@ -1,11 +1,11 @@
 ---
 title: Kernel do MJRP Harness
-summary: as 23 páginas do harness que este projeto carrega — o que os campos do VISION, a memória, o perfil e os sensores significam
+summary: as 24 páginas do harness que este projeto carrega — o que os campos do VISION, a memória, o perfil e os sensores significam
 ---
 
 ## Definition
 
-Cópia carimbada (versão **2026-10-06**, fonte `7b92583`) das páginas do MJRP Harness que governam como uma instância funciona. **Não se edita aqui**: edite no harness e rode `new_project.py --refresh-kernel`. O doctor (I5) avisa quando o carimbo envelhece.
+Cópia carimbada (versão **2026-10-07**, fonte `3d3763e`) das páginas do MJRP Harness que governam como uma instância funciona. **Não se edita aqui**: edite no harness e rode `new_project.py --refresh-kernel`. O doctor (I5) avisa quando o carimbo envelhece.
 
 | Página | O que responde |
 |---|---|
@@ -32,3 +32,4 @@ Cópia carimbada (versão **2026-10-06**, fonte `7b92583`) das páginas do MJRP 
 | [linked-notes-concept](linked-notes-concept.md) | o modelo de notas atômicas e densamente ligadas que o Obsidian popularizou — de onde vem, os nomes que ele tem, os mecanismos (wikilink, backlink, embed, block ID, MOC) e como o harness o usa como a leitura humana do grafo |
 | [git-governance](git-governance.md) | como se commita, ramifica e marca versão num projeto do harness — tipos e formato do commit, os commits de cada estágio do SDD, branches, tags, regras de brownfield, e o que os hooks exigem |
 | [spreadsheet-standard](spreadsheet-standard.md) |  |
+| [product-discovery](product-discovery.md) | o processo da FASE 1b do MJRP — Rapid (cinco passos essenciais, iterativo com o LLM) e Full (o Rapid mais técnicas que o PM marca no início), os quatro riscos transformados em teste, a decisão matar · iterar · avançar e onde cada saída mora no grafo do projeto |

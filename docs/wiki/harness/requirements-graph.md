@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-10-04
 fontes: [design/proposals/requirements-knowledge-graph-proposal.md, kernel/knowledge-graph-concept, kernel/linked-notes-concept, kernel/graph-engineering-concept, kernel/spec-kit]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-06 · fonte 7b92583 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-07 · fonte 3d3763e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **grafo de requisitos** é a documentação do PDLC tratada como grafo de conhecimento: cada requisito, épico,
@@ -35,6 +35,12 @@ dos agentes; este é o grafo de **dados** que o comportamento lê como estado.
   **Resultado e release:** no `ROADMAP.md`, com block ID (`^OUT-01`, `^REL-01`). A direção é do ROADMAP
   para o PRD: o ROADMAP define os resultados, e o épico **serve** a um deles (`serves`). O ROADMAP não deriva dos
   requisitos do PRD — decisão do MJRP, 2026-10-04 12:15.
+- **Tags de categoria:** todo resultado leva **de 1 a 3 tags** numa linha `tags:: #a #b` na sua seção do ROADMAP (logo
+  abaixo do heading); todo épico **herda** as tags do resultado que serve e pode declarar **até 3 próprias** (`tags::` abaixo
+  do heading, no PRD). Vocabulário livre, em inglês e kebab-case (`#visual-management`): o sensor confere só formato e
+  quantidade (regra `tags`); `--tags` lista as de cada nó, com a herança calculada. Para quê: classificar e filtrar os
+  resultados por categoria na gestão visual — a primeira é a GVV (Gestão Visual Virtual) do Control Center. Decisão do
+  MJRP, 2026-10-06.
 - **NFR (requisito não funcional transversal):** um nó próprio em `requirements/` (`NFR-01.md`), como restrição que
   vale para todas as features; não é importado por nenhuma. O prefixo `REQ-` fica só para os REQ locais da feature.
   Decisão do MJRP, 2026-10-04 12:15, reversível: ele pode voltar atrás.
@@ -140,6 +146,7 @@ que executa a reconciliação por conta própria é do EP-03 (brief do MJRP).
 - **Julga o conteúdo:** `mjrp-ensuring-quality` (Reviewer) — a aresta existir não prova que o teste prova o REQ.
 
 ## History
+- **2026-10-06** · **Tags de categoria em resultado e épico** (MJRP: "todos os elementos de outcome de roadmap e dos épicos do harness venham com uma tag que categorize"). Resultado com 1 a 3, épico herda e soma até 3 próprias, vocabulário livre; regra `tags` no sensor e no selftest, `--tags` lista; modelos de ROADMAP e PRD da `mjrp-pdlc-bootstrap` e a `mjrp-coaching-pm` escrevem o campo.
 - **2026-10-05 13:46** · **Requisito em pt-BR e em inglês** (S-110; MJRP, 2026-10-05 09:39: "que isso fosse padrão, constitution"). Seções `## pt-BR` e `## en` no mesmo nó; regra `bilingual` no sensor, padrão `languages: [pt-BR, en]`; os 131 nós do harness traduzidos de uma vez (decisão dele: todos agora).
 - **2026-10-05 10:53** · **Requisitos agrupados por épico** (S-123; MJRP: a lista longa de stories incomodava). Cada épico declara
   `folder:: ep-NN-<slug-em-inglês>` no PRD; os nós moram nessa pasta, NFR em `nfr/`. Regra `node_folder`; mover um nó não conta

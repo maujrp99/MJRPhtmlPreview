@@ -1,7 +1,7 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-06 · fonte 7b92583 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-07 · fonte 3d3763e · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "The single declaration of structure by nature (ADR-0014). Vendored to every project with the kernel; structure_check.py, the doctor (W9), the pre-commit and the PreToolUse hook all read THIS file. Edit here, in the harness, never in a copy.",
-  "version": "2026-10-06",
+  "version": "2026-10-07",
   "rule_of_thumb": "agente precisa ler para saber o que é verdade → docs/ · resultado de olhar o projeto → reports/ · ainda sendo decidido ou mostrado → design/ · não é texto para gente → data/",
   "screenshots": {
     "rule": "screenshot: dado → data/raw/<assunto>/ · referência de como deve ser → design/references/<assunto>/ · evidência de UAT ou prova de entrega → reports/evidence/<TASK-ID>/ · nome: <TASK-ID|assunto>-<viewport|origem>-AAAA-MM-DD.<ext> · captura do agente entra no git só quando uma task a cita; dado sensível fica fora do git, como em data/raw",
@@ -127,6 +127,17 @@
       "prompts",
       "canonical"
     ]
+  },
+  "diagram_themes": {
+    "root": "design/diagrams",
+    "rule": "todo diagrama desenhado numa conversa mora num tema: design/diagrams/<tema>/AAAA-MM-DD-HHMM-<name>.png (+ o .svg fonte ao lado). O tema é o assunto, não a fase do PDLC (um diagrama atravessa fases); a fase vai na linha do diagrama no folder-index.md do tema. Tema novo entra aqui, no harness, com o OK do MJRP. Quem gera o caminho certo é o render_diagram.js (--theme, --name).",
+    "name_regex": "^\\d{4}-\\d{2}-\\d{2}-\\d{4}-[a-z0-9]+(-[a-z0-9]+)*\\.(png|svg)$",
+    "themes": {
+      "ways-of-working": "como trabalhamos — o fluxo do PDLC, a descoberta (Rapid x Full), o Ways of Working",
+      "skills": "o sistema de skills — arquétipos, papéis, quem faz o quê",
+      "architecture": "estrutura e stack — NFRs, estilos, camadas, o que é o núcleo",
+      "roadmap": "épicos, releases, o que ficou dentro e fora do escopo"
+    }
   },
   "tolerated_in_every_folder": [
     "folder-index.md",

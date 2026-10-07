@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-06 · fonte 7b92583 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-07 · fonte 3d3763e · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "Single declaration of the requirements graph (S-63, kernel page requirements-graph). The sensor reads this file; the kernel page explains it for humans. Edges are written in one direction only; the inverse is computed. Each edge is enforced only from the status declared in 'enforced_from' (lesson of SDD_chain_artifacts_check: checking every pair everywhere produced 366 false positives).",
   "version": 1,
   "paths": {
@@ -266,5 +266,19 @@
     "pt-BR",
     "en"
   ],
-  "_languages": "S-110 (MJRP, 2026-10-05 09:39): every requirement and NFR node carries one `## <lang>` section per language, same file, same ID; the contract's mjrp_harness.requirements.languages overrides ([] turns it off)"
+  "_languages": "S-110 (MJRP, 2026-10-05 09:39): every requirement and NFR node carries one `## <lang>` section per language, same file, same ID; the contract's mjrp_harness.requirements.languages overrides ([] turns it off)",
+  "tags": {
+    "field": "tags",
+    "pattern": "^#[a-z0-9]+(-[a-z0-9]+)*$",
+    "outcome": {
+      "min": 1,
+      "max": 3
+    },
+    "epic_own": {
+      "min": 0,
+      "max": 3
+    },
+    "epic_inherits": true
+  },
+  "_tags": "MJRP, 2026-10-06: every outcome carries 1 to 3 category tags (`tags:: #a #b` in its ROADMAP section) and every epic inherits the tags of the outcome it serves and may add up to 3 of its own (`tags::` under its heading in prd.md). Free vocabulary: the sensor checks only the format (English kebab-case after #) and the count."
 }
