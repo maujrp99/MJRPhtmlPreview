@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte 9e9312e · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte b774b53 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "The single declaration of structure by nature (ADR-0014). Vendored to every project with the kernel; structure_check.py, the doctor (W9), the pre-commit and the PreToolUse hook all read THIS file. Edit here, in the harness, never in a copy.",
   "version": "2026-10-09",
   "rule_of_thumb": "agente precisa ler para saber o que é verdade → docs/ · resultado de olhar o projeto → reports/ · ainda sendo decidido ou mostrado → design/ · não é texto para gente → data/",
@@ -143,7 +143,7 @@
   },
   "wireframes": {
     "root": "design/wireframes",
-    "rule": "o wireframe de cada rodada mora junto do inventário da tela (info-arch.md § Inventário do protótipo): design/wireframes/<name>-vN-<screen>.png (+ o .svg fonte ao lado, quando houver), as caixas com os IDs do inventário. Uma pasta só, sem subpastas; versão nova da tela, wireframe novo — o antigo fica. Quem escreve é a mjrp-designing-ui, na mesma rodada do render (decisão do MJRP, 2026-10-09).",
+    "rule": "o wireframe de cada rodada mora junto do inventário da tela (info-arch.md § Inventário do protótipo): design/wireframes/<name>-vN-<screen>.png (+ o .svg fonte ao lado, quando houver), as caixas com os IDs do inventário. Uma pasta só, sem subpastas; toda versão do protótipo (design/inception/<name>-vN.html) tem o wireframe de TODAS as telas, não só das que mudaram — mudança de dado conta; o antigo fica. Tela retirada de propósito se declara no info-arch.md com <!-- wireframe-retired: <tela> -->. Guardado pelo commit-msg (prototype_sync_check.py: protótipo no commit sem o info-arch e os wireframes da versão é recusado) e pelo doctor W14 (decisão do MJRP, 2026-10-09 19:36). Quem escreve é a mjrp-designing-ui, na mesma rodada do render (decisão do MJRP, 2026-10-09).",
     "name_regex": "^[a-z0-9]+(-[a-z0-9]+)*-v\\d+(\\.\\d+)*(-[a-z0-9]+)+\\.(png|svg)$"
   },
   "kernel_themes": {

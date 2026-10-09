@@ -1,5 +1,5 @@
 #!/bin/sh
-# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte 9e9312e · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte b774b53 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 # commit-msg - every commit brings a new entry in the project log (S-61). Born 2026-10-03/04: commits
 # without a log entry, and decisions that survived a context compaction only in the AI Platform's summary.
 # It runs wherever git runs, so it guards local and cloud sessions alike.
@@ -14,4 +14,9 @@ AMEND=""
 case "$(ps -o args= -p "$PPID" 2>/dev/null)" in
   *--amend*) AMEND="--amend" ;;
 esac
-cd "$ROOT" && python3 "$CHECK" $AMEND
+cd "$ROOT" && python3 "$CHECK" $AMEND || exit 1
+# 2026-10-09 (MJRP): a prototype that changes brings its info-arch.md and the wireframes of every screen of its
+# version in the same commit. The message is read for the human's escape trailer ("Prototype-sync: skip — <why>").
+SYNC="$ROOT/mjrp-scripts/prototype_sync_check.py"
+[ -f "$SYNC" ] || exit 0
+python3 "$SYNC" "$ROOT" --staged --msg "$1"

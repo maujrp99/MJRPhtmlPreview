@@ -6,7 +6,7 @@ tags: [harness, sensores, verificacao]
 status: em formação
 atualizado: 2026-09-14
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte 9e9312e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b774b53 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **doctor** é o sensor do harness: um script que lê a instância e devolve verde,
@@ -147,6 +147,7 @@ pegado (ADR-0002, emendada pela ADR-0007): checagem sem incidente é opinião co
 - **2026-10-05 18:55** · **W12 — skill aposentada em documento vivo.** Avisa quando README, AGENTS/CLAUDE/GEMINI, MEMORY, VISION, ROADMAP, specs, wiki ou contrato citam uma skill aposentada ou renomeada; registro (seções de histórico, entrada datada, tarefa feita, linha que diz aposentada ou já nomeia a sucessora, pastas de registro e logs) fica com o nome da época. A lista é uma só, `retired_skills.json`, a mesma que o `build_plugin.py --check` usa no corpo das skills (S-56). Nasceu de outra sessão respondendo com `mjrp-adr` e `mjrp-system-architect` depois do EP-10.
 
 - **2026-10-08 17:43** · **W13 — backup do repositório atrasado.** Avisa quando o último `git bundle` no iCloud Drive não tem o HEAD (`backup_repo.py --check`); com o iCloud Drive fora do alcance da máquina, só anota que não avaliou. Nasceu da pré-condição do merge autônomo do PDLC em loops.
+- **2026-10-09 19:45** · **W14 — protótipo × info-arch × wireframes.** Avisa quando o protótipo mais novo (`design/inception/<name>-vN.html`) não tem o wireframe de todas as telas da versão (as da versão anterior, menos as declaradas `<!-- wireframe-retired: <tela> -->` no `info-arch.md`), quando o `info-arch.md` não o cita, e quando ele mudou depois do `info-arch.md` ou de um wireframe. O mesmo `prototype_sync_check.py` roda no hook `commit-msg` e recusa o commit que traz o protótipo sem o info-arch e os wireframes da versão; a saída é do humano, no trailer `Prototype-sync: skip — <motivo>`. Protótipo tocado antes de 2026-10-09 é legado. Nasceu do Control Center v3.5: mudou depois de aprovado, com 3 das 7 telas com wireframe e o info-arch citando o v3.3 — a regra só existia em prosa (decisão do MJRP, 19:36: hook + sensor, todas as telas por versão).
 
 ## Related
 [[harness-elements]] · [[harness-kaizen]] · skill-distribution · ADR-0002 · ADR-0007

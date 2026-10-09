@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte 9e9312e · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte b774b53 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 doctor.py - the computational sensor of the harness.
 
@@ -1642,6 +1642,27 @@ def w12_retired_names(root, rep):
         rep.note("W12", "nenhum documento vivo cita skill aposentada")
 
 
+def w14_prototype_sync(root, rep):
+    """W14 - the newest prototype, its info-arch.md and the wireframes of every screen of its version move together."""
+    inc = ("09/10/2026 19:36: o Control Center v3.5 mudou depois de aprovado e o dado envelheceu, com só 3 das 7 telas "
+           "com wireframe e o info-arch ainda citando o v3.3 — a regra existia só em prosa; o MJRP: 'alterou protótipo, "
+           "automaticamente wireframe e info-arch precisam ser atualizados' (hook commit-msg + este sensor)")
+    sys.dont_write_bytecode = True
+    try:
+        import prototype_sync_check as psc
+    except ModuleNotFoundError:
+        return
+    try:
+        gaps = psc.drift(root)
+    except Exception as e:
+        rep.warn("W14", f"protótipo × info-arch × wireframes não avaliado ({e})", inc)
+        return
+    for g in gaps:
+        rep.warn("W14", f"protótipo × wireframes: {g}", inc)
+    if not gaps and psc.prototypes(Path(root).resolve()):
+        rep.note("W14", "protótipo mais novo, info-arch e wireframes de todas as telas em dia")
+
+
 def w13_repo_backup(root, rep):
     """W13 - the newest repository backup holds HEAD: a merge by the agent must stay reversible."""
     inc = ("08/10/2026: o merge do Delivery passou a ser do agente (pdlc-loops); o MJRP pediu backup recorrente "
@@ -1708,6 +1729,7 @@ def run(root, skip_sensors):
     w11_prototype_inventory(root, rep)
     w12_retired_names(root, rep)
     w13_repo_backup(root, rep)
+    w14_prototype_sync(root, rep)
     _daily_checks_ledger(root, cfg, rep)
     return rep, (1 if rep.errors else 0)
 
