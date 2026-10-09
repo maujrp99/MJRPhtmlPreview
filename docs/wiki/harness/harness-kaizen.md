@@ -4,10 +4,10 @@ aliases: [harness-kaizen, lições, licoes, aprendizados, o que não funcionou, 
 summary: onde o harness falhou e o que se aprendeu com isso — o erro e a correção no mesmo lugar
 tags: [harness, memoria, kaizen]
 status: em formação
-atualizado: 2026-09-28
+atualizado: 2026-10-09
 fontes: [2026-claude-code-auto-memory]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte 1d87cd3 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte 4c7593e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O registro do que o harness **não pegou** e do que se aprendeu com isso. Achado e lição moram
@@ -50,6 +50,13 @@ deixando o ponteiro. Lição que só mora aqui é lição que ninguém aplica.
   checável por sensor.
 
 - **2026-10-09 11:54** · **O processo mandava todo item do protótipo servir a um resultado — e separava o info-arch da tela.** No inventário do v3.3 do Control Center, o agente quis cortar ou forçar um resultado para o que é só informação (o mapa do harness, a wiki), e tratou o info-arch como etapa depois do protótipo, herança das fases em cascata. O MJRP corrigiu: um control center informa, ajuda a decidir e age — informação é produto, não resultado; e o info-arch mora junto com o desenho da tela. Decisões dele: cada item do inventário termina numa função do produto (da Visão) ou num resultado, ou é cortado; `design/wireframes/` anda com o inventário; o kernel ganha temas; a biblioteca de paletas vai para o kernel (tema design). Brief e plano no `docs/log.md` desta data.
+  **Correção (fechada em 2026-10-09 13:51):** (1) a `VISION.md` do Control Center declara as três funções — informar, ajudar a
+  decidir, agir; (2–3) as quatro skills de tela viraram a `mjrp-designing-ui` — a tela e a descrição dela (texto,
+  inventário com wireframe, `info-arch.md`) numa rodada só, cada item do inventário com destino na coluna *Serve a*
+  (função do produto, `^OUT-xx` ou corte), e a leitura da reação como PM foi para a `mjrp-coaching-pm`; (4)
+  `design/wireframes/` declarada, conferida pelo sensor de estrutura e criada em todo projeto novo; (5) o kernel por
+  tema na fonte (ways-of-working, skills, architecture, roadmap, design), o filho achatado com o índice por tema; (6) a
+  biblioteca de paletas no kernel, tema design. Os temas são refinados depois da revisão dos grupos da wiki no v3.4.
 - **2026-10-07 11:07** · **O coach perguntava os quatro riscos como "baixo, médio ou alto" — risco sem teste é chute.** Na 1b do
   Control Center, a `mjrp-coaching-pm` só nomeava os riscos; não tinha procedimento para transformá-los em teste. O MJRP
   corrigiu (*"como vc ajuda o PM a pensar nessas 4 dimensões ... pra testar valor, usabilidade e viabilidade técnica?"*) e

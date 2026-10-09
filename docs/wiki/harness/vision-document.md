@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-09-11
 fontes: [productplan-vision-vs-strategy, productcompass-vision-strategy-goals]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte 1d87cd3 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte 4c7593e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O documento que responde **por que este projeto existe e onde ele quer chegar**. Estado, medição, configuração e ordem de execução moram em outros lugares e são apontados daqui.
