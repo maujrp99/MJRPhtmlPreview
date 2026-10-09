@@ -4,10 +4,10 @@ aliases: [project-profiles, perfis, perfil, greenfield, brownfield, content, cam
 summary: os três perfis que o harness atende — e a distinção que o README apagava, entre PERFIL (o que o projeto entrega) e CAMINHO DE ADOÇÃO (por que porta ele entra)
 tags: [harness, fundamento]
 status: firme
-atualizado: 2026-09-10
+atualizado: 2026-10-07
 fontes: []
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-07 · fonte 3d3763e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte d2552b9 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 **Perfil** é o que o projeto **entrega**, e é o que o campo `profile:` do contrato declara:
@@ -35,7 +35,7 @@ CAMINHO DE ADOÇÃO   por qual porta se entra       não vai para o contrato —
 ```
 
 Greenfield e brownfield são **duas portas para o mesmo perfil**. Elas divergem só na entrada e
-**convergem na FASE 3** — a partir do ciclo SDD, o fluxo é idêntico. Um projeto brownfield deixa
+**convergem no Delivery** ([[pdlc-loops]]) — dali em diante, o fluxo é idêntico. Um projeto brownfield deixa
 de ser brownfield assim que termina o retrofit; um projeto `content` nunca deixa de ser `content`.
 
 > **Consequência prática.** O contrato declara `profile:`, não o caminho. Depois do bootstrap,
@@ -82,7 +82,8 @@ já existe**.
 
 Quatro fases antecedem o ciclo normal: **0 Audit** (inventário + gaps) → **0.5 Extract Foundation**
 (identidade extraída do que existe) → **1B Retrofitting** (documentar features no nível certo) →
-**2B Ativar** (configs de IA apontando para os artefatos novos). Depois disso, entra na FASE 3.
+**2B Ativar** (configs de IA apontando para os artefatos novos). Depois disso, entra nos loops: toda demanda nova
+passa pelo Intake, e requisito já Ready vai direto ao Delivery.
 
 O esforço do retrofit escala com o projeto: **mínimo** (constitution + lista de features, 1–2h) ·
 **padrão** (+ spec, arch, data-model, 4–6h) · **completo** (tudo + design-system, 1–2 dias).
@@ -132,6 +133,7 @@ um álbum por vez.
   `doctor.py` valida é o `profile:`.
 
 ## History
+- **2026-10-07 20:29** · Onda E do PDLC em loops (`design/proposals/pdlc-loops-migration-plan.md`): a numeração antiga de fases deu lugar às estações e ao contrato de [[pdlc-loops]] §11.
 - **2026-10-04 00:00** — MJRP (S-62): os requisitos passam para o PRD, por épico, em qualquer formato; o `story.md` sai da cadeia.
 
 > A decisão mora na página do assunto que ela muda, com data (ADR-0008). As entradas abaixo

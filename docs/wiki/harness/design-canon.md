@@ -4,10 +4,10 @@ aliases: [design-canon, canone de design, cânone de UX, cânone de UI, ux canon
 summary: as fontes elevadas que fundamentam UX, UI e conteúdo explicativo no MJRP — organizadas em oito disciplinas com regras de ID estável que as skills citam em vez de recitar
 tags: [harness, design, ux, kernel]
 status: vivo
-atualizado: 2026-09-28
+atualizado: 2026-10-07
 fontes: [few-information-dashboard-design, tufte-visual-display, knaflic-storytelling-with-data, wexler-big-book-of-dashboards, shneiderman-the-eyes-have-it, nngroup-dashboards-preattentive, smashing-dashboard-decluttering, a11y-collective-accessible-charts, sigma-color-blindness, 925studios-whoop-breakdown, sahha-readiness-scores, nielsen-ten-heuristics, krug-dont-make-me-think, cooper-about-face, yablonski-laws-of-ux, google-apple-m3-hig, w3c-wcag-2-2, gigerenzer-risk-communication, case-calm-technology, cdc-clear-communication-index, andrews-info-we-trust, design-council-double-diamond-knapp-sprint, baghai-three-horizons, tmap-crud-test, kaplan-nngroup-empty-states]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-07 · fonte 3d3763e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte d2552b9 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **cânone de design** é o corpo de referência externo que fundamenta as regras de UX, UI e
@@ -31,8 +31,8 @@ Cada regra tem três partes: **ID** (estável — nunca se renumera; regra retir
 **tipo**:
 
 - **produção** — a skill produtora aplica no momento de desenhar; teria mudado o código se
-  existisse. É o que `mjrp-designing-information-architecture`, `mjrp-designing-interfaces`, `mjrp-defining-design-systems` e
-  `mjrp-writing-screen-content` carregam como checklist.
+  existisse. É o que `mjrp-designing-ui` e `mjrp-defining-design-systems`
+  carregam como checklist.
 - **julgamento** — não dá para impor na produção; só se pega na crítica. É o que só a
   `mjrp-critiquing-ux` verifica.
 
@@ -187,6 +187,7 @@ O cânone é **referência inicial, não limitante** (MJRP, 19/09/2026). Três m
    o que vira regra sobe com o antes/depois como evidência. As cinco primeiras regras assim
    (HI-01, HI-02, DE-05, CO-04, CO-01/CO-03) vieram do `mjrp-health-control`.
 3. **Regra retirada não some.** Fica marcada *retirada*, com data e motivo, no `## History`; o
+- **2026-10-07 20:29** · Onda E do PDLC em loops (`design/proposals/pdlc-loops-migration-plan.md`): a numeração antiga de fases deu lugar às estações e ao contrato de [[pdlc-loops]] §11.
    ID não é reusado — a auditoria antiga que o citava continua legível.
 
 ## How MJRP uses it
@@ -195,9 +196,8 @@ O cânone é **referência inicial, não limitante** (MJRP, 19/09/2026). Três m
   `docs/wiki/harness/`, e o I5 do `doctor` confere que chegou e que o carimbo não envelheceu.
 - **Lê-se sob demanda.** Quem vai desenhar uma tela, escrever o texto dela ou julgá-la abre;
   as skills de design citam o ID e mandam ler daqui. Nenhuma sessão carrega o cânone inteiro.
-- **As skills que citam:** `mjrp-designing-information-architecture` (2a — HI, DE-05, CP, IN, MP-01), `mjrp-defining-design-systems`
-  (2b — AH-01/02/08, CP-07), `mjrp-designing-interfaces` (2c — HI, DE, CP, IN, MP-01), `mjrp-writing-screen-content`
-  (CO, AH-06/07, RC), `mjrp-critiquing-ux` (tudo, os dois tipos), `mjrp-infographic-designer` (CO, HI,
+- **As skills que citam:** `mjrp-designing-ui` (Explorar e Desenhar — a tela e a descrição dela: HI, DE, CP, IN, MP-01, e o
+  texto da tela: CO, AH-06/07, RC), `mjrp-defining-design-systems` (Desenhar, sistema visual — AH-01/02/08, CP-07), `mjrp-critiquing-ux` (tudo, os dois tipos), `mjrp-infographic-designer` (CO, HI,
   AH no toolkit).
 - **Quando o cânone e o projeto discordarem, o projeto decide** — desde que a decisão esteja
   escrita na `constitution.md` ou no `design-system.md` dele, e desde que não contrarie um

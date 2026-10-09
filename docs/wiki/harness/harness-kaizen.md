@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-09-28
 fontes: [2026-claude-code-auto-memory]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-07 · fonte 3d3763e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte d2552b9 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O registro do que o harness **não pegou** e do que se aprendeu com isso. Achado e lição moram
@@ -39,6 +39,17 @@ deixando o ponteiro. Lição que só mora aqui é lição que ninguém aplica.
 
 ## Findings
 
+- **2026-10-07 18:40** · **A Discovery não usou o protótipo aprovado nem o inventário** — #harness-kaizen do MJRP. Na saída da
+  Discovery do Control Center, o coach partiu das 7 perguntas do MJRP e a `mjrp-writing-reqs` ia escrever requisitos
+  sem o inventário do protótipo v3.3: abas aprovadas (Wiki, harness em camadas, ciclo de vida, memória × contexto) ficavam
+  sem resultado nem requisito. Causa: o inventário só nascia na 2a (`mjrp-designing-information-architecture`), depois da
+  Discovery; nenhuma skill da 1b o pedia. **Correção:** o inventário vira a entrada principal da Discovery — a
+  `mjrp-coaching-pm` o monta antes do passo 1, os resultados o cobrem, a `mjrp-writing-reqs` não escreve sem ele, a 2a o
+  completa; [[product-discovery]] ganha o item 8 do checklist. E a falha abriu o redesenho do processo: [[pdlc-loops]]
+  (Intake + Discovery · Delivery · Learn), em que o "pronto" da Discovery é todo item do inventário com destino —
+  checável por sensor.
+
+- **2026-10-09 11:54** · **O processo mandava todo item do protótipo servir a um resultado — e separava o info-arch da tela.** No inventário do v3.3 do Control Center, o agente quis cortar ou forçar um resultado para o que é só informação (o mapa do harness, a wiki), e tratou o info-arch como etapa depois do protótipo, herança das fases em cascata. O MJRP corrigiu: um control center informa, ajuda a decidir e age — informação é produto, não resultado; e o info-arch mora junto com o desenho da tela. Decisões dele: cada item do inventário termina numa função do produto (da Visão) ou num resultado, ou é cortado; `design/wireframes/` anda com o inventário; o kernel ganha temas; a biblioteca de paletas vai para o kernel (tema design). Brief e plano no `docs/log.md` desta data.
 - **2026-10-07 11:07** · **O coach perguntava os quatro riscos como "baixo, médio ou alto" — risco sem teste é chute.** Na 1b do
   Control Center, a `mjrp-coaching-pm` só nomeava os riscos; não tinha procedimento para transformá-los em teste. O MJRP
   corrigiu (*"como vc ajuda o PM a pensar nessas 4 dimensões ... pra testar valor, usabilidade e viabilidade técnica?"*) e

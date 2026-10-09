@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-07 · fonte 3d3763e · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte d2552b9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 structure_check.py - the structure-by-nature sensor (ADR-0014, EP-09).
 
@@ -306,6 +306,93 @@ def _check_diagram_themes(root, rules, out):
             out.append(_finding(rel.as_posix(), note))
 
 
+def _wireframe_note(parts, rules):
+    """What is wrong with a path under design/wireframes/ (the declared wireframes block), or None.
+    A wireframe lives flat in the folder: design/wireframes/<name>-vN-<screen>.(png|svg)."""
+    wf = rules.get("wireframes")
+    if not wf:
+        return None
+    root = Path(wf["root"]).parts
+    parts = tuple(parts)
+    if parts[:len(root)] != root or len(parts) <= len(root):
+        return None
+    rest = parts[len(root):]
+    tolerated = set(rules["tolerated_in_every_folder"])
+    if len(rest) > 1:
+        return f"{wf['root']}/ é uma pasta só, sem subpastas — a tela e a versão vão no nome: <name>-vN-<screen>.(png|svg)"
+    if rest[0] in tolerated or rest[0].startswith(".") or rest[0] in IGNORE:
+        return None
+    if not re.match(wf["name_regex"], rest[0]):
+        return "nome fora do padrão <name>-vN-<screen>.(png|svg) — ex.: control-center-v3.3-overview.png"
+    return None
+
+
+def _check_wireframes(root, rules, out):
+    wf = rules.get("wireframes")
+    if not wf:
+        return
+    base = root / wf["root"]
+    if not base.is_dir():
+        return
+    for f in sorted(base.rglob("*")):
+        rel = f.relative_to(root)
+        if f.is_dir() or any(x.startswith(".") or x in IGNORE for x in rel.parts[len(Path(wf["root"]).parts):]):
+            continue
+        note = _wireframe_note(rel.parts, rules)
+        if note:
+            out.append(_finding(rel.as_posix(), note))
+
+
+def _kernel_theme_note(parts, rules):
+    """What is wrong with a FILE path under docs/wiki/kernel/ (the declared kernel_themes), or None."""
+    kt = rules.get("kernel_themes")
+    if not kt:
+        return None
+    root = Path(kt["root"]).parts
+    parts = tuple(parts)
+    if parts[:len(root)] != root or len(parts) <= len(root):
+        return None
+    rest = parts[len(root):]
+    if any(x.startswith(".") or x in IGNORE for x in rest):
+        return None
+    allowed = set(kt["root_files"]) | set(rules["tolerated_in_every_folder"])
+    themes = kt["themes"]
+    if len(rest) == 1:
+        return None if rest[0] in allowed else f"página solta na raiz do kernel — vai num tema: {', '.join(themes)}"
+    if rest[0] not in themes:
+        return (f"tema do kernel não declarado — os declarados: {', '.join(themes)}; "
+                "tema novo entra no structure_rules.json do harness, com o OK do MJRP")
+    if len(rest) > 2:
+        return "um tema do kernel é uma pasta só, sem subpastas"
+    return None
+
+
+def _check_kernel_themes(root, rules, out):
+    """The kernel source (only the harness has docs/wiki/kernel/) lives in theme folders:
+    docs/wiki/kernel/<theme>/<page>.md; at its root, only the glossary and the indexes."""
+    kt = rules.get("kernel_themes")
+    if not kt:
+        return
+    base = root / kt["root"]
+    if not base.is_dir():
+        return
+    allowed = set(kt["root_files"]) | set(rules["tolerated_in_every_folder"])
+    themes = kt["themes"]
+    for e in sorted(base.iterdir()):
+        if e.name.startswith(".") or e.name in IGNORE:
+            continue
+        rel = e.relative_to(root).as_posix()
+        if e.is_file() and e.name not in allowed:
+            out.append(_finding(rel, f"página solta na raiz do kernel — vai num tema: {', '.join(themes)}"))
+        elif e.is_dir() and e.name not in themes:
+            out.append(_finding(rel + "/", f"tema do kernel não declarado — os declarados: {', '.join(themes)}; "
+                                           "tema novo entra no structure_rules.json do harness, com o OK do MJRP"))
+        elif e.is_dir():
+            for f in sorted(e.rglob("*")):
+                if f.is_dir() and not f.name.startswith("."):
+                    out.append(_finding(f.relative_to(root).as_posix() + "/", "um tema do kernel é uma pasta só, sem subpastas"))
+
+
 def _check_tree(root, out):
     tree = root / "mjrp-scripts" / "tree.py"
     if not (tree.exists() and (root / "mjrp-scripts" / "structure.yml").exists()):
@@ -330,6 +417,8 @@ def check(root, rules=None):
     _check_root(root, rules, prof, out)
     _check_subfolders(root, rules, out)
     _check_diagram_themes(root, rules, out)
+    _check_wireframes(root, rules, out)
+    _check_kernel_themes(root, rules, out)
     if profile == "meta":
         _check_tree(root, out)
     return profile, out
@@ -357,6 +446,9 @@ def judge_path(root, rel, rules=None):
     aliases = rules["folder_aliases"]
     if low_name in rules["retired_files"]:
         return _finding(rel, rules["retired_files"][low_name])
+    kn = _kernel_theme_note(parts, rules)
+    if kn:
+        return _finding(rel, kn)
     top = parts[0]
     if top == "docs" and len(parts) >= 2:
         first = parts[1]
@@ -412,7 +504,7 @@ def judge_path(root, rel, rules=None):
         if len(parts) >= 3 and parts[1] not in subs:
             return _finding(rel, f"subpasta não declarada em {top}/ — as declaradas: {', '.join(subs)}; "
                                  f"nova subpasta entra no structure_rules.json do harness")
-        note = _diagram_theme_note(parts, rules)
+        note = _diagram_theme_note(parts, rules) or _wireframe_note(parts, rules)
         if note:
             return _finding(rel, note)
     to = _name_decides(rel, rules)

@@ -1,13 +1,13 @@
 ---
 title: Product Discovery — do problema à decisão (Rapid × Full)
-aliases: [product-discovery, discovery, FASE 1b, rapid discovery, full discovery, handbook de discovery, quatro riscos, premissa mais arriscada, matar iterar avançar]
-summary: o processo da FASE 1b do MJRP — Rapid (cinco passos essenciais, iterativo com o LLM) e Full (o Rapid mais técnicas que o PM marca no início), os quatro riscos transformados em teste, a decisão matar · iterar · avançar e onde cada saída mora no grafo do projeto
+aliases: [product-discovery, discovery, enquadrar, FASE 1b, rapid discovery, full discovery, handbook de discovery, quatro riscos, premissa mais arriscada, matar iterar avançar]
+summary: o processo da estação Enquadrar da Discovery do MJRP — Rapid (cinco passos essenciais, iterativo com o LLM) e Full (o Rapid mais técnicas que o PM marca no início), os quatro riscos transformados em teste, a decisão matar · iterar · avançar e onde cada saída mora no grafo do projeto
 tags: [kernel, pdlc, discovery, produto]
 status: em formação
 atualizado: 2026-10-07
-fontes: [originals/product-discovery-handbook/2026-10-07-handbook-v0.md, originals/product-discovery-handbook/2026-10-07-handbook-v1.md, wiki/sources/2026-10-07-mjrp-product-discovery-handbook.md, kernel/requirements-graph, kernel/sketch-vs-prototype]
+fontes: [originals/product-discovery-handbook/2026-10-07-handbook-v0.md, originals/product-discovery-handbook/2026-10-07-handbook-v1.md, wiki/sources/2026-10-07-mjrp-product-discovery-handbook.md, kernel/roadmap/requirements-graph, kernel/design/sketch-vs-prototype]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-07 · fonte 3d3763e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte d2552b9 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # Product Discovery — do problema à decisão (Rapid × Full)
 
@@ -19,11 +19,11 @@ fontes: [originals/product-discovery-handbook/2026-10-07-handbook-v0.md, origina
 
 ## Definition
 
-A **Discovery** (FASE 1b do PDLC) é a fase em que o responsável pelo produto (o PM), com o agente coach, transforma o que a
-Inception mostrou numa decisão: o problema que vale resolver, o resultado que se quer mover e como medi-lo, os quatro riscos
+O **Enquadrar** é a estação da Discovery ([[pdlc-loops]] §3) em que o responsável pelo produto (o PM), com o agente coach,
+transforma o que o Explorar mostrou numa decisão: o problema que vale resolver, o resultado que se quer mover e como medi-lo, os quatro riscos
 do produto convertidos em testes, a premissa mais arriscada e o desenho do teste dela — e então **matar, iterar ou avançar**.
 Tem dois modos: o **Rapid** (o essencial, em cinco passos, iterativo com o LLM) e o **Full** (o Rapid mais as técnicas que o
-PM escolhe no início). É uma fase aberta: o processo oferece, o PM decide quanto basta.
+PM escolhe no início). É uma estação aberta: o processo oferece, o PM decide quanto basta.
 
 ## 0. Como usar
 
@@ -34,8 +34,12 @@ PM escolhe no início). É uma fase aberta: o processo oferece, o PM decide quan
   15 min) são padrão recomendado e ajustável.
 - **Quem decide.** O PM decide o modo, as técnicas, quanto basta em cada passo e a decisão final. O agente propõe, pergunta,
   registra e lembra — não fixa número de rodadas, fidelidade nem condição de parada.
+- **A entrada principal é o protótipo aprovado.** Antes do passo 1, o coach monta o **inventário do protótipo** — cada
+  função que a tela mostra, uma linha, em `info-arch.md` § *Inventário do protótipo* — e cada item termina ligado a um
+  resultado ou cortado pelo PM com motivo. O resultado e a medida cobrem o que o protótipo aprovado mostra. Pular isso é
+  escrever resultados e requisitos que deixam de fora o que o PM já aprovou (o furo de 2026-10-07).
 - **Um tema por vez, com candidatos.** Em cada passo o coach traz perguntas ou respostas candidatas, tiradas do que já existe
-  (Inception, ROADMAP, log), para o PM marcar e completar — não pede lista do zero.
+  (as Inception Notes do Explorar, o ROADMAP, o log), para o PM marcar e completar — não pede lista do zero.
 - **Produto só para o próprio PM.** A "amostra de um" e o tamanho do público não são risco. Viram risco quando houver desejo
   de escalar o produto para outras pessoas — o coach lembra, o PM decide.
 
@@ -131,7 +135,7 @@ O Full é o Rapid mais as técnicas que o PM marca no início. Cada técnica apr
 
 ## 5. Checklist de saída — o que convém ter claro
 
-Não é portão: é o que o processo recomenda ter claro antes de seguir para a FASE 2. O PM decide quanto basta.
+Não é portão: é o que o processo recomenda ter claro antes de seguir para o Desenhar. O PM decide quanto basta.
 
 1. O problema está escrito como dor, não como solução.
 2. O resultado tem medida (hoje → alvo) e tags no `ROADMAP.md`.
@@ -140,6 +144,7 @@ Não é portão: é o que o processo recomenda ter claro antes de seguir para a 
 5. Cada épico serve exatamente um resultado (`serves::`).
 6. O fora de escopo está explícito — a "coisa principal" separada do resto.
 7. Existe um critério para abortar, combinado antes.
+8. Todo item do inventário do protótipo aprovado tem destino: ligado a um resultado (e, depois, a um requisito) ou cortado com motivo.
 
 Quando o produto vai **escalar** para outras pessoas, entram também: a amostra de um superada (entrevistas fora do PM), o
 problema qualificado na matriz (Vencedores ou Nicho) e a usabilidade testada com o público.
@@ -156,7 +161,8 @@ problema qualificado na matriz (Vencedores ou Nicho) e a usabilidade testada com
 | Premissas e desenho do teste | `docs/specs/inception-notes.md` e `docs/log.md` | `mjrp-coaching-pm` |
 | Decisão (matar · iterar · avançar) | `docs/log.md`, com data e hora | o PM decide, o agente registra |
 | Épicos e fora de escopo | `docs/specs/prd.md` | `mjrp-coaching-pm` |
-| Requisitos | `docs/specs/requirements/` | `mjrp-writing-reqs` (FASE 2 em diante) |
+| Inventário do protótipo aprovado | `docs/specs/info-arch.md` § *Inventário do protótipo* | `mjrp-coaching-pm` cria antes do passo 1; o Desenhar completa |
+| Requisitos | `docs/specs/requirements/` | `mjrp-writing-reqs` (no nível do problema aqui; Ready no contrato) |
 
 ## Anexo A · Casos citados nos handbooks
 
@@ -180,6 +186,9 @@ problema qualificado na matriz (Vencedores ou Nicho) e a usabilidade testada com
 | Tony Fadell | *Build / Criar* | Simplicidade; a "coisa principal"; corte do supérfluo |
 
 ## History
+
+- **2026-10-07 20:29** · Onda E do PDLC em loops (`design/proposals/pdlc-loops-migration-plan.md`): a numeração antiga de fases deu lugar às estações e ao contrato de [[pdlc-loops]] §11.
+- **2026-10-07 18:40** · #harness-kaizen: o protótipo aprovado e o seu inventário viram a entrada principal (antes do passo 1); o checklist ganha o item 8 (todo item com destino) e a tabela, onde o inventário mora. Origem: na Discovery do Control Center o coach partiu das 7 perguntas e deixou de fora abas que o MJRP tinha aprovado no protótipo v3.3. O processo vive agora dentro do loop Discovery de [[pdlc-loops]] (o *Enquadrar*).
 
 - **2026-10-07** · Página criada como v2 do Handbook MJRP de Product Discovery (#harness-kaizen). Origem: na 1b do Control
   Center o coach perguntou os quatro riscos como "baixo, médio ou alto"; o MJRP pediu que o processo da Discovery fosse

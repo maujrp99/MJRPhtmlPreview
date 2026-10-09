@@ -1,4 +1,4 @@
-<!-- cópia carimbada do MJRP Harness · versão 2026-10-07 · fonte 3d3763e · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte d2552b9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # PRINCIPLES — as regras que regulam a ação no MJRP
 
 > Princípio é **a regra que regula a ação e serve de base ao método**; visão é para onde se vai;
@@ -90,7 +90,7 @@ específico da linguagem ou do framework dele.
     avança pro Plan sem um protótipo visual aprovado pelo humano — registrado no `info-arch.md`
     § *Protótipos aprovados*, uma entrada por versão, com `shows::` listando os estados que ele
     mostra. *O como* (19/09): o protótipo sai da **ferramenta de prototipagem
-    declarada no contrato** (`tools.prototyping`, receita na `mjrp-designing-interfaces`), passa pela
+    declarada no contrato** (`tools.prototyping`, receita na `mjrp-designing-ui`), passa pela
     **`mjrp-critiquing-ux`** contra o [[design-canon]] (nenhum P0 aberto) e só então chega ao dono;
     HTML/React cru da própria AI Platform é último recurso, declarado no registro. Não substitui o 12
     (verificação Playwright pós-implementação) — cobre a ponta oposta: decidir a tela **antes** de
@@ -158,6 +158,13 @@ harness, e são quatro condições que fazem algo ser um:
 
 9. **Uma fonte da verdade por capacidade.** Sem skill duplicada, sem ambiguidade skill × workflow
     para o mesmo trabalho, sem dois arquivos dizendo a mesma coisa.
+
+10. **O humano não pode ser o gargalo — o processo é um loop.** Enquanto houver um único humano no
+    loop, decidir é leve: o agente leva pouco para ler (candidatas prontas, uma decisão de cada vez,
+    o essencial), a decisão tomada é revisável, e o retrabalho é aceito como custo do loop — avançar
+    e corrigir na volta seguinte vale mais do que parar esperando leitura longa. Cada fase do ciclo é
+    uma volta, não um portão definitivo. *Direção do MJRP, 2026-10-07 14:38; rever quando houver mais humanos ou
+    agentes definidos no loop.*
 
 ---
 

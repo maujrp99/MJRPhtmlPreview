@@ -4,16 +4,17 @@ aliases: [loop-engineering-concept, loop engineering, loop, agent loop, ralph lo
 summary: o loop como o que roda sem você — os 4 níveis, a matemática dos erros compostos, loop fixo × criador, e por que o gargalo é o verificador, não o modelo
 tags: [harness, orquestracao, verificacao, fundamento, conceito]
 status: firme
-atualizado: 2026-09-11
-fontes: [pasquadev-harness-e-loop-engineering, waldemar-neto-loop-engineering-500k-linhas, google-cloud-tech-graph-engineering-101, google-cloud-tech-ai-agents-explained, karpathy-no-priors-skill-issue, austin-marchese-karpathy-method]
+atualizado: 2026-10-07
+fontes: [wiki/sources/2026-10-07-mjrp-loop-engineering-handbook.md, pasquadev-harness-e-loop-engineering, waldemar-neto-loop-engineering-500k-linhas, google-cloud-tech-graph-engineering-101, google-cloud-tech-ai-agents-explained, karpathy-no-priors-skill-issue, austin-marchese-karpathy-method]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-07 · fonte 3d3763e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte d2552b9 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 **Loop engineering** é projetar o ciclo que roda **sem você**: o agente raciocina, age, observa e
-ajusta até atingir um objetivo — e o que decide se ele continua **não é um `if`, é o próprio
-modelo**. O harness é o carro; o loop é o piloto automático. E o gargalo do loop **não é o modelo,
-é o verificador**.
+ajusta até atingir um objetivo. Dentro de cada volta, o modelo escolhe a próxima ação; **se o loop
+continua, para ou escala quem decide é o harness** — o verificador e as regras de parada, nunca o
+auto-relato do agente (`PRINCIPLES.md` II.3). O harness é o carro; o loop é o piloto automático. E o
+gargalo do loop **não é o modelo, é o verificador**.
 
 ## What it is
 
@@ -159,6 +160,18 @@ externo** (o sistema de deploy). *"The verifier is the quality check station by 
 3. **Tem stop condition confiável?** — *"algo que ele bata e diga: tem que parar e chamar o humano"*
 4. **Tem backlog suficiente** para valer a pena deixar rodando em vez de você mesmo planejar e fazer?
 
+### As cinco peças e as regras de parada (Garage Labs, IBM)
+
+O handbook MJRP de Loop Engineering (ficha) fecha a anatomia:
+**contrato** com "pronto" verificável por máquina · **ferramentas** do ambiente real · **estado externo** fora da janela ·
+**verificador inviolável** e determinístico · **regras de parada e escalonamento**. As regras de parada são quatro, e o
+teto de voltas é só uma: **teto de iterações**, **orçamento de tokens**, **detecção de falta de progresso** (o diff zerou por
+N voltas) e **rota clara para o humano**. O ciclo da IBM — objetivo → ação → observação → ajuste — e o da Garage Labs —
+*act → observe → decide → repeat* — diferem num ponto: no segundo, o *decide* é do harness.
+
+**LLM como juiz:** evitar um segundo modelo como **juiz único** — modelos compartilham pontos cegos. Onde não existe
+verificador determinístico (UX, conteúdo), o juiz é o humano, com o LLM de apoio (o juiz de UX do MJRP é isso).
+
 ## How MJRP uses it
 
 - **O `loop.py` é um loop de nível 2** — goal-based: roda até o critério de saída (`--until`, um
@@ -175,11 +188,16 @@ externo** (o sistema de deploy). *"The verifier is the quality check station by 
 - **Loop fixo × criador é a distinção que o candidato do PRD (ex-BACKLOG #21) pede** para o EP-05 (Autonomous): *"a fase H não
   distingue; muda o teto de iterações e o gate."* O Waldemar deu o vocabulário.
 
+**Onde o kernel errava (corrigido em 2026-10-07 18:38):** a definição dizia, com Waldemar, que *o próprio modelo* decide se o loop continua. Contradizia o II.3 do `PRINCIPLES.md` e as fontes de 2026: o modelo decide a próxima ação; continuar, parar ou escalar é do harness. O `loop.py` tem as quatro regras de parada: o critério de saída (exit 0), o teto (exit 1), a falta de progresso — o que `--progress-cmd` mede, por padrão o `git diff`, não mudou em `--stale` passadas seguidas (exit 3) — e o orçamento de tokens (`--budget-tokens`; o uso que o agente relata em JSON, ou a estimativa de 4 caracteres por token, dita como estimada — exit 4). Parada por regra vira lição no kaizen.
+
 **Onde o MJRP diverge:** as fontes tratam o roadmap como algo que **o humano regenera quando o
 loop esgota**. O MJRP tem o roadmap como documento de fases com prova — e a prova de cada fase **é**
 a stop condition do loop daquela fase. O roadmap não é insumo do loop; é o mapa dos loops.
 
 ## History
+
+- **2026-10-07 20:37** · Onda F do PDLC em loops: o `loop.py` ganhou a falta de progresso (exit 3) e o orçamento de tokens (exit 4); a lacuna de 18:38 fechou. Selftest com os casos 6 a 7c.
+- **2026-10-07 18:38** · Correção pela proposta do PDLC em loops: a decisão de continuar é do harness, não do modelo; as cinco peças e as quatro regras de parada (handbook de Loop Engineering: Garage Labs, IBM); LLM nunca como juiz único. Lacuna: o `loop.py` sem orçamento de tokens nem detecção de falta de progresso. Ver [[pdlc-loops]].
 
 - **2026-09-11** · Página criada a partir da mineração do acervo, a pedido do MJRP, durante o
   brief do playbook. Fontes centrais: pasquadev e Waldemar Neto; complementos de Google Cloud

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-07 · fonte 3d3763e · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte d2552b9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 doctor.py - the computational sensor of the harness.
 
@@ -498,8 +498,9 @@ def _wiki_targets(root):
     if conc.is_dir():
         # 14/09: the kernel copied by new_project.py lives in docs/wiki/harness/ and links to
         # itself ([[terms]], [[base-concept]]); those pages are part of this project's wiki.
+        # 2026-10-09: the kernel source is organised by theme (docs/wiki/kernel/<theme>/<page>.md)
         for f in (list(conc.glob("*.md")) + list((conc / "harness").glob("*.md"))
-                  + list((conc / "kernel").glob("*.md"))):
+                  + list((conc / "kernel").rglob("*.md"))):
             targets.add(f.stem.lower())
             al = frontmatter(f).get("aliases") or []
             if isinstance(al, str):
@@ -891,7 +892,8 @@ def _kernel_divergentes(root, pages):
     fora = []
     for pg in pages:
         cop = root / "docs" / "wiki" / "harness" / f"{pg}.md"
-        if not cop.exists() or not (HARNESS_WIKI / "kernel" / f"{pg}.md").exists():
+        # 2026-10-09: the source page may sit in a theme folder (docs/wiki/kernel/<theme>/<page>.md)
+        if not cop.exists() or not any((HARNESS_WIKI / "kernel").rglob(f"{pg}.md")):
             continue
         try:
             esperado = npj.kernel_page_text(pg, "x", "x")
@@ -1637,6 +1639,30 @@ def w12_retired_names(root, rep):
         rep.note("W12", "nenhum documento vivo cita skill aposentada")
 
 
+def w13_repo_backup(root, rep):
+    """W13 - the newest repository backup holds HEAD: a merge by the agent must stay reversible."""
+    inc = ("08/10/2026: o merge do Delivery passou a ser do agente (pdlc-loops); o MJRP pediu backup recorrente "
+           "do repositório, no iCloud Drive, a cada commit, antes da tag v0.0")
+    sys.dont_write_bytecode = True
+    try:
+        import backup_repo as br
+    except ModuleNotFoundError:
+        return
+    if not (root / ".git").exists():
+        return
+    try:
+        msg = br.freshness(root)
+    except Exception as e:
+        rep.warn("W13", f"backup do repositório não avaliado ({e})", inc)
+        return
+    if br.destination_base() is None:
+        rep.note("W13", "backup do repositório: iCloud Drive fora do alcance desta máquina — não avaliado")
+    elif msg:
+        rep.warn("W13", f"{msg} (python3 mjrp-scripts/backup_repo.py . faz um agora)", inc)
+    else:
+        rep.note("W13", "backup do repositório em dia com o HEAD")
+
+
 def run(root, skip_sensors):
     rep = Report()
     cfile = root / CONTRACT
@@ -1678,6 +1704,7 @@ def run(root, skip_sensors):
     w10_sessions(root, rep)
     w11_prototype_inventory(root, rep)
     w12_retired_names(root, rep)
+    w13_repo_backup(root, rep)
     _daily_checks_ledger(root, cfg, rep)
     return rep, (1 if rep.errors else 0)
 

@@ -4,10 +4,10 @@ aliases: [requirements-graph, grafo de requisitos, knowledge graph, rastreabilid
 summary: como requisitos e artefatos do PDLC viram nós com ID estável e arestas tipadas, legíveis no Obsidian e por script; a cardinalidade feature × requisito; como a release agrupa requisitos e épicos
 tags: [kernel, sdd, requisitos, grafo, release]
 status: em formação
-atualizado: 2026-10-04
-fontes: [design/proposals/requirements-knowledge-graph-proposal.md, kernel/knowledge-graph-concept, kernel/linked-notes-concept, kernel/graph-engineering-concept, kernel/spec-kit]
+atualizado: 2026-10-07
+fontes: [design/proposals/requirements-knowledge-graph-proposal.md, kernel/architecture/knowledge-graph-concept, kernel/architecture/linked-notes-concept, kernel/architecture/graph-engineering-concept, kernel/ways-of-working/spec-kit]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-07 · fonte 3d3763e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte d2552b9 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **grafo de requisitos** é a documentação do PDLC tratada como grafo de conhecimento: cada requisito, épico,
@@ -56,7 +56,8 @@ As regras abaixo, em forma que o script lê, estão em `mjrp-scripts/requirement
 (com o padrão de ID e onde mora), arestas (origem, destino, mínimo, máximo, a partir de que status são cobradas),
 restrições e a sintaxe de cada forma de nó. Mudou a regra, muda o arquivo — e esta página explica o porquê.
 Os status seguem o ciclo `Backlog → Prioritized → Ready → In progress → Done → Accepted`; uma aresta cobrada "a
-partir de Ready" vale de Ready em diante. `Deferred` é válido mas fica **fora do ciclo**: requisito adiado não é
+partir de Ready" vale de Ready em diante. **Ready é o contrato** ([[pdlc-loops]] §4): o requisito vai a Ready com o OK do
+humano, registrado no log; **Accepted** é o aceite dele no UAT. `Deferred` é válido mas fica **fora do ciclo**: requisito adiado não é
 cobrado como Ready nem conta como aberto (decisão do MJRP, 2026-10-04 14:28).
 
 ### Arestas da primeira versão
@@ -137,7 +138,7 @@ que executa a reconciliação por conta própria é do EP-03 (brief do MJRP).
 ### Quem faz o quê (arquétipos)
 - **Escrevem as arestas:** `mjrp-writing-reqs` (`epic`, `points_to`, `planned_for`), `mjrp-specifying-sdd-artifacts`
   (`imports`, `implements`), quem escreve o teste ou o `uat.md` (`verified_by`).
-- **Escrevem os estados observáveis:** o de tela, `mjrp-designing-information-architecture` (block ID no
+- **Escrevem os estados observáveis:** o de tela, `mjrp-designing-ui` (block ID no
   `info-arch.md`, a partir do protótipo aprovado); o de comportamento, `mjrp-writing-reqs` no Example Mapping, com os
   exemplos julgados pelo humano antes do Ready (decisão D-04 do MJRP, 2026-10-04).
 - **Confere o grafo:** `mjrp-ensuring-sdd` (Guardian), sobre o sensor determinístico (o
@@ -146,6 +147,7 @@ que executa a reconciliação por conta própria é do EP-03 (brief do MJRP).
 - **Julga o conteúdo:** `mjrp-ensuring-quality` (Reviewer) — a aresta existir não prova que o teste prova o REQ.
 
 ## History
+- **2026-10-07 20:29** · Onda E do PDLC em loops: Ready é o contrato — vai a Ready com o OK do humano, registrado no log (decisão do MJRP; `mjrp-writing-reqs` atualizada na onda D).
 - **2026-10-06** · **Tags de categoria em resultado e épico** (MJRP: "todos os elementos de outcome de roadmap e dos épicos do harness venham com uma tag que categorize"). Resultado com 1 a 3, épico herda e soma até 3 próprias, vocabulário livre; regra `tags` no sensor e no selftest, `--tags` lista; modelos de ROADMAP e PRD da `mjrp-pdlc-bootstrap` e a `mjrp-coaching-pm` escrevem o campo.
 - **2026-10-05 13:46** · **Requisito em pt-BR e em inglês** (S-110; MJRP, 2026-10-05 09:39: "que isso fosse padrão, constitution"). Seções `## pt-BR` e `## en` no mesmo nó; regra `bilingual` no sensor, padrão `languages: [pt-BR, en]`; os 131 nós do harness traduzidos de uma vez (decisão dele: todos agora).
 - **2026-10-05 10:53** · **Requisitos agrupados por épico** (S-123; MJRP: a lista longa de stories incomodava). Cada épico declara

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-07 · fonte 3d3763e · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte d2552b9 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """requirements_graph_check.py -- checks the requirements graph of a project against its single declaration,
 requirements_graph_rules.json (S-63, kernel page requirements-graph).
 
@@ -526,7 +526,7 @@ class Graph:
         imps = [ft for ft in self.features.values() if nid in [r for _, r in ft["imports"]]]
         if st in ("Backlog", "Prioritized"):
             return ("promover a Ready (mjrp-writing-reqs)" if edges.get("points_to")
-                    else "FASE 2: estado observável — tela no info-arch.md ou exemplos no behavior.md")
+                    else "Discovery · Desenhar: estado observável — tela no info-arch.md ou exemplos no behavior.md")
         if st == "Ready":
             return "SDD Specify — nova feature que o importe" if not imps else "SDD em curso na feature " + imps[0]["dir"]
         if st == "In progress":

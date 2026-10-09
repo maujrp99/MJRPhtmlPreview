@@ -4,10 +4,10 @@ aliases: [spec-kit, speckit, SpecKit, artefatos do speckit, uat, homologacao, ho
 summary: as três camadas com o mesmo nome (Spec Kit do GitHub, SpecKit do MJRP, uso real por projeto), a lista única de 9 artefatos e onde cada um mora no grafo de requisitos, o que foi fundido de propósito, e as duas extensões do MJRP — PRD com o mapa dos requisitos (do BMAD) e uat.md
 tags: [kernel, sdd, speckit, metodo]
 status: firme
-atualizado: 2026-10-04
+atualizado: 2026-10-07
 fontes: [github/spec-kit, BMAD, feedback-from-other-projects/spec-kit, feedback-from-other-projects/speckit-artifact-reconciliation]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-07 · fonte 3d3763e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte d2552b9 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 **SpecKit** é a adaptação do MJRP ao Spec Kit do GitHub: os **9 documentos vivos** de `docs/specs/` — a cadeia `prd → spec → plan → tasks → uat`, em que cada um deriva do anterior (os requisitos são nós, um arquivo cada, e o PRD é o mapa deles; spec, plan e tasks moram na pasta de cada feature), mais o contexto durável que a cadeia consulta, `constitution`, `arch`, `data-model` e `design-system`. Três coisas têm o mesmo nome e confundi-las gera achado errado: **Spec Kit** (com espaço) é o método original do GitHub, `constitution → specify → plan → tasks → implement`; **SpecKit** (sem espaço) é esta adaptação; e o **uso real de cada projeto**, que pode acrescentar arquivos de apoio (um diagrama, uma planilha) sem que isso mude a lista.
@@ -31,6 +31,10 @@ Até 16/09 o glossário dizia 6 artefatos e a skill `mjrp-sdd-speckit` (hoje `mj
 
 Os cinco primeiros são **a cadeia**: desde a S-63 ela é um grafo — nós com ID estável e arestas tipadas (página [[requirements-graph]]) — e o sensor do grafo (`requirements_graph_check.py`) confere órfão, aresta quebrada e cardinalidade; o `SDD_chain_artifacts_check.py` segue só para projeto ainda com spec, plan e tasks planos (aposentadoria na S-77). Os quatro últimos são **contexto durável**: a cadeia os consulta, não deriva deles. Os estados observáveis que os requisitos apontam (`info-arch.md`, `behavior.md`) são do design e do grafo, não desta lista.
 
+**No PDLC em loops** ([[pdlc-loops]] §5), `spec.md`, `plan.md` e `tasks.md` são estações do Delivery: cada uma avança
+quando a sua checagem passa (o cruzamento, a cobertura, o sensor do grafo). A aprovação do humano em cada uma só vale onde
+o contrato a liga (`gates:`); o padrão é aprovar só o contrato — os requisitos Ready.
+
 ### 2. O que foi fundido, de propósito
 `research.md`, `contracts/`, `quickstart.md` e `checklists/` do Spec Kit oficial **não são arquivos** no MJRP. O conteúdo vive como **seções opcionais e recomendadas** nos templates: *Research* e *Contracts* em `plan.md`; *Quickstart* (validação manual logo após implementar) e *Checklist de requisitos* em `tasks.md`. Cada projeto usa se precisar. Isto é decisão, não omissão — antes de 17/09 a fusão existia na prática e não estava escrita em lugar nenhum.
 
@@ -47,6 +51,7 @@ O Spec Kit termina no *implement*: os *Acceptance Scenarios* do `spec.md` são p
 Arquivo de apoio que um projeto cria para si (`roadmap-diagrams.md`, uma planilha de dados de referência) é do projeto, não do SpecKit: não entra na lista, não entra na cadeia, não precisa ser mencionado no harness.
 
 ## History
+- **2026-10-07 20:29** · Onda E do PDLC em loops: spec, plan e tasks são estações do Delivery; aprovação do humano só onde o `gates:` do contrato liga — o padrão é aprovar só o contrato.
 - **2026-10-04 17:38** — MJRP (S-63, passo 11): a lista não muda; muda onde cada artefato mora — requisitos como nós em `requirements/`, o PRD como mapa, spec/plan/tasks em `features/Fxx-slug/` ligados por `imports`, `implements` e `verified_by`; o sensor do grafo confere a cadeia; o `SDD_chain_artifacts_check.py` fica para os filhos não migrados (S-77).
 - **2026-10-04 00:00** — MJRP (S-62): os requisitos passam para o PRD, por épico, em qualquer formato (user story, caso de uso, EARS); o `story.md` sai — a lista vai de 10 para 9 artefatos e a cadeia fica `prd → spec → plan → tasks → uat`. Projetos ainda não migrados seguem com o `story.md` até o kernel ser atualizado em cada um.
 - **2026-09-17 14:32** — Reconciliação do BACKLOG #59, decidida pelo MJRP item a item: lista de 10 (9 + `uat.md`); fusão de research/contracts/quickstart/checklists declarada como seções opcionais; duas camadas da constitution nomeadas e o gate criado; `uat.md` como issue tracker mínimo com OK humano; arquivo de apoio de projeto fora da lista. Página promovida ao kernel a partir do rascunho `feedback-from-other-projects/spec-kit.md` (16/09).
