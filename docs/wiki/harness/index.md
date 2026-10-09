@@ -1,11 +1,11 @@
 ---
 title: Kernel do MJRP Harness
-summary: as 25 páginas do harness que este projeto carrega — o que os campos do VISION, a memória, o perfil e os sensores significam
+summary: as 26 páginas do harness que este projeto carrega — o que os campos do VISION, a memória, o perfil e os sensores significam
 ---
 
 ## Definition
 
-Cópia carimbada (versão **2026-10-09**, fonte `d2552b9`) das páginas do MJRP Harness que governam como uma instância funciona. **Não se edita aqui**: edite no harness e rode `new_project.py --refresh-kernel`. O doctor (I5) avisa quando o carimbo envelhece.
+Cópia carimbada (versão **2026-10-09**, fonte `1d87cd3`) das páginas do MJRP Harness que governam como uma instância funciona. **Não se edita aqui**: edite no harness e rode `new_project.py --refresh-kernel`. O doctor (I5) avisa quando o carimbo envelhece.
 
 As páginas vêm achatadas nesta pasta; os grupos abaixo são os temas da fonte (no harness, `docs/wiki/kernel/<tema>/`).
 
@@ -57,6 +57,7 @@ As páginas vêm achatadas nesta pasta; os grupos abaixo são os temas da fonte 
 |---|---|
 | [design-canon](design-canon.md) | as fontes elevadas que fundamentam UX, UI e conteúdo explicativo no MJRP — organizadas em oito disciplinas com regras de ID estável que as skills citam em vez de recitar |
 | [spreadsheet-standard](spreadsheet-standard.md) |  |
+| [palette-library](palette-library.md) | as paletas curadas com a identidade visual pessoal do MJRP (Light + Dark) — fonte única para qualquer skill que gere output visual (infográficos, dossiês, decks, site pessoal) |
 
 ### raiz do kernel
 
