@@ -6,7 +6,7 @@ tags: [harness, sensores, verificacao]
 status: em formação
 atualizado: 2026-09-14
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte ff7b819 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte 9e9312e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **doctor** é o sensor do harness: um script que lê a instância e devolve verde,

@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte ff7b819 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte 9e9312e · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "The single declaration of structure by nature (ADR-0014). Vendored to every project with the kernel; structure_check.py, the doctor (W9), the pre-commit and the PreToolUse hook all read THIS file. Edit here, in the harness, never in a copy.",
   "version": "2026-10-09",
   "rule_of_thumb": "agente precisa ler para saber o que é verdade → docs/ · resultado de olhar o projeto → reports/ · ainda sendo decidido ou mostrado → design/ · não é texto para gente → data/",
@@ -131,8 +131,9 @@
   },
   "diagram_themes": {
     "root": "design/diagrams",
-    "rule": "todo diagrama desenhado numa conversa mora num tema: design/diagrams/<tema>/AAAA-MM-DD-HHMM-<name>.png (+ o .svg fonte ao lado). O tema é o assunto, não a fase do PDLC (um diagrama atravessa fases); a fase vai na linha do diagrama no folder-index.md do tema. Tema novo entra aqui, no harness, com o OK do MJRP. Quem gera o caminho certo é o render_diagram.js (--theme, --name).",
+    "rule": "todo diagrama desenhado numa conversa mora num tema: design/diagrams/<tema>/AAAA-MM-DD-HHMM-<name>.png (+ o .svg fonte ao lado); o diagrama de um épico pode ir na subpasta do épico dentro do tema, design/diagrams/<tema>/ep-NN/ (decisão do MJRP, 2026-10-09 18:49: muitos diagramas por épico). Nenhuma outra subpasta. O tema é o assunto, não a fase do PDLC (um diagrama atravessa fases); a fase vai na linha do diagrama no folder-index.md do tema. Tema novo entra aqui, no harness, com o OK do MJRP. Quem gera o caminho certo é o render_diagram.js (--theme, --name, --epic).",
     "name_regex": "^\\d{4}-\\d{2}-\\d{2}-\\d{4}-[a-z0-9]+(-[a-z0-9]+)*\\.(png|svg)$",
+    "epic_subfolder_regex": "^ep-\\d{2}$",
     "themes": {
       "ways-of-working": "como trabalhamos — o fluxo do PDLC, a descoberta (Rapid x Full), o Ways of Working",
       "skills": "o sistema de skills — arquétipos, papéis, quem faz o quê",

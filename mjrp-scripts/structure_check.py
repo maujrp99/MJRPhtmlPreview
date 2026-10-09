@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte ff7b819 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte 9e9312e · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 structure_check.py - the structure-by-nature sensor (ADR-0014, EP-09).
 
@@ -252,7 +252,8 @@ def _check_subfolders(root, rules, out):
 
 def _diagram_theme_note(parts, rules):
     """What is wrong with a path under design/diagrams/ (the declared diagram_themes), or None.
-    A diagram lives in a theme folder: design/diagrams/<theme>/AAAA-MM-DD-HHMM-<name>.(png|svg)."""
+    A diagram lives in a theme folder: design/diagrams/<theme>/AAAA-MM-DD-HHMM-<name>.(png|svg), or in its epic's
+    subfolder inside the theme: design/diagrams/<theme>/ep-NN/<same name>."""
     dt = rules.get("diagram_themes")
     if not dt:
         return None
@@ -270,8 +271,11 @@ def _diagram_theme_note(parts, rules):
     if rest[0] not in themes:
         return (f"tema de diagrama não declarado em {dt['root']}/ — os declarados: {', '.join(themes)}; "
                 f"tema novo entra no structure_rules.json do harness, com o OK do MJRP")
+    epic = dt.get("epic_subfolder_regex")
+    if len(rest) > 2 and epic and re.match(epic, rest[1]):
+        rest = (rest[0],) + rest[2:]          # design/diagrams/<theme>/ep-NN/<file>: the epic's subfolder (2026-10-09)
     if len(rest) > 2:
-        return "um tema é uma pasta só, sem subpastas"
+        return "um tema aceita só a subpasta do épico (ep-NN), nenhuma outra"
     if rest[1] in tolerated or rest[1].startswith(".") or rest[1] in IGNORE:
         return None
     if not re.match(dt["name_regex"], rest[1]):
