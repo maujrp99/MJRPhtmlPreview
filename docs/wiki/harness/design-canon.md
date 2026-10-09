@@ -7,7 +7,7 @@ status: vivo
 atualizado: 2026-10-07
 fontes: [few-information-dashboard-design, tufte-visual-display, knaflic-storytelling-with-data, wexler-big-book-of-dashboards, shneiderman-the-eyes-have-it, nngroup-dashboards-preattentive, smashing-dashboard-decluttering, a11y-collective-accessible-charts, sigma-color-blindness, 925studios-whoop-breakdown, sahha-readiness-scores, nielsen-ten-heuristics, krug-dont-make-me-think, cooper-about-face, yablonski-laws-of-ux, google-apple-m3-hig, w3c-wcag-2-2, gigerenzer-risk-communication, case-calm-technology, cdc-clear-communication-index, andrews-info-we-trust, design-council-double-diamond-knapp-sprint, baghai-three-horizons, tmap-crud-test, kaplan-nngroup-empty-states]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte 4c7593e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte ff7b819 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **cânone de design** é o corpo de referência externo que fundamenta as regras de UX, UI e

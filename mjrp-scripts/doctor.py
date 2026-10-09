@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte 4c7593e · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte ff7b819 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 doctor.py - the computational sensor of the harness.
 
@@ -363,6 +363,9 @@ SCHEMA = {
     # 04/10 (MJRP): the content profile's fields, written by new_project.py since 09/09 - W3 flagged them in every
     # content project ("campo desconhecido"); the onboarding skill carried a note explaining the warning.
     "content_root": str, "session_history": str, "destinations": list,
+    # 09/10 (MJRP): a subproject of the harness (apps/<app>/) names the harness epic it belongs to; it has no
+    # epics of its own and its stories are organised by release (requirements_graph_check.py, kernel requirements-graph).
+    "parent_epic": str,
 }
 ENUMS = {
     "profile": {"code-app", "content", "meta"},

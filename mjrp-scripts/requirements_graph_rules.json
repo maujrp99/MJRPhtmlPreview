@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte 4c7593e · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte ff7b819 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "Single declaration of the requirements graph (S-63, kernel page requirements-graph). The sensor reads this file; the kernel page explains it for humans. Edges are written in one direction only; the inverse is computed. Each edge is enforced only from the status declared in 'enforced_from' (lesson of SDD_chain_artifacts_check: checking every pair everywhere produced 366 false positives).",
   "version": 1,
   "paths": {
@@ -33,6 +33,11 @@
     "Ready",
     "In progress"
   ],
+  "subproject": {
+    "_about": "MJRP, 2026-10-09: a subproject of the harness (apps/<app>/) declares `parent_epic: EP-NN` in its contract and has no epics; its stories carry no `epic:` and are organised by release — `planned_for` is required from this status on (a Backlog story may still be unplanned).",
+    "contract_field": "parent_epic",
+    "planned_for_from": "Prioritized"
+  },
   "node_types": {
     "outcome": {
       "id_pattern": "^OUT-\\d{2}$",

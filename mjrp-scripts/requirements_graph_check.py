@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte 4c7593e · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte ff7b819 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """requirements_graph_check.py -- checks the requirements graph of a project against its single declaration,
 requirements_graph_rules.json (S-63, kernel page requirements-graph).
 
@@ -85,6 +85,18 @@ class Graph:
         self.nodes = {}      # id -> {"type", "file", "status", "edges": {name: [targets]}}
         self.features = {}   # fid -> {"status", "imports", "reqs": {REQ: verified_by[]}, "tasks": {TASK: [REQ]}, "dir"}
         self.findings = []
+        # 2026-10-09 (MJRP): a subproject of the harness (apps/<app>/) declares in its contract the harness epic it
+        # belongs to (`parent_epic: EP-08`); it has no epics of its own -- its stories carry no `epic:` and are
+        # organised by release (`planned_for`, required from Prioritized on).
+        self.parent_epic = None
+        contract = self.root / ".mjrp-project.yml"
+        if contract.exists():
+            try:
+                y = read_yaml(contract.read_text(encoding="utf-8")) or {}
+                pe = (y.get("mjrp_harness") or {}).get("parent_epic")
+                self.parent_epic = str(pe).strip() if pe else None
+            except Exception:
+                self.parent_epic = None
 
     def find(self, rule, msg):
         self.findings.append((rule, msg))
@@ -277,12 +289,31 @@ class Graph:
         elif node["type"] not in allowed:
             self.find("edge_type", f"{src} —{edge['name']}→ {tid}: alvo é {node['type']}, a aresta pede {'/'.join(allowed)}")
 
+    def check_subproject(self):
+        """A subproject (contract with parent_epic) has no epics: the epic lives in the harness."""
+        if not self.parent_epic:
+            return
+        if not re.match(self.types["epic"]["id_pattern"], self.parent_epic):
+            self.find("subproject", f"parent_epic: {self.parent_epic} fora do padrão EP-NN")
+        for nid, node in self.nodes.items():
+            if node["type"] == "epic":
+                self.find("subproject", f"{nid}: subprojeto não declara épico — o épico mora no harness (parent_epic: {self.parent_epic}); "
+                                        "as stories daqui se organizam por release")
+            elif node["type"] in ("requirement", "nfr") and node["edges"].get("epic"):
+                self.find("subproject", f"{nid}: subprojeto — a story não declara `epic:` (o épico é {self.parent_epic}, no contrato); "
+                                        "declare a release em `planned_for:`")
+
     def check_node_edges(self):
+        sub_from = self.rules.get("subproject", {}).get("planned_for_from", "Prioritized")
         for nid, node in self.nodes.items():
             for edge in self.rules["edges"]:
                 srcs = edge["from"] if isinstance(edge["from"], list) else [edge["from"]]
                 if node["type"] not in srcs:
                     continue
+                if self.parent_epic and edge["name"] == "epic":
+                    continue      # the subproject's epic is the contract's parent_epic (check_subproject)
+                if self.parent_epic and edge["name"] == "planned_for" and node["type"] == "requirement":
+                    edge = dict(edge, min=1, enforced_from=sub_from)
                 targets = node["edges"].get(edge["name"], [])
                 if edge.get("to") == "acceptance":
                     # S-79: an acceptance is an anchor of uat.md or a log entry, not a node -- resolved by
@@ -607,6 +638,7 @@ class Graph:
 
     def run(self):
         self.load()
+        self.check_subproject()
         self.check_node_folder()
         self.check_node_edges()
         self.check_tags()

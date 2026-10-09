@@ -4,10 +4,10 @@ aliases: [requirements-graph, grafo de requisitos, knowledge graph, rastreabilid
 summary: como requisitos e artefatos do PDLC viram nós com ID estável e arestas tipadas, legíveis no Obsidian e por script; a cardinalidade feature × requisito; como a release agrupa requisitos e épicos
 tags: [kernel, sdd, requisitos, grafo, release]
 status: em formação
-atualizado: 2026-10-07
+atualizado: 2026-10-09
 fontes: [design/proposals/requirements-knowledge-graph-proposal.md, kernel/architecture/knowledge-graph-concept, kernel/architecture/linked-notes-concept, kernel/architecture/graph-engineering-concept, kernel/ways-of-working/spec-kit]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte 4c7593e · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte ff7b819 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **grafo de requisitos** é a documentação do PDLC tratada como grafo de conhecimento: cada requisito, épico,
@@ -104,6 +104,19 @@ Decisão do MJRP, 2026-10-04, nas palavras dele — **limitar:**
 - **Ficam fora:** *fase* é a fase do PDLC (discovery, design, SDD), outro eixo; *sprint* é caixa de tempo, não de
   conteúdo — quem usa declara como release de `kind: sprint`.
 
+### Subprojeto do harness: o épico no contrato, as stories por release
+
+Um **subprojeto** é um projeto aninhado dentro do repositório do harness (`apps/<app>/`), com contrato, sensores e
+grafo próprios. Ele **não declara épicos**: épico só existe no `prd.md` do harness, e o subprojeto diz no contrato a
+qual pertence — `parent_epic: EP-08` em `.mjrp-project.yml`. As stories do subprojeto **não levam `epic:`**; elas se
+organizam **por release** (`planned_for`, cobrada a partir de `Prioritized` — uma story em Backlog pode estar sem
+release) e o `prd.md` do subprojeto as embute por release, não por épico. O resto do grafo fica local: o requisito
+aponta para o estado da tela do próprio subprojeto, a feature importa o requisito do próprio subprojeto, e o sensor
+roda em cada um sem atravessar repositório. Só a ligação de cima — o épico — atravessa, e uma vez só, no contrato.
+O épico do harness guarda as stories que já entregou como histórico; as novas e as abertas moram no subprojeto.
+Projeto filho independente (repositório próprio: pedroso, fin-control, health-control) **não** é subprojeto: tem
+épicos próprios. (Decisão do MJRP, 2026-10-09 15:13.)
+
 ### O status pede evidência
 O status é declarado no frontmatter, e declarado sozinho ele mente: ninguém atualiza, ou atualiza errado, e quem lê o
 grafo roteia com confiança para o lugar errado (risco R-01 do PRD do harness). Por isso o sensor confere o status
@@ -147,6 +160,7 @@ que executa a reconciliação por conta própria é do EP-03 (brief do MJRP).
 - **Julga o conteúdo:** `mjrp-ensuring-quality` (Reviewer) — a aresta existir não prova que o teste prova o REQ.
 
 ## History
+- **2026-10-09 15:13** · Subprojeto do harness (decisão do MJRP): épico só no harness; o subprojeto declara `parent_epic` no contrato e organiza as stories por release; o sensor reprova épico no subprojeto, `epic:` em story dele e story `Prioritized` sem release. O Control Center é o primeiro (EP-08).
 - **2026-10-07 20:29** · Onda E do PDLC em loops: Ready é o contrato — vai a Ready com o OK do humano, registrado no log (decisão do MJRP; `mjrp-writing-reqs` atualizada na onda D).
 - **2026-10-06** · **Tags de categoria em resultado e épico** (MJRP: "todos os elementos de outcome de roadmap e dos épicos do harness venham com uma tag que categorize"). Resultado com 1 a 3, épico herda e soma até 3 próprias, vocabulário livre; regra `tags` no sensor e no selftest, `--tags` lista; modelos de ROADMAP e PRD da `mjrp-pdlc-bootstrap` e a `mjrp-coaching-pm` escrevem o campo.
 - **2026-10-05 13:46** · **Requisito em pt-BR e em inglês** (S-110; MJRP, 2026-10-05 09:39: "que isso fosse padrão, constitution"). Seções `## pt-BR` e `## en` no mesmo nó; regra `bilingual` no sensor, padrão `languages: [pt-BR, en]`; os 131 nós do harness traduzidos de uma vez (decisão dele: todos agora).
