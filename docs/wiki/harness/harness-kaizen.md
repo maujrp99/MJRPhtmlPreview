@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-10-09
 fontes: [2026-claude-code-auto-memory]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte 3f3b7ea · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte c470187 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O registro do que o harness **não pegou** e do que se aprendeu com isso. Achado e lição moram
@@ -39,6 +39,12 @@ deixando o ponteiro. Lição que só mora aqui é lição que ninguém aplica.
 
 ## Findings
 
+- **2026-10-09 22:02** · **Registrei como decisão o que era só herança.** Ao extrair o `design-system.md` do Control
+  Center do protótipo aprovado, escrevi "Padrão: L2 Navy & Gold" — mas a L2 só estava no protótipo porque veio dos
+  primeiros rascunhos; ninguém a escolheu. O MJRP perguntou quem definiu, e decidiu: L8 Organic Blueprint no claro, D4
+  Zen Dark no escuro. **Correção:** `design-system.md` e protótipo v3.7 com o padrão dele. **Lição:** ao extrair de um
+  protótipo, separar o que o humano aprovou do que só sobreviveu; o que só sobreviveu entra como proposta, com a
+  pergunta.
 - **2026-10-09 21:45** · **Um teste tocou a produção outra vez — a quarta da mesma classe.** O teste ponta a ponta da guarda do
   protótipo (o hook que exige wireframe e `info-arch.md` quando o protótipo muda) rodou num repositório descartável com os hooks
   do harness, e o `post-commit` (o hook que faz o backup do repositório a cada commit) gravou bundles desse repositório no
