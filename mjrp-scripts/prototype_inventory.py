@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte 99b47e5 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte 3f3b7ea · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """prototype_inventory.py -- every item of the prototype inventory ends in a destination.
 
 02/10/2026 (EP-07, reverse mapping): when `docs/specs/info-arch.md` has the section
