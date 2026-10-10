@@ -4,10 +4,10 @@ aliases: [hooks-concept, hook, hooks, matcher, pretooluse, pre-tool use, evento 
 summary: hook como evento + script — a camada de determinismo dentro de um sistema probabilístico, e a regra que decide o que vai para hook e o que fica no prompt
 tags: [harness, verificacao, fundamento, conceito]
 status: firme
-atualizado: 2026-09-11
+atualizado: 2026-10-09
 fontes: [agentic-lab-claude-code-hooks-explained, don-woodlock-what-is-harness-engineering, quintanilha-o-que-e-harness, austin-marchese-karpathy-method, pasquadev-harness-e-loop-engineering, fernanda-kipper-harness-alem-do-claude-md]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b774b53 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte 99b47e5 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 Um **hook** é um evento que dispara um script: **o evento responde *quando* o código roda; o
@@ -140,12 +140,15 @@ complexity for you. Engineering is not dead; you're just abstracting up a layer.
   não dependa do modelo cooperar"* — é exatamente o que a regra de bolso descreve. O verbete
   *Pedido × regra* do glossário é essa distinção com nome próprio: *uma linha no `CLAUDE.md` é
   pedido; um hook que intercepta a chamada é regra.*
-- **O MJRP já tem dois**, desde 09/09 (BACKLOG #9): `SessionStart` roda o `doctor` — é o que faz o
-  aviso de arquivo sem commit (W4) chegar sozinho —, e `Stop` bloqueia o fim do turno sem critério
-  de saída. O segundo é o que torna o princípio II.4 (*critério de saída*) **executável**, não só escrito.
-- **Desde 04/10, mais cinco — e um limite descoberto** (S-61). `PreCompact`, `SessionStart` (só na
-  retomada depois de compactar), um segundo `Stop` e `PostToolUse` (Skill) rodam o `session_journal.py`;
-  o quinto é um hook do **git**, o `commit-msg`. O limite: hook de AI Platform só roda onde a plataforma
+- **O inventário de hoje** (2026-10-09). **AI Platform** (`.claude/settings.json`): `SessionStart` → `doctor`;
+  `SessionStart` (compact) → `session_journal reinject`; `Stop` → `stop_gate.py`, `session_journal gate`,
+  `requirements_graph_check --changed --gate`; `PreToolUse` (Write|Edit) → `path_guard.py`; `PreCompact` e
+  `PostToolUse` (Skill) → `session_journal`. **Git** (`mjrp-scripts/hooks/`, `core.hooksPath`): `pre-commit` →
+  estrutura por natureza + contradição do grafo nos nós tocados; `commit-msg` → entrada nova no log + protótipo ×
+  info-arch × wireframes (`Prototype-sync: skip — <motivo>` é do humano); `post-commit` → `backup_repo.py` (nunca
+  bloqueia). O `Stop` de critério de saída é o que torna o princípio II.4 **executável**, não só escrito; o
+  `SessionStart` é o que faz o aviso de arquivo sem commit (W4) chegar sozinho.
+- **O limite** (S-61, 04/10): hook de AI Platform só roda onde a plataforma
   carrega as configurações do projeto. A sessão remota que alcança o repo por ponte não carrega — prova:
   o `Stop` de critério de saída nunca bloqueou nela. Hook do git roda onde o git roda, em toda sessão;
   por isso a regra que não pode falhar (todo commit com entrada no log) mora nele.
@@ -163,6 +166,7 @@ hook é o ponto de encaixe dos dois.
 
 ## History
 
+- **2026-10-09 20:55** · Revisão geral de 2026-10-09: o texto contava dois hooks e depois "mais cinco"; passou a trazer o inventário de hoje, conferido no `.claude/settings.json` e em `mjrp-scripts/hooks/` (inclusive `path_guard`, `requirements_graph_check`, `pre-commit`, o guarda do protótipo no `commit-msg` e o `post-commit`).
 - **2026-09-11** · Página criada a partir da mineração do acervo, a pedido do MJRP, no meio do
   brief do playbook de conceitos. Fonte canônica: Agentic Lab; complementos de Woodlock,
   Quintanilha, Marchese, pasquadev e Kipper. O corpus vive fora deste repositório —

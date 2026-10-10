@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte b774b53 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte 99b47e5 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """requirements_graph_check.py -- checks the requirements graph of a project against its single declaration,
 requirements_graph_rules.json (S-63, kernel page requirements-graph).
 
@@ -14,6 +14,16 @@ Edges are written in one direction only; each one is enforced only from the stat
 Informational until it proves quiet (S-63 step 7): exits 0 and prints the findings. --strict exits 1 when there
 are findings and 2 when the project has no requirements graph yet (contract: 0 passed, 1 failed, 2 not
 evaluable). Python 3 stdlib only (constitution, ADR-0015: this is core).
+
+File names (MJRP 2026-10-09): a requirement file is `<ID>-<slug>.md` -- the ID prefix of the stem is the node's
+identity (node_id), the slug is the English title, lowercase ASCII kebab-case, at most `file_name.slug_max`
+characters (node_slug). Links and embeds name the whole stem with the ID as display text
+(`[[S-31-decide-how-data-reaches-the-screen|S-31]]`); a bare ID or an outdated slug pointing to a slugged file is
+flagged (link_stem). A file with no slug has the ID as its whole stem, so `[[S-31]]` is the right link to it. Every
+finding about a node starts with its ID, so --staged/--changed match them against the touched nodes.
+
+Design system (audit C F10, MJRP 2026-10-09): a Ready requirement that points to a screen state (info-arch.md)
+needs docs/specs/design-system.md in the same project -- the visual identity is decided before the contract.
 
 Tags (MJRP 2026-10-06): every outcome carries 1-3 category tags (`tags:: #a #b` in its ROADMAP section); every
 epic inherits them and may add up to 3 of its own. Free vocabulary: format and count only. --tags lists them.
@@ -43,6 +53,14 @@ WIKILINK = re.compile(r"\[\[([^\]|#]*)(?:#([^\]|]*))?(?:\|[^\]]*)?\]\]")
 INLINE_FIELD = re.compile(r"^\s*(?:[-*]\s+)?([a-z_]+)::\s*(.+)$")
 BLOCK_ANCHOR = re.compile(r"\s\^([A-Za-z0-9-]+)\s*$")
 HEADING = re.compile(r"^(#{1,6})\s+(.*)$")
+# the ID prefix of a requirement file stem: S-31 in S-31-decide-how-data-reaches-the-screen (MJRP, 2026-10-09)
+NODE_ID = re.compile(r"^((?:S|UC|EA|NFR)-\d{2,})(?=-|$)")
+
+
+def node_id(stem):
+    """The requirement ID a file stem names (`S-31-some-slug` -> `S-31`, `S-31` -> `S-31`); any other stem as is."""
+    m = NODE_ID.match(stem)
+    return m.group(1) if m else stem
 
 
 def frontmatter(text):
@@ -62,13 +80,14 @@ def as_list(v):
 
 
 def link_targets(value):
-    """Every [[file#anchor]] in a value -> list of (file, id). id = anchor without ^, or the file stem."""
+    """Every [[file#anchor]] in a value -> list of (file, id). id = anchor without ^, or the node the file stem
+    names (the ID prefix of a requirement stem: [[S-31-some-slug|S-31]] -> S-31)."""
     out = []
     for item in as_list(value):
         for f, a in WIKILINK.findall(str(item)):
             f = f.strip()
             a = (a or "").strip()
-            out.append((f, a.lstrip("^") if a else Path(f).stem))
+            out.append((f, a.lstrip("^") if a else node_id(Path(f).stem)))
     return out
 
 
@@ -172,6 +191,26 @@ class Graph:
             if a and a.group(1) == current:
                 self.nodes[current]["anchored"] = True
 
+    def check_file_name(self, f, nid, fm):
+        """MJRP, 2026-10-09: <ID>-<slug>.md -- the slug is lowercase ASCII kebab-case, at most slug_max characters."""
+        spec = self.rules.get("file_name") or {}
+        if not spec:
+            return
+        m = re.match(spec.get("pattern", r"^(?P<id>[A-Z]+-\d+)(?:-(?P<slug>[a-z0-9-]+))?$"), f.stem)
+        if not m:
+            self.find("node_slug", f"{nid}: nome '{f.name}' fora do padrão <ID>-<slug>.md — o slug é o título em inglês, "
+                                   "minúsculo, ASCII, palavras separadas por hífen")
+            return
+        slug = m.group("slug") or ""
+        mx = spec.get("slug_max")
+        if mx and len(slug) > mx:
+            self.find("node_slug", f"{nid}: slug com {len(slug)} caracteres, o máximo é {mx} — encurte mantendo o sentido "
+                                   f"(req_file_names.py --reslug {nid})")
+        if spec.get("slug_required") and not slug:
+            self.find("node_slug", f"{nid}: arquivo sem slug — o nome é <ID>-<slug>.md (req_file_names.py)")
+        if spec.get("alias_required") and nid not in [str(a).strip() for a in as_list(fm.get("aliases"))]:
+            self.find("node_slug", f"{nid}: frontmatter sem `aliases: [{nid}]`")
+
     def load_requirements(self):
         d = self.p["requirements"]
         for f in sorted(d.rglob("*.md")):
@@ -179,18 +218,21 @@ class Graph:
                 continue
             raw = f.read_text(encoding="utf-8", errors="replace")
             fm, body = frontmatter(raw)
+            # MJRP, 2026-10-09: the file is <ID>-<slug>.md -- the node is the ID prefix; every message starts with it
+            # (the --staged/--changed filter matches the first token against the touched nodes)
+            nid = node_id(f.stem)
             # S-110 (MJRP, 2026-10-05): every node in each declared language, as a `## <lang>` section of the same file
             for lang in self.languages():
                 sec = re.search(r"^## " + re.escape(lang) + r"\s*\n(.*?)(?=^## |\Z)", body or "", re.M | re.S)
                 if not sec or not sec.group(1).strip():
-                    self.find("bilingual", f"{f.name}: sem a seção `## {lang}` (ou vazia) — o nó vem nas línguas {', '.join(self.languages())}")
-            nid = f.stem
+                    self.find("bilingual", f"{nid}: sem a seção `## {lang}` (ou vazia) em {f.name} — o nó vem nas línguas {', '.join(self.languages())}")
             t = self.type_of(nid)
             if t not in ("requirement", "nfr"):
-                self.find("node_id", f"{f.name}: o nome do arquivo não é um ID de requisito (S-, UC-, EA-, NFR-)")
+                self.find("node_id", f"{nid}: o nome do arquivo ({f.name}) não começa por um ID de requisito (S-, UC-, EA-, NFR-)")
                 continue
             if fm.get("id") and str(fm.get("id")) != nid:
-                self.find("node_id", f"{f.name}: frontmatter id '{fm.get('id')}' difere do nome do arquivo")
+                self.find("node_id", f"{nid}: frontmatter id '{fm.get('id')}' difere do ID do nome do arquivo ({f.name})")
+            self.check_file_name(f, nid, fm)
             status = fm.get("status")
             valid = self.rules["statuses"] + self.rules.get("off_track_statuses", [])
             if status not in valid:
@@ -201,7 +243,7 @@ class Graph:
                     edges[e["name"]] = link_targets(fm[e["name"]])
             if nid in self.nodes and self.nodes[nid].get("path"):
                 self.find("node_id", f"{nid}: dois arquivos com o mesmo ID ({self.nodes[nid]['path'].relative_to(d)}, {f.relative_to(d)})")
-            self.nodes[nid] = {"type": t, "file": f.name, "path": f, "status": status, "edges": edges,
+            self.nodes[nid] = {"type": t, "file": f.name, "path": f, "stem": f.stem, "status": status, "edges": edges,
                                "delivered_by": [str(x).strip().strip("`") for x in as_list(fm.get("delivered_by"))],
                                "accepted_in": str(fm.get("accepted_in") or "").strip()}
 
@@ -285,7 +327,7 @@ class Graph:
         node = self.nested_anchor(f, tid) or self.nodes.get(tid)
         allowed = edge["to"] if isinstance(edge["to"], list) else [edge["to"]]
         if node is None:
-            self.find("target_exists", f"{src} —{edge['name']}→ [[{f}{'#^' + tid if f and tid != Path(f).stem else ''}]]: alvo não existe")
+            self.find("target_exists", f"{src} —{edge['name']}→ [[{f}{'#^' + tid if f and tid != node_id(Path(f).stem) else ''}]]: alvo não existe")
         elif node["type"] not in allowed:
             self.find("edge_type", f"{src} —{edge['name']}→ {tid}: alvo é {node['type']}, a aresta pede {'/'.join(allowed)}")
 
@@ -588,7 +630,7 @@ class Graph:
             for ft in self.features.values():
                 fs[ft["status"]] = fs.get(ft["status"], 0) + 1
             print("  features por status: " + " · ".join(f"{k} {v}" for k, v in fs.items()))
-        contradicted = {msg.split(":")[0] for rule, msg in self.findings}
+        contradicted = {re.split(r"[:/ ]", msg, maxsplit=1)[0] for rule, msg in self.findings}
         print("  próxima fase por nó (aberto):")
         for nid in sorted(reqs, key=lambda x: (x.split("-")[0], int(re.sub(r"\D", "", x) or 0))):
             v = reqs[nid]
@@ -598,6 +640,64 @@ class Graph:
             if v["status"] == "Done" and nid not in contradicted:
                 continue
             print(f"    {nid} [{v['status']}] → {step}")
+
+    def check_link_stems(self):
+        """MJRP, 2026-10-09: with link_form = stem, a link or embed to a requirement names its whole file stem --
+        Obsidian resolves file names, not aliases, so [[S-31]] to S-31-some-slug.md is a broken link there. Checked
+        on the edges of every node, the imports of every feature and the wikilinks/embeds of prd.md."""
+        if (self.rules.get("file_name") or {}).get("link_form") != "stem":
+            return
+        seen = set()
+
+        def judge(src, f):
+            if not f or "#" in f:
+                return
+            stem = Path(f).stem
+            node = self.nodes.get(node_id(stem))
+            if not node or not node.get("stem") or stem == node["stem"] or (src, stem) in seen:
+                return
+            seen.add((src, stem))
+            what = "ID solto" if stem == node_id(stem) else f"slug desatualizado ({stem})"
+            self.find("link_stem", f"{src}: link para {node_id(stem)} com {what} — escreva [[{node['stem']}|{node_id(stem)}]] "
+                                   f"(embed ![[{node['stem']}]])")
+
+        for nid, node in self.nodes.items():
+            for targets in node["edges"].values():
+                for f, _ in targets:
+                    judge(nid, f)
+        for ft in self.features.values():
+            for f, _ in ft["imports"]:
+                judge(ft["dir"], f)
+        prd = self.p.get("prd")
+        if prd and prd.exists():
+            for f, _ in WIKILINK.findall(prd.read_text(encoding="utf-8", errors="replace")):
+                judge(prd.name, f.strip())
+
+    def check_design_system(self):
+        """Audit C F10 (MJRP, 2026-10-09): a Ready requirement that points to a screen state (info-arch.md, nested
+        included) needs the design system of that project -- the identity is decided before the contract, not left
+        in the prototype's code."""
+        rel_ds = (self.rules.get("paths") or {}).get("design_system")
+        rel_ia = (self.rules.get("paths") or {}).get("info_arch")
+        if not rel_ds or not rel_ia:
+            return
+        for nid, node in self.nodes.items():
+            if node["type"] != "requirement" or node["status"] != "Ready":
+                continue
+            missing = set()
+            for f, _ in node["edges"].get("points_to", []):
+                doc = self.state_doc(f)
+                if not doc or doc.stem != Path(rel_ia).stem:
+                    continue
+                proj = doc
+                for _ in Path(rel_ia).parts:
+                    proj = proj.parent
+                ds = proj / rel_ds
+                if not ds.exists():
+                    missing.add(str(ds.relative_to(self.root)) if ds.is_relative_to(self.root) else str(ds))
+            for m in sorted(missing):
+                self.find("design_system_exists", f"{nid}: Ready aponta para estado de tela, e {m} não existe — a identidade "
+                                                  "visual vem antes do contrato (mjrp-defining-design-systems, a partir do protótipo aprovado)")
 
     def check_node_folder(self):
         """S-123 (MJRP, 2026-10-05): requirement files are grouped in one folder per epic. Dormant until the
@@ -644,6 +744,8 @@ class Graph:
         self.check_tags()
         self.check_features()
         self.check_evidence()
+        self.check_design_system()
+        self.check_link_stems()
         return self.findings
 
 
@@ -669,7 +771,7 @@ def touched_nodes(root, rules, mode):
             if " -> " in p:
                 p = p.split(" -> ")[-1].strip('"')
         if p.startswith(req) and p.endswith(".md"):
-            ids.add(Path(p).stem)
+            ids.add(node_id(Path(p).stem))      # MJRP, 2026-10-09: <ID>-<slug>.md -> the node is the ID
         elif p.startswith(feat):
             ids.add(p[len(feat):].split("/")[0])
     return ids
@@ -696,7 +798,7 @@ def main(argv):
         # S-67: refuse only what THIS work introduces or touches - a contradiction in a node it touched. Time rules
         # (stale, state changed after Ready) are the daily pass's, never a reason to block a commit.
         nodes = touched_nodes(root, rules, mode)
-        mine = [(r, m) for r, m in findings if r not in Graph.TIME_RULES and re.split(r"[:/ ]", m, 1)[0] in nodes]
+        mine = [(r, m) for r, m in findings if r not in Graph.TIME_RULES and re.split(r"[:/ ]", m, maxsplit=1)[0] in nodes]
         if not mine:
             return 0
         print(f"[requirements_graph] {len(mine)} contradição(ões) nos nós que este trabalho toca:")

@@ -4,10 +4,10 @@ aliases: [knowledge-graph-concept, knowledge graph, grafo de conhecimento, ontol
 summary: o que é um knowledge graph, o que é ontologia e como ela difere de taxonomia e vocabulário controlado; tripla, RDF × grafo de propriedades, schema × instância, e validação por formas
 tags: [kernel, conceito, grafo, dados, ontologia]
 status: vivo
-atualizado: 2026-10-04
+atualizado: 2026-10-09
 fontes: [2021-hogan-et-al-knowledge-graphs, 1993-gruber-portable-ontology-specifications, 1998-studer-benjamins-fensel-knowledge-engineering, 2017-w3c-shacl]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b774b53 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte 99b47e5 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 Um **knowledge graph** é um grafo de dados sobre um domínio: os **nós** são as entidades de interesse e as
@@ -40,7 +40,8 @@ whose edges represent relations between these entities."*
 ### Schema × instância
 O **schema** diz o que pode existir (todo requisito tem um épico); a **instância** é o que existe (`S-07` pertence ao
 `EP-01`). A ontologia é a forma mais rica de schema. A **identidade** é o que faz um nó ser reconhecido sempre igual
-— no harness, o ID estável que é o nome do arquivo.
+— no harness, o ID estável que abre o nome do arquivo (`S-07-import-the-card-statement.md`) e está no `id:` e
+no `aliases:` do frontmatter. O slug depois do ID é só para o humano ler; nasce com o nó e não muda sozinho.
 
 ### Ontologia
 - Gruber (1993): *"An ontology is an explicit specification of a conceptualization"* — e conceitualização é *"an
@@ -82,5 +83,6 @@ regras por tipo de nó, relatório do que não conforma.
 - A ontologia mora no kernel porque precisa ser **compartilhada** (Studer et al.): todo projeto recebe a mesma.
 
 ## History
+- **2026-10-09 20:55** · Revisão geral de 2026-10-09: a identidade do nó é o ID que abre o nome do arquivo (`<ID>-<slug>.md`, com `id:` e `aliases: [<ID>]`), não mais o nome inteiro — a regra nova de nome dos requisitos ([[requirements-graph]]).
 - **2026-10-04 11:34** · Página criada na S-63 a pedido do MJRP: o kernel usava "ontologia" e "aresta tipada" sem
   defini-los. Fontes fichadas: Hogan et al. (2021), Gruber (1993), Studer et al. (1998), W3C SHACL (2017).

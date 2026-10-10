@@ -4,18 +4,19 @@ aliases: [adr-practice, disciplina de ADR, como ADR nasce]
 summary: quando uma decisão vira ADR, o que a ADR pode e não pode mudar depois, e o gate Proposed → Accepted
 tags: [harness, decisao, processo]
 status: em formação
-atualizado: 2026-09-14
+atualizado: 2026-10-09
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b774b53 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte 99b47e5 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 Uma **ADR** registra uma decisão grande — a que tem alternativas, custos e consequências
 que sobrevivem a quem a tomou. A prosa dela é **imutável**: depois de aceita, só mudam links,
 caminhos renomeados e ponteiros de supersessão. O que envelhece não se reescreve, se emenda.
-E ela nasce `Proposed`: vira `Accepted` quando o Zé lê e aceita — não quando o agente termina
-de escrever.
+E ela nasce `Proposed`: vira `Accepted` quando o MJRP lê e aceita — depois de a `mjrp-critiquing-architecture`
+julgá-la (troca de chapéu declarada ou agente separado; critérios na página [[architecture-review]]); com P0 aberto, ela
+nem chega a ele. Não quando o agente termina de escrever.
 
-**O critério concreto (14/09/2026, ADR-0010):** vira ADR quando a mudança — de uma feature, um
+**O critério concreto (14/09/2026, ADR-0010 do harness):** vira ADR quando a mudança — de uma feature, um
 componente, um módulo, uma regra de negócio ou uma UI — **conflita** com o que já está declarado
 em `arch.md`, `info-arch.md` ou `design-system.md`. Não escala por `process_level:` — a mesma
 regra vale nos três níveis; em projetos `minimal`, que raramente têm esses três documentos, ela
@@ -23,6 +24,7 @@ simplesmente dispara pouco, o que é a medida certa, não uma exceção.
 
 ## History
 
+- **2026-10-09 20:55** · Revisão geral de 2026-10-09: antes do aceite do MJRP, a `mjrp-critiquing-architecture` julga a ADR (troca de chapéu declarada ou agente separado; critérios em [[architecture-review]]) — com P0 aberto, ela não chega a ele. As ADRs citadas passam a dizer "do harness", em texto, porque a cópia do kernel nos filhos ligava à ADR de mesmo número do filho.
 - **2026-09-14 11:02** · **O gatilho de ADR ganhou critério concreto.** Fechando o BACKLOG #46,
   o MJRP definiu: vira ADR quando a mudança conflita com o que já está declarado em `arch.md`,
   `info-arch.md` ou `design-system.md` — mesma regra nos três níveis de `process_level:`. Como
@@ -55,4 +57,4 @@ simplesmente dispara pouco, o que é a medida certa, não uma exceção.
   meses sem ninguém notar: o que governa a sessão é `AGENTS.md` + `MEMORY.md`.
 
 ## Related
-[[harness-elements]] · [[harness-kaizen]] · [[memory-architecture]] · ADR-0002 · ADR-0007 · ADR-0010
+[[harness-elements]] · [[harness-kaizen]] · [[memory-architecture]] · [[architecture-review]] · ADR-0002, ADR-0007 e ADR-0010 do harness (`docs/decisions/`)

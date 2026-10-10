@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-10-09
 fontes: [design/proposals/requirements-knowledge-graph-proposal.md, kernel/architecture/knowledge-graph-concept, kernel/architecture/linked-notes-concept, kernel/architecture/graph-engineering-concept, kernel/ways-of-working/spec-kit]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b774b53 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte 99b47e5 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **grafo de requisitos** é a documentação do PDLC tratada como grafo de conhecimento: cada requisito, épico,
@@ -21,14 +21,20 @@ dos agentes; este é o grafo de **dados** que o comportamento lê como estado.
 
 ## Details
 
-> **Em formação (S-63).** O que está abaixo foi decidido pelo MJRP em 2026-10-04; o desenho completo, com as
-> alternativas, está em `design/proposals/requirements-knowledge-graph-proposal.md`. Até a S-63 fechar, as
-> skills ainda escrevem no formato anterior (requisitos por épico dentro do `prd.md`).
+> A S-63 fechou; o desenho e as alternativas estão em `design/proposals/requirements-knowledge-graph-proposal.md`.
 
 ### Nós e onde moram
-- **Requisito:** um arquivo por nó, `docs/specs/requirements/<pasta do épico>/<ID>.md` — o nome do arquivo é o ID (`S-07`, `UC-04`,
-  `EA-11`); status e arestas no frontmatter. A pasta é a que o épico declara (`folder:: ep-NN-<slug-em-inglês>`); NFR em `nfr/`.
-  Regra `node_folder` no sensor, dormente enquanto nenhum épico declara `folder::`. O corpo vem em cada língua declarada — por padrão `## pt-BR` e `## en`, no mesmo arquivo, com um ID e um frontmatter só (regra `bilingual`; o contrato muda a lista em `mjrp_harness.requirements.languages`, `[]` desliga). É o nó mais ligado do grafo, por isso tem a âncora mais estável.
+- **Requisito:** um arquivo por nó, `docs/specs/requirements/<pasta do épico>/<ID>-<slug>.md`. O nome começa pelo ID
+  (`S-07`, `UC-04`, `EA-11`, `NFR-03` — o próximo número livre do prefixo, nunca reusado) e segue com o slug: o título
+  em inglês (a linha em negrito que abre `## en`), em kebab-case ASCII minúsculo, até 50 caracteres, encurtado com juízo
+  para um humano ainda entender (`S-07-import-the-card-statement.md`). O slug nasce com o nó e não segue edições do
+  título; a identidade é o ID (`id: S-07` e `aliases: [S-07]` no frontmatter). Renomear é operação explícita
+  (`req_file_names.py --reslug <ID>`): move o arquivo e reescreve os links. Link e embed levam o nome inteiro do
+  arquivo, com o ID como texto — `S-07`, `!S-07-import-the-card-statement` —,
+  porque o Obsidian resolve nome de arquivo, não alias; o sensor acusa link com ID solto ou slug velho (`link_stem`) e
+  nome fora da forma (`node_slug`). Status e arestas no frontmatter. A pasta é a que o épico declara
+  (`folder:: ep-NN-<slug-em-inglês>`); NFR em `nfr/`. No subprojeto do harness, sem épico, o nó mora direto em
+  `requirements/`. Regra `node_folder` no sensor, dormente enquanto nenhum épico declara `folder::`. O corpo vem em cada língua declarada — por padrão `## pt-BR` e `## en`, no mesmo arquivo, com um ID e um frontmatter só (regra `bilingual`; o contrato muda a lista em `mjrp_harness.requirements.languages`, `[]` desliga). É o nó mais ligado do grafo, por isso tem a âncora mais estável.
 - **Feature:** uma pasta por ciclo SDD, `docs/specs/features/<F-ID>-<slug>/` com `spec.md`, `plan.md`, `tasks.md`.
   Dentro da pasta, `REQ-` e `TASK-` são IDs locais, resolvidos pelo script dentro dela.
 - **Épico:** no `prd.md`, com as arestas dele numa linha logo abaixo do heading (`serves:: ROADMAP#^OUT-01`).
@@ -41,7 +47,7 @@ dos agentes; este é o grafo de **dados** que o comportamento lê como estado.
   quantidade (regra `tags`); `--tags` lista as de cada nó, com a herança calculada. Para quê: classificar e filtrar os
   resultados por categoria na gestão visual — a primeira é a GVV (Gestão Visual Virtual) do Control Center. Decisão do
   MJRP, 2026-10-06.
-- **NFR (requisito não funcional transversal):** um nó próprio em `requirements/` (`NFR-01.md`), como restrição que
+- **NFR (requisito não funcional transversal):** um nó próprio em `requirements/nfr/` (`NFR-01-<slug>.md`), como restrição que
   vale para todas as features; não é importado por nenhuma. O prefixo `REQ-` fica só para os REQ locais da feature.
   Decisão do MJRP, 2026-10-04 12:15, reversível: ele pode voltar atrás.
 - **Estado observável:** uma situação da superfície do sistema que o humano vê e julga — alvo do `points_to`, com block
@@ -66,8 +72,8 @@ Escreve-se **só uma direção**; a inversa é calculada (backlink no Obsidian, 
 | Aresta | De → para | O sensor exige |
 |---|---|---|
 | `serves` | épico → resultado do ROADMAP | todo épico tem exatamente 1 |
-| `epic` | requisito → épico | todo requisito tem exatamente 1 |
-| `planned_for` | requisito (ou épico, como atalho) → release | opcional — release é opcional por projeto |
+| `epic` | requisito → épico | todo requisito tem exatamente 1 — exceto no subprojeto do harness, onde é proibida (o épico vem de `parent_epic` no contrato) |
+| `planned_for` | requisito (ou épico, como atalho) → release | opcional — release é opcional por projeto; exceto no subprojeto do harness, onde é obrigatória a partir de `Prioritized` |
 | `points_to` | requisito → estado observável (de tela ou de comportamento) | requisito Ready tem pelo menos 1; o alvo existe |
 | `imports` | feature → requisito | ver *Cardinalidade* |
 | `implements` | TASK → REQ local | toda TASK tem pelo menos 1; todo REQ tem pelo menos uma TASK |
@@ -92,7 +98,7 @@ Decisão do MJRP, 2026-10-04, nas palavras dele — **limitar:**
   `supersedes` deixa de ser opcional.
 
 ### Release, épico e requisito
-- **Release é opcional por projeto** e mora numa seção do `ROADMAP.md` (decisão de 2026-10-02). Wave, milestone e
+- **Release é opcional por projeto** — no subprojeto do harness é a unidade de organização — e mora numa seção do `ROADMAP.md` (decisão de 2026-10-02). Wave, milestone e
   release são o mesmo nó, com um campo `kind` se o projeto quiser nomear diferente; milestone é release com data.
 - **A unidade planejada é o requisito** (`planned_for`); a feature herda a release dos requisitos que importa, e o
   sensor acusa feature que importa requisitos de releases diferentes.
@@ -127,7 +133,7 @@ contra a realidade — **a mesma regra para todo projeto**, decidida pelo MJRP e
 | **In progress** | uma feature aberta que importa o requisito, **ou** atividade recente — commit no nó ou na feature, ou entrada do log que cita o ID, em até `requirements.stale_days` (14) |
 | **Done** | uma feature Done que o importa (tarefas fechadas, REQ com `verified_by`), **ou** `delivered_by:` com o commit que entregou |
 | **Accepted** | a de Done **e** `accepted_in:`, que aponta o aceite do humano |
-| **Ready** | `points_to`; o estado de tela apontado aparece na linha `shows::` de um protótipo aprovado (registro em `info-arch.md` § *Protótipos aprovados*) — estado de comportamento fica isento, não tem tela; e o documento do estado observável não mudou depois do requisito — se mudou, o critério pode ter envelhecido |
+| **Ready** | `points_to`; o estado de tela apontado aparece na linha `shows::` de um protótipo aprovado (registro em `info-arch.md` § *Protótipos aprovados*) — estado de comportamento fica isento, não tem tela; e o documento do estado observável não mudou depois do requisito — se mudou, o critério pode ter envelhecido; com estado de tela, o `docs/specs/design-system.md` do projeto existe (regra `design_system_exists`: a identidade se decide antes do contrato) |
 
 Code-app entrega por feature; o trabalho meta, e o que foi entregue antes do grafo, por commit — as duas formas são
 evidência conferível, nenhuma é isenção. Três mecanismos aplicam a regra: o `pre-commit` recusa o commit que deixa
@@ -145,7 +151,7 @@ Quando o sensor acusa contradição ou status apodrecido, quem lê o grafo **rec
 6. Registre cada reconciliação no log (uma entrada por decisão) e rode o sensor de novo.
 
 É procedimento de Guardian: a `mjrp-ensuring-sdd` o assume (S-66), e a `mjrp-pdlc` o chama antes de decidir a
-próxima fase. A passada diária só **propõe** (relatório em `reports/audits/`); o status muda numa sessão. O agente
+próxima estação. A passada diária só **propõe** (relatório em `reports/audits/`); o status muda numa sessão. O agente
 que executa a reconciliação por conta própria é do EP-03 (brief do MJRP).
 
 ### Quem faz o quê (arquétipos)
@@ -154,12 +160,13 @@ que executa a reconciliação por conta própria é do EP-03 (brief do MJRP).
 - **Escrevem os estados observáveis:** o de tela, `mjrp-designing-ui` (block ID no
   `info-arch.md`, a partir do protótipo aprovado); o de comportamento, `mjrp-writing-reqs` no Example Mapping, com os
   exemplos julgados pelo humano antes do Ready (decisão D-04 do MJRP, 2026-10-04).
-- **Confere o grafo:** `mjrp-ensuring-sdd` (Guardian), sobre o sensor determinístico (o
-  `SDD_chain_artifacts_check` evoluído).
-- **Percorre o grafo:** `mjrp-pdlc` (Orchestrator) decide a fase pelo estado dos nós.
+- **Confere o grafo:** `mjrp-ensuring-sdd` (Guardian), sobre o sensor determinístico
+  (`requirements_graph_check.py`; o `SDD_chain_artifacts_check` foi aposentado em 05/10, S-77).
+- **Percorre o grafo:** `mjrp-pdlc` (Orchestrator) decide a próxima estação pelo estado dos nós.
 - **Julga o conteúdo:** `mjrp-ensuring-quality` (Reviewer) — a aresta existir não prova que o teste prova o REQ.
 
 ## History
+- **2026-10-09 20:55** · Revisão geral de 2026-10-09: nome do nó `<ID>-<slug>.md` (slug do título em inglês, até 50 caracteres, congelado ao nascer; `aliases: [<ID>]`; link com o nome inteiro e o ID como texto; renomear com `req_file_names.py --reslug`); exceções do subprojeto do harness nas arestas `epic` e `planned_for`; regra `design_system_exists` no Ready com tela; sensor `requirements_graph_check.py` no lugar do aposentado; S-63 fechada.
 - **2026-10-09 15:13** · Subprojeto do harness (decisão do MJRP): épico só no harness; o subprojeto declara `parent_epic` no contrato e organiza as stories por release; o sensor reprova épico no subprojeto, `epic:` em story dele e story `Prioritized` sem release. O Control Center é o primeiro (EP-08).
 - **2026-10-07 20:29** · Onda E do PDLC em loops: Ready é o contrato — vai a Ready com o OK do humano, registrado no log (decisão do MJRP; `mjrp-writing-reqs` atualizada na onda D).
 - **2026-10-06** · **Tags de categoria em resultado e épico** (MJRP: "todos os elementos de outcome de roadmap e dos épicos do harness venham com uma tag que categorize"). Resultado com 1 a 3, épico herda e soma até 3 próprias, vocabulário livre; regra `tags` no sensor e no selftest, `--tags` lista; modelos de ROADMAP e PRD da `mjrp-pdlc-bootstrap` e a `mjrp-coaching-pm` escrevem o campo.

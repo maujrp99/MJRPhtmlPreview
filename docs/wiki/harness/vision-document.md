@@ -4,10 +4,10 @@ aliases: [documento-de-visao, VISION.md, vision]
 summary: o que entra num documento de visão, o que não entra, e o teste que separa os dois
 tags: [harness, documentacao, memoria]
 status: firme
-atualizado: 2026-09-11
+atualizado: 2026-10-09
 fontes: [productplan-vision-vs-strategy, productcompass-vision-strategy-goals]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b774b53 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte 99b47e5 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O documento que responde **por que este projeto existe e onde ele quer chegar**. Estado, medição, configuração e ordem de execução moram em outros lugares e são apontados daqui.
@@ -38,7 +38,7 @@ documento e ensinado pela `mjrp-pdlc-bootstrap`:
 |---|---|---|---|
 | **Propósito (WHY)** | a razão de ser — a necessidade que se quer resolver | sem prazo | **1 frase** |
 | **Visão (WHERE)** | o horizonte a alcançar — uma instanciação do propósito | longo prazo | **1 frase** + contexto |
-| **Objetivo (WHAT)** | a meta que leva à visão, e **o que se entrega** para chegar lá — o único lugar onde stack pode aparecer | curto a médio prazo | o corpo do documento |
+| **Objetivo (WHAT)** | a meta que leva à visão, e **o que se entrega** para chegar lá — o único lugar onde stack pode aparecer; inclui **as funções do produto** (ex.: informar, ajudar a decidir, agir), a que cada item do inventário do protótipo se liga | curto a médio prazo | o corpo do documento |
 | **Como (HOW)** | o plano e a estratégia que sustentam o objetivo | curto a médio prazo | ponteiro + estratégia |
 
 Os quatro campos são os quatro elos da **cadeia de intenção** ([[base-concept]]). **O plano não é
@@ -58,14 +58,16 @@ invariante sem perceber. Um campo que precisa de paráfrase para fazer sentido s
 
 O `VISION.md` guarda: identidade e nome · objetivo último · os dois modelos de negócio ·
 definição do que o harness é ·. E aponta para: `ROADMAP.md` (ordem),
-`docs/wiki/` (termos), (../../MEMORY.md) (estado),
+`docs/wiki/` (termos), `MEMORY.md` (estado),
 `docs/decisions/` (por que se decidiu).
 
 **Sensor possível, ainda sem incidente:** uma checagem que reprova número absoluto e nome de
-ferramenta no `VISION.md`. Fica candidata pelo critério do ADR-0002 — entra quando o drift
+ferramenta no `VISION.md`. Fica candidata pelo critério da ADR-0002 do harness — entra quando o drift
 custar uma sessão.
 
 ## History
+
+- **2026-10-09 20:55** · Revisão geral de 2026-10-09: o *Objetivo* do template passa a incluir as funções do produto (informar, ajudar a decidir, agir), onde cada item do inventário do protótipo termina; o link quebrado do `MEMORY.md` foi corrigido; as ADRs citadas passam a dizer "do harness", em texto.
 
 > A decisão mora na página do assunto que ela muda, com data (ADR-0008). As entradas abaixo
 > vieram **inteiras** do `MEMORY.md` na migração do BACKLOG #28a (09/09/2026) — nada foi
@@ -122,4 +124,4 @@ custar uma sessão.
   princípios foram a exceção, viraram `PRINCIPLES.md` porque ele mandou.)*
 
 ## Related
-[[base-concept]] · contrato · tools · ADR-0003 · inegociáveis
+[[base-concept]] · contrato · tools · inegociáveis · ADR-0003 do harness (`docs/decisions/`)

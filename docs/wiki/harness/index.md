@@ -1,11 +1,11 @@
 ---
 title: Kernel do MJRP Harness
-summary: as 26 páginas do harness que este projeto carrega — o que os campos do VISION, a memória, o perfil e os sensores significam
+summary: as 28 páginas do harness que este projeto carrega — o que os campos do VISION, a memória, o perfil e os sensores significam
 ---
 
 ## Definition
 
-Cópia carimbada (versão **2026-10-09**, fonte `b774b53`) das páginas do MJRP Harness que governam como uma instância funciona. **Não se edita aqui**: edite no harness e rode `new_project.py --refresh-kernel`. O doctor (I5) avisa quando o carimbo envelhece.
+Cópia carimbada (versão **2026-10-09**, fonte `99b47e5`) das páginas do MJRP Harness que governam como uma instância funciona. **Não se edita aqui**: edite no harness e rode `new_project.py --refresh-kernel`. O doctor (I5) avisa quando o carimbo envelhece.
 
 As páginas vêm achatadas nesta pasta; os grupos abaixo são os temas da fonte (no harness, `docs/wiki/kernel/<tema>/`).
 
@@ -43,6 +43,7 @@ As páginas vêm achatadas nesta pasta; os grupos abaixo são os temas da fonte 
 | [hooks-concept](hooks-concept.md) | hook como evento + script — a camada de determinismo dentro de um sistema probabilístico, e a regra que decide o que vai para hook e o que fica no prompt |
 | [knowledge-graph-concept](knowledge-graph-concept.md) | o que é um knowledge graph, o que é ontologia e como ela difere de taxonomia e vocabulário controlado; tripla, RDF × grafo de propriedades, schema × instância, e validação por formas |
 | [linked-notes-concept](linked-notes-concept.md) | o modelo de notas atômicas e densamente ligadas que o Obsidian popularizou — de onde vem, os nomes que ele tem, os mecanismos (wikilink, backlink, embed, block ID, MOC) e como o harness o usa como a leitura humana do grafo |
+| [architecture-review](architecture-review.md) | as regras com ID estável que a crítica de arquitetura cita — governança, anatomia da ADR, macroarquitetura, dados, comunicação, resiliência, invariantes com teste binário, vetos imediatos e sensores — destiladas do Handbook MJRP de Architecture Review (v0) |
 
 ### roadmap · intenção e escopo — a visão, os resultados, épicos e releases no grafo de requisitos
 
@@ -58,6 +59,7 @@ As páginas vêm achatadas nesta pasta; os grupos abaixo são os temas da fonte 
 | [design-canon](design-canon.md) | as fontes elevadas que fundamentam UX, UI e conteúdo explicativo no MJRP — organizadas em oito disciplinas com regras de ID estável que as skills citam em vez de recitar |
 | [spreadsheet-standard](spreadsheet-standard.md) |  |
 | [palette-library](palette-library.md) | as paletas curadas com a identidade visual pessoal do MJRP (Light + Dark) — fonte única para qualquer skill que gere output visual (infográficos, dossiês, decks, site pessoal) |
+| [sketch-vs-prototype](sketch-vs-prototype.md) |  |
 
 ### raiz do kernel
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte b774b53 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte 99b47e5 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """retired_names_check.py - no live document sends the agent to a skill that no longer exists.
 
 The skill bodies are checked by build_plugin.py --check (S-56). This script checks the rest: the documents an agent

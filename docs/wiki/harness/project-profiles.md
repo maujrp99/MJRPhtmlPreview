@@ -4,10 +4,10 @@ aliases: [project-profiles, perfis, perfil, greenfield, brownfield, content, cam
 summary: os três perfis que o harness atende — e a distinção que o README apagava, entre PERFIL (o que o projeto entrega) e CAMINHO DE ADOÇÃO (por que porta ele entra)
 tags: [harness, fundamento]
 status: firme
-atualizado: 2026-10-07
+atualizado: 2026-10-09
 fontes: []
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b774b53 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte 99b47e5 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 **Perfil** é o que o projeto **entrega**, e é o que o campo `profile:` do contrato declara:
@@ -48,25 +48,17 @@ A cadeia de derivação é a espinha: **todo artefato deriva de um pai**, e é i
 duplicação e drift.
 
 ```
-VISION.md → prd.md (requisitos por épico) → ROADMAP.md → arch.md / data-model.md → info-arch.md → design-system.md
+VISION.md → ROADMAP.md (resultados) → prd.md (épicos; requisitos em requirements/) → protótipo + info-arch (+ wireframes)
+          → arch.md / data-model.md (ADR + crítica) → design-system.md
                                                                                     │
-                            um requisito por vez entra no ciclo SDD ↓
+                     os requisitos Ready (o contrato) entram no Delivery, feature a feature ↓
                         spec.md → plan.md → tasks.md → src/ + tests/
 ```
 
-As fases, com os gates que exigem aprovação humana (⛔):
+O ciclo é o [[pdlc-loops]]: Fundação → Intake (Full · Standard · Fast track · Fix) → Discovery (Explorar · Enquadrar ·
+Desenhar) → Contrato → Delivery → UAT → Learn; os gates opcionais moram em `gates:` do contrato.
 
-| Fase | O que acontece | Gate |
-|---|---|---|
-| **0 · Setup** | git, estrutura, documentos de identidade, configs de IA | ⛔ Foundation |
-| **1 · Discovery** | validar valor, primeiros requisitos em nível de problema, esqueleto de arquitetura | — |
-| **2 · Design** | info-arch → design-system → protótipo (opcional) | ⛔ info-arch |
-| **3 · Ciclo SDD** *(por requisito)* | Specify → Plan → Tasks → Implement | ⛔ ×3 |
-| **4 · Qualidade** | auditoria de fim de sprint, dívida, regressão | — |
-| **5 · Deploy** | preview, smoke, produção | — |
-| **6 · Docs & fechamento** | specs atualizadas, tag, roadmap avança | — |
-
-**O processo escala; o invariante não.** O caminho mínimo é Setup → constitution → um requisito SDD
+**O processo escala; o invariante não.** O caminho mínimo é Fundação → constitution → um requisito SDD
 enxuto → loop de build → handoff. As fases avançadas entram quando o projeto as merece — trabalho
 multiagente, complexidade de UI, feature de risco.
 
@@ -92,7 +84,7 @@ O esforço do retrofit escala com o projeto: **mínimo** (constitution + lista d
 > isso que o gate ⛔ Retrofit valida contra o código, não contra a intenção.
 
 E o histórico: **nunca reescrever o que já foi commitado.** Conventional Commits valem daqui para
-frente; a adoção ganha uma tag (`v0-framework-bootstrap`); branches existentes ficam até o merge
+frente; a adoção ganha uma tag (`v0-harness-adoption`); branches existentes ficam até o merge
 natural.
 
 ### `content` — o processo mora no TIPO, nunca no item
@@ -133,6 +125,7 @@ um álbum por vez.
   `doctor.py` valida é o `profile:`.
 
 ## History
+- **2026-10-09 20:55** · Revisão geral de 2026-10-09: a cadeia do `code-app` segue a ordem de hoje (ROADMAP antes do PRD, protótipo e info-arch, arquitetura com ADR e crítica, design system); a tabela de fases 0–6 deu lugar ao [[pdlc-loops]]; a tag de adoção é `v0-harness-adoption`; a ADR citada passa a dizer "do harness".
 - **2026-10-07 20:29** · Onda E do PDLC em loops (`design/proposals/pdlc-loops-migration-plan.md`): a numeração antiga de fases deu lugar às estações e ao contrato de [[pdlc-loops]] §11.
 - **2026-10-04 00:00** — MJRP (S-62): os requisitos passam para o PRD, por épico, em qualquer formato; o `story.md` sai da cadeia.
 
@@ -152,4 +145,4 @@ um álbum por vez.
   FASE 2c viraram termo agnóstico.
 
 ## Related
-[[harness-elements]] · [[terms]] · [[vision-document]] · ADR-0002
+[[harness-elements]] · [[terms]] · [[vision-document]] · [[pdlc-loops]] · ADR-0002 do harness (`docs/decisions/`)

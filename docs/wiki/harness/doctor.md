@@ -4,17 +4,50 @@ aliases: [doctor, doctor.py, sensores, o que o doctor vê]
 summary: o que o doctor mede, o que ele deliberadamente não mede, e por que uma checagem só nasce depois de um incidente
 tags: [harness, sensores, verificacao]
 status: em formação
-atualizado: 2026-09-14
+atualizado: 2026-10-09
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b774b53 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte 99b47e5 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **doctor** é o sensor do harness: um script que lê a instância e devolve verde,
 amarelo ou vermelho por critério nomeado. Ele não julga o trabalho — julga se a instância
 obedece ao que ela mesma declara. Uma checagem só entra depois de um incidente que ela teria
-pegado (ADR-0002, emendada pela ADR-0007): checagem sem incidente é opinião com exit code.
+pegado (ADR-0002 do harness, emendada pela ADR-0007 do harness): checagem sem incidente é opinião com exit code.
+
+## As checagens
+
+Erro (vermelho) nas letras C, I, F e A; aviso (amarelo) no W. O código é a fonte: `mjrp-scripts/doctor.py`.
+
+| ID | O que confere |
+|---|---|
+| C1 | skills instaladas × fonte |
+| I1 | schema do contrato e `environment` |
+| I2 | caminhos declarados existem |
+| I3 | links relativos e wikilinks |
+| I4 | `AGENTS.md` canônico |
+| I5 | herança do `PRINCIPLES.md`; kernel e cópias carimbadas × fonte; espelho da constituição |
+| F1 | forma do `MEMORY.md` e `## Now` × log; formato do log; crescimento do Ways of Working |
+| F2 | gate além do SLA |
+| F3 | sob git |
+| A1 | sensores do contrato |
+| W1 | descrições das skills |
+| W2 | commits aguardando push |
+| W3 | campo desconhecido no contrato; contrato sem `environment` |
+| W4 | edições sem commit |
+| W5 | skills de fronteira não revistas |
+| W6 | `CHARTER.md` não migrado; `stack:` mal usado |
+| W7 | filhos com kernel defasado |
+| W8 | deriva do Cowork |
+| W9 | estrutura por natureza |
+| W10 | sessões concorrentes |
+| W11 | inventário do protótipo |
+| W12 | nomes de skill aposentada |
+| W13 | backup atrás do HEAD |
+| W14 | protótipo × `info-arch.md` × wireframes |
 
 ## History
+
+- **2026-10-09 20:55** · Revisão geral de 2026-10-09: a página ganhou a tabela *As checagens* (C1, I1–I5, F1–F3, A1, W1–W14, tirada do código); as ADRs citadas passam a dizer "do harness", em texto, porque a cópia do kernel nos filhos ligava à ADR de mesmo número do filho (o Control Center tem a própria ADR-0002).
 
 > Página criada em 09/09/2026 pelo BACKLOG #28a, por indicação do Zé. As entradas abaixo vieram
 > **inteiras** do `MEMORY.md` — nada foi condensado na mudança; a edição, se vier, vem depois e
@@ -150,4 +183,4 @@ pegado (ADR-0002, emendada pela ADR-0007): checagem sem incidente é opinião co
 - **2026-10-09 19:45** · **W14 — protótipo × info-arch × wireframes.** Avisa quando o protótipo mais novo (`design/inception/<name>-vN.html`) não tem o wireframe de todas as telas da versão (as da versão anterior, menos as declaradas `<!-- wireframe-retired: <tela> -->` no `info-arch.md`), quando o `info-arch.md` não o cita, e quando ele mudou depois do `info-arch.md` ou de um wireframe. O mesmo `prototype_sync_check.py` roda no hook `commit-msg` e recusa o commit que traz o protótipo sem o info-arch e os wireframes da versão; a saída é do humano, no trailer `Prototype-sync: skip — <motivo>`. Protótipo tocado antes de 2026-10-09 é legado. Nasceu do Control Center v3.5: mudou depois de aprovado, com 3 das 7 telas com wireframe e o info-arch citando o v3.3 — a regra só existia em prosa (decisão do MJRP, 19:36: hook + sensor, todas as telas por versão).
 
 ## Related
-[[harness-elements]] · [[harness-kaizen]] · skill-distribution · ADR-0002 · ADR-0007
+[[harness-elements]] · [[harness-kaizen]] · skill-distribution · [[hooks-concept]] · ADR-0002 e ADR-0007 do harness (`docs/decisions/`)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte b774b53 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte 99b47e5 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """log_entry_check.py -- every commit brings a new entry in the project log (S-61).
 
 Born 2026-10-03 17:48: in the skills revision, four commits went out with no entry in docs/log.md, and on
@@ -13,6 +13,10 @@ Rule (MJRP, 2026-10-04 14:11):
   - exempt: a commit that touches only derived files (folder-index.md, daily-checks/, _backups/), a merge,
     and a commit made by a declared scaffold script (environment MJRP_LOG_EXEMPT, set by new_project.py);
   - --amend is judged against the parent of the commit being amended;
+  - an entry is its whole heading line, so two entries in the same minute are two entries (2026-10-09: the second
+    commit of a minute was refused as "no new entry");
+  - a new entry's <type> is one of KINDS (2026-10-09 21:26: an entry went out as `decisão`, and the Control Center,
+    which reads the log, broke on the unknown type);
   - going over it (git commit --no-verify) is the human's call, never the agent's.
 
 The log path comes from the contract (`mjrp_harness.session_history`, for content projects Core/log.md);
@@ -32,7 +36,9 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 from doctor import log_rel  # the same contract reading as the doctor
 
-ENTRY = re.compile(r"^## \[\d{4}-\d{2}-\d{2} \d{2}:\d{2}\]", re.MULTILINE)
+ENTRY = re.compile(r"^## \[\d{4}-\d{2}-\d{2} \d{2}:\d{2}\].*$", re.MULTILINE)
+KIND = re.compile(r"^## \[[^\]]+\] *([^\s—]*)")
+KINDS = ("session", "decision", "inventory", "ingest", "harness-feedback")   # the types the logs use
 DERIVED_NAMES = ("folder-index.md",)
 DERIVED_DIRS = ("daily-checks/", "_backups/")
 
@@ -104,10 +110,15 @@ def check(root, amend=False):
             continue  # project without a log yet (scaffold in progress): nothing to compare
         new = entries(root, f":{log}")
         old = entries(root, f"{base}:{log}") if has_head else set()
+        where = proj or "raiz"
         if not (new - old):
-            where = proj or "raiz"
             fails.append((where, log, "o commit não acrescenta entrada nova" if log in files
                           else "o log não está no commit"))
+        for head in sorted(new - old):
+            kind = KIND.match(head).group(1)
+            if kind not in KINDS:
+                fails.append((where, log, f"a entrada `{head[:60]}` tem o tipo `{kind or '(vazio)'}`, fora de "
+                                          f"{', '.join(KINDS)}"))
     return fails
 
 

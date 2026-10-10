@@ -4,10 +4,10 @@ aliases: [as onze peças, onze elementos, componentes do harness, harness-elemen
 summary: os harness elements — as onze peças de um sistema agêntico, o domínio de cada uma, e onde o MJRP está
 tags: [harness, fundamento, mapa]
 status: firme
-atualizado: 2026-09-14
+atualizado: 2026-10-09
 fontes: [pasquadev-loop-engineering, anthropic-context-engineering, ibm-skills-mcp-rag-memory, fowler-guides-sensors]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b774b53 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte 99b47e5 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 As **onze peças** que compõem o entorno de um modelo de linguagem para que ele produza trabalho
@@ -24,14 +24,14 @@ Uma tabela para ver de relance, e depois cada uma com detalhe.
 
 | # | Peça | Domínio hoje | Estado no MJRP |
 |---|---|---|---|
-| 1 | Loop de execução | Plataforma | emprestado — o da tarefa ainda não existe |
+| 1 | Loop de execução | Plataforma + Harness | o do turno, emprestado; o da tarefa: `loop.py`, nível 2, com as quatro regras de parada |
 | 2 | Ferramentas | Instância | catálogo pendente; `tools:` não implementado |
 | 3 | Guides | Harness | é o que mais temos — as skills |
 | 4 | Context engineering | Harness | `onboarding` faz o *select*; falta medir |
 | 5 | Memória | Harness + Instância | seis tipos, com casa (ADR-0001, 0005, 0006) |
 | 6 | Ambiente de execução | Plataforma → Harness | EP-04 do PRD (Next do roadmap) |
-| 7 | Sensores | Harness | `doctor` + 4 sensores rodando |
-| 8 | Governança | Harness | escrita, não mecanizada |
+| 7 | Sensores | Harness | `doctor` (C1, I1–I5, F1–F3, A1, W1–W14) + os sensores do contrato |
+| 8 | Governança | Harness | parcialmente mecanizada — hooks que recusam (`path_guard`, `pre-commit`, `commit-msg`, `Stop`); o resto é pedido |
 | 9 | Guardrails | Plataforma | emprestado; nada nosso |
 | 10 | Observabilidade | — | não existe |
 | 11 | Orquestração | Harness | em prosa, na `mjrp-pdlc` |
@@ -47,8 +47,9 @@ o resultado, chama de novo, e para quando *ele mesmo* emite texto sem chamar nad
 parada padrão é uma **opinião do modelo**, não um fato verificado. O **loop da tarefa** é nosso:
 repetir o turno até um critério verificável passar, com o estado viajando por arquivo.
 
-**No MJRP.** Só o primeiro existe, emprestado. O segundo é o `loop.py` planejado, e é o que o
-invariante nº 12 exige — nenhum loop começa sem critério de saída declarado e verificável.
+**No MJRP.** O primeiro é emprestado. O segundo é o `loop.py`: nível 2 (goal-based), com as quatro regras de parada —
+critério de saída, teto, falta de progresso e orçamento de tokens ([[loop-engineering-concept]]). É o que o invariante
+nº 12 exige — nenhum loop começa sem critério de saída declarado e verificável.
 
 ### 2 · Ferramentas
 **O que é.** Tudo o que o agente pode **chamar para agir**. Ver tools para os três
@@ -102,15 +103,17 @@ cooperar. Devolve 0 ou 1. Ver [[terms]].
 modelo revisando > auto-relato do agente (que não é sensor nenhum). **A linguagem é um sensor**:
 escolher stack tipada é escolher um verificador de força máxima que roda de graça.
 
-**No MJRP.** `doctor` com contrato 0/1/2 e quatro sensores rodando. **O furo:** ele verifica a
+**No MJRP.** `doctor` com contrato 0/1/2 e as checagens C1, I1–I5, F1–F3, A1 e W1–W14 ([[doctor]]), mais os
+sensores que o contrato declara. **O furo:** ele verifica a
 conformidade da instância, não o trabalho entregue.
 
 ### 8 · Governança
 **O que é.** Quem pode fazer o quê, e o que exige aprovação. No nível da chamada de ferramenta:
 *always do / ask first / never do*.
 
-**No MJRP.** Existe escrita — os gates, o `PRINCIPLES.md` — mas **não mecanizada**: nada intercepta
-uma chamada. É pedido, não regra.
+**No MJRP.** **Parcialmente mecanizada.** Hooks que recusam: o `path_guard` (arquivo novo fora da sua natureza), o
+`pre-commit`, o `commit-msg` e o `Stop` ([[hooks-concept]]). O resto — os gates, o `PRINCIPLES.md` — segue escrito:
+é pedido, não regra.
 
 ### 9 · Guardrails
 **O que é.** O limite que **impede** a ação antes de acontecer — distinto do sensor, que detecta
@@ -142,6 +145,8 @@ fase, loop** (o trabalho do papel é exploratório).
   (10) e guardrails (9).
 
 ## History
+
+- **2026-10-09 20:55** · Revisão geral de 2026-10-09: o loop da tarefa existe (`loop.py`, nível 2, quatro regras de parada); os sensores são as checagens do `doctor` (C1, I1–I5, F1–F3, A1, W1–W14) mais as do contrato; a governança ficou parcialmente mecanizada pelos hooks que recusam. A tabela dizia o estado de setembro.
 
 > A decisão mora na página do assunto que ela muda, com data (ADR-0008). As entradas abaixo
 > vieram **inteiras** do `MEMORY.md` na migração do BACKLOG #28a (09/09/2026) — nada foi

@@ -4,10 +4,10 @@ aliases: [termos, glossário, glossario, verbetes, vocabulário, vocabulario, vi
 summary: o glossário do MJRP — todo o vocabulário, agrupado por função no harness e alfabético dentro de cada grupo
 tags: [conceitos, glossario]
 status: firme
-atualizado: 2026-09-14
+atualizado: 2026-10-09
 fontes: []
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b774b53 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte 99b47e5 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # Termos — o glossário
 
@@ -33,7 +33,7 @@ está na última seção, separado de propósito.
 | **Jaggedness** | A competência dos modelos é irregular — ótima numa tarefa, ruim na vizinha, sem aviso. Obriga a medir no próprio domínio. *(Karpathy)* |
 | **MJRP SaaS** | O **identificador reconhecível pro cliente** do negócio da MJRP — não o produto em si (ADR-0004, resolvido 14/09). O produto real é o que o Harness constrói e entrega caso a caso. Mesmo papel que "Salesforce" faz pro SaaS que a marca nomeia: identifica pra fora, sem ser o nome de nenhum módulo por dentro. |
 | **Pedido × regra** | Uma linha no `CLAUDE.md` é pedido; um hook que intercepta a chamada é regra. T4 é sobre regras. *(Karpathy)* |
-| **Quatro domínios** (antes *três planos*) | De quem é cada domínio do **entorno** — não do software entregue. **Instância**: muda a cada projeto, o contrato declara. **Harness**: muda quando o método da MJRP muda. **Plataforma**: muda quando o fornecedor quiser. **Usuário**: como o Zé quer as coisas, fora de repo. |
+| **Quatro domínios** (antes *três planos*) | De quem é cada domínio do **entorno** — não do software entregue. **Instância**: muda a cada projeto, o contrato declara. **Harness**: muda quando o método da MJRP muda. **Plataforma**: muda quando o fornecedor quiser. **Usuário**: como o MJRP quer as coisas, fora de repo. |
 | **Sandbox** | O ambiente isolado em que o agente executa. Hoje é **system harness** — quem entrega é a Plataforma. O EP-04 do PRD (o Next "o produto sobe por comando do agente" do `ROADMAP.md`) o traz para o lado do MJRP: o agente ganha canteiro, o projeto ganha chão. Alinhado ao [[vision-document]]. |
 | **Skill issue** | Vira princípio aqui: toda falha de agente é bug do harness até prova em contrário. *(Karpathy)* |
 | **T1–T4** | As quatro condições necessárias para algo ser um harness: loop, interface de ferramenta, gestão de contexto, e mecanismo que não dependa do modelo cooperar. |
@@ -53,6 +53,7 @@ está na última seção, separado de propósito.
 | **Inegociável** | A palavra do MJRP para o mesmo conjunto que *invariante* — e os dois não são sinônimos exatos, são as duas faces da mesma coisa: **invariante** diz *o que a coisa é* (uma verdade que tem de valer sempre); **inegociável** diz *como se trata* (não está em discussão). A postura é consequência da propriedade — como não tem nível, não há o que negociar. |
 | **Invariante** | Coisa que **tem que ser verdade**. Não tem nível, custa zero quando está certo, não escala com o projeto, e **não tem campo no contrato**. Oposto de *processo* — mas o nível de processo que a instância declarou vira invariante dela (`PRINCIPLES.md` II.1). |
 | **Processo** (*nível de*, `process_level:`) | Trabalho que se escolhe fazer — **quanto do método o projeto roda**. Tem nível, custa token toda vez, escala com o projeto, e é declarado no contrato: `minimal` · `standard` · `full`. *O teste:* complete "esse projeto é pequeno, então pode ficar assim"; se faz sentido é processo, se soa absurdo é *invariante* (verbete acima). **Chamava-se "cerimônia" até 11/09/2026** — trocado porque em ágil *cerimônia* é ritual (daily, planning, review, retro), e não é disso que o campo trata. |
+| **Subprojeto** (do harness) | Projeto aninhado em `apps/<app>/`, com contrato e grafo próprios, sem épicos: declara `parent_epic` no contrato e organiza as stories por release ([[requirements-graph]]). Projeto filho com repositório próprio não é subprojeto. |
 
 ## Identidade e documentos do projeto
 
@@ -69,6 +70,7 @@ está na última seção, separado de propósito.
 | **Roadmap** (`ROADMAP.md`) | O **HOW** da [[base-concept|cadeia de intenção]]: os **resultados** que o produto persegue, em Now / Next / Later — quem sente, hoje, medida e solução ou opções por item; sem data, sem estado. "Pronto" é a medida mover, não o trabalho terminar (v0 em 17/09/2026). |
 | **Tag de categoria** (`tags::`) | A classificação de um **resultado** do `ROADMAP.md` e de um **épico** do PRD: de 1 a 3 tags por resultado (`tags:: #visual-management`), em inglês e kebab-case; o épico herda as do resultado que serve e pode somar até 3 próprias. Vocabulário livre: o sensor do grafo confere formato e quantidade (regra `tags`). Serve para filtrar e agrupar resultados por categoria na gestão visual. Ver [[requirements-graph]]. (MJRP, 2026-10-06) |
 | **Visão** (`VISION.md`) | O **WHERE** da [[base-concept|cadeia de intenção]]: o horizonte a alcançar, uma instanciação do propósito. O documento que a carrega é o [[vision-document]]. |
+| **Wireframe** (`design/wireframes/`) | A tela de uma versão do protótipo em caixas, com os IDs do inventário: `design/wireframes/<name>-vN-<screen>.png`. Toda versão tem o de todas as telas (hook `commit-msg`, doctor W14). |
 
 ## Contexto e memória
 
@@ -80,11 +82,11 @@ está na última seção, separado de propósito.
 | **Contexto (memória de trabalho)** | O conjunto de tokens na janela do modelo numa chamada. Finito, reconstruído a cada turno, degrada conforme cresce (*context rot*). Distinto de memória, que é o que persiste fora da janela. *(Anthropic; CoALA)* |
 | **Custo fixo de sessão** | O que se paga antes de qualquer trabalho começar: o contexto carregado mais as descriptions residentes. É falha de *select*, não de memória — e por *context rot* o excesso é pior que inútil. A medição atual sai do `doctor`, não deste documento. |
 | **Memória (longo prazo)** | O que persiste fora da janela — arquivos, banco, pesos — e precisa ser *recuperado* para virar contexto. Memória é fonte de contexto, não a mesma coisa. Tipos: episódica, procedural, semântica *(CoALA)* + decisória, de usuário *(Kipper)*. |
-| **Memória aprendida** | O que o **agente** descobriu trabalhando e guardou sem ser mandado — correções do Zé, decisões de meio de sessão, achados sobre o próprio harness. `MEMORY.md`, **acrescenta** com data e hora (ADR-0005). É o único tipo que o humano não escreve. |
+| **Memória aprendida** | O que o **agente** descobriu trabalhando e guardou sem ser mandado — correções do MJRP, decisões de meio de sessão, achados sobre o próprio harness. `MEMORY.md`, **acrescenta** com data e hora (ADR-0005). É o único tipo que o humano não escreve. |
 | **Memória ativa** | Onde o trabalho está: foco, próximo passo, bloqueios. Vive na seção `## Now` do `MEMORY.md`, quatro blocos com ponteiros, **sobrescrita** a cada bloco de trabalho (ADR-0006). É o que tem que sobreviver à compactação. *(Cline Memory Bank; Anthropic memory tool)* |
 | **Memória de longo prazo** (escolha do MJRP) | As fontes de agentes (IBM) assumem banco vetorial; o MJRP escolheu **arquivos e wiki com recuperação sob demanda** (`MEMORY.md`, `docs/log.md`, páginas com índice) — divergência deliberada, não lacuna. Ver [[memory-architecture]]. (2026-10-07 18:38) |
 | **Memória de trabalho** | Sinônimo de contexto — o que está na janela agora. Ver *Contexto*. |
-| **Memória de usuário** | Como o Zé quer as coisas. Casa: `~/.claude/CLAUDE.md`, nível de usuário, fora de qualquer repo. Vazia hoje. |
+| **Memória de usuário** | Como o MJRP quer as coisas. Casa: `~/.claude/CLAUDE.md`, nível de usuário, fora de qualquer repo. Vazia hoje. |
 | **Memória decisória** | Por que decidimos X e o que foi descartado. Casa: `docs/decisions/` — um arquivo por decisão, imutável; decisão nova supersede, não edita. |
 | **Memória episódica** | "Experiência de ciclos de decisão anteriores" *(CoALA)* — o que aconteceu. No MJRP, `docs/log.md`, que **acrescenta** por checkpoint. |
 | **Memória procedural** | Como se faz. O CoALA distingue a implícita (nos pesos do modelo) da **explícita, escrita no código do agente** — as skills do MJRP são exatamente isso, distribuídas em dois pacotes: o do ciclo de software e o toolkit, que usa o mesmo mecanismo fora dele. |
@@ -156,6 +158,7 @@ está na última seção, separado de propósito.
 |---|---|
 | **[A prática de ADR](adr-practice.md)** | Uma **ADR** registra uma decisão grande — a que tem alternativas, custos e consequências que sobrevivem a quem a tomou. |
 | **[Agente e agêntico — os conceitos](agents-agentic-concepts.md)** | Um **agente** é software que não apenas responde: decide e age. |
+| **[Architecture Review — o cânone da crítica de arquitetura](architecture-review.md)** | A **Architecture Review** é a passada que julga uma decisão de arquitetura — uma ADR em `Proposed`, os esqueletos `arch.md` e `data-model.md`, a `constitution.md` — ou o código no portão de um marco, contra um checklist externo. |
 | **[Arquitetura de memória](memory-architecture.md)** | A memória do harness é o que persiste **fora da janela** e precisa ser trazido de volta. |
 | **[Biblioteca de paletas MJRP](palette-library.md)** | A **MJRP Personal Palette Library** é o conjunto de paletas curadas para output com a identidade visual pessoal do MJRP — infográficos de reunião, dossiês, decks, site pessoal. |
 | **[Cânone de design](design-canon.md)** | O **cânone de design** é o corpo de referência externo que fundamenta as regras de UX, UI e conteúdo explicativo do MJRP — 23 fontes fichadas em `docs/wiki/sources/`, organizadas em oito disciplinas, cada regra com um **ID estável** que as skills de design citam em vez de recitar. |
@@ -207,3 +210,7 @@ como se existissem**.
 | **Roteamento de modelo** | Tarefa diferente, modelo diferente — declarado no contrato, nunca escolhido em runtime. *(proposto)* |
 | **Rubrica** | O critério de avaliação escrito antes do mecanismo, amarrado a um limiar de utilidade. *(proposto)* |
 | **Validação por schema** | Tipos na porta, semântica no livro-razão: marker e frontmatter validados contra schema, não lidos com regex. *(proposto)* |
+
+## History
+
+- **2026-10-09 20:55** · Revisão geral de 2026-10-09: "MJRP", não "Zé", no texto vivo; entram **Subprojeto** (do harness) e **Wireframe**, na parte escrita à mão — não têm página própria, então não saem do bloco do `gen_terms.py`.

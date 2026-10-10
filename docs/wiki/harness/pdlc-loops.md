@@ -7,12 +7,12 @@ status: em formação
 atualizado: 2026-10-09
 fontes: [kernel/ways-of-working/product-discovery, kernel/ways-of-working/loop-engineering-concept, kernel/design/sketch-vs-prototype, kernel/roadmap/requirements-graph, wiki/sources/2026-10-07-mjrp-product-discovery-handbook.md, wiki/sources/2026-10-07-mjrp-loop-engineering-handbook.md, wiki/sources/2026-10-07-mjrp-agentic-ai-handbook.md]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b774b53 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte 99b47e5 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # PDLC em loops — Intake, Discovery, Delivery, Learn
 
 > Kernel · página de processo · criada 2026-10-07 · nasce da proposta `design/proposals/pdlc-loop-engineering-proposal.md`
-> (decisões do MJRP de 2026-10-07, 18:02 a 18:30) · diagrama oficial: `design/diagrams/ways-of-working/2026-10-09-1318-pdlc-loops-v4.png`
+> (decisões do MJRP de 2026-10-07, 18:02 a 18:30) · diagrama oficial: `design/diagrams/ways-of-working/2026-10-09-2121-pdlc-loops-v5.png`
 > (os loops no topo; o fluxo dos artefatos e das skills embaixo) · substitui a numeração de fases (0 · 1a · 1b · 2 · 2→3 · 3 · 4 · 5),
 > que as skills ainda usam até migrarem — a §11 traduz.
 
@@ -44,7 +44,10 @@ Não é fase: é onde os loops rodam, montada uma vez (`mjrp-pdlc-bootstrap`) e 
 | Intenção | `VISION.md`, `PRINCIPLES.md`, `constitution.md` |
 | Guias | kernel e skills |
 | Sensores | `doctor.py`, sensores do contrato, `daily-checks/` |
-| Arquitetura | `arch.md`, `data-model.md`, `design-system.md` — quando prontos, liberam o Fast track |
+| Arquitetura | `arch.md`, `data-model.md` (ADR aceita pelo humano depois da crítica sem P0), `design-system.md` — quando prontos, liberam o Fast track |
+
+A fundação não produz a arquitetura: o esqueleto (`arch.md`, `data-model.md`) nasce no fim do Discovery · Enquadrar
+(§3), e o `design-system.md` no Desenhar. Daí em diante eles moram aqui, e cada Plan os refina.
 
 ## 2. Intake — a porta de entrada e as trilhas
 
@@ -60,7 +63,7 @@ Intake é a pré-venda (captar a oportunidade, estimar, mandar proposta) — val
 | **Fast track** | arquitetura e design system prontos, sem risco novo | protótipo rápido → requisitos Ready tirados do inventário → Delivery |
 | **Fix** | bug ou ajuste dentro do contrato | direto ao Delivery |
 
-A elegibilidade do Fast track se confere por máquina (arquitetura aprovada, design system existe, resultado no ROADMAP);
+A elegibilidade do Fast track se confere por máquina (ADR de arquitetura `Accepted`, depois da crítica sem P0 aberto; design system existe; resultado no ROADMAP);
 o sensor diz se cabe, o humano escolhe.
 
 ## 3. Loop Discovery — o que construir
@@ -68,20 +71,26 @@ o sensor diz se cabe, o humano escolhe.
 Interativo; o avaliador é o humano, com o juiz de UX. Pelas fontes de produto (Cagan, Torres, Perri, Olsen), **design é
 Discovery**: as três estações são uma só volta.
 
-1. **Explorar** — prototipação rápida, ligada por padrão, pode pular (sketch-vs-prototype). Saída: `design/inception/`
+1. **Explorar** — prototipação rápida, ligada por padrão, pode pular ([[sketch-vs-prototype]]). Saída: `design/inception/`
    vN, `inception-notes.md` e, na mesma rodada, a descrição da tela (texto, inventário com o wireframe em
    `design/wireframes/`, `info-arch.md`). **A tela e a descrição dela são uma atividade só**, de uma dona só
-   (`mjrp-designing-ui`) — não etapas em sequência.
+   (`mjrp-designing-ui`) — não etapas em sequência. Todo commit que traz versão nova em `design/inception/` traz junto o
+   `info-arch.md` e os wireframes de todas as telas da versão (hook `commit-msg`, doctor W14).
 2. **Enquadrar** — Rapid × Full ([[product-discovery]]): problema, resultado e medida, os quatro riscos como teste, a
    premissa mais arriscada, matar · iterar · avançar. **A entrada principal é o protótipo aprovado e o seu inventário**; cada item termina numa **função do produto**
    (declarada no `VISION.md`: informar, ajudar a decidir, agir…) ou num **resultado** — informação é produto mesmo sem
-   mover resultado —, ou é cortado com motivo.
+   mover resultado —, ou é cortado com motivo. **No fim do Enquadrar, a arquitetura:** ADR `Proposed` + esqueletos
+   (`arch.md`, `data-model.md`) por `mjrp-designing-architecture` → crítica (`mjrp-critiquing-architecture`, troca de
+   chapéu declarada ou agente separado; critérios em [[architecture-review]]; relatório em `reports/audits/`) → sem P0, o
+   humano aceita.
 3. **Desenhar** — a tela e a descrição dela convergem juntas (`info-arch.md`, com o inventário completo e as lacunas) ·
    o sistema visual (`design-system.md`), aplicado quando a estrutura assentou · o protótipo julgado
    (`design/prototypes/` + auditoria de UX sem P0).
 
 **Saída:** requisitos Ready que cobrem o inventário do protótipo — todo item com destino (coberto, evoluído, cortado com
-motivo). **Verificador:** o humano e o juiz de UX (LLM de apoio, nunca juiz único) + os sensores do inventário e do grafo.
+motivo) — e, quando há UI, o `design-system.md` com a identidade que o protótipo aprovado usa. **Verificador:** o humano, o
+juiz de UX e o crítico de arquitetura (LLMs de apoio, nunca juízes únicos) + os sensores do inventário (W11), do protótipo
+× info-arch × wireframes (W14, `commit-msg`), do grafo e do sistema visual.
 
 ## 4. O contrato
 
@@ -127,12 +136,16 @@ medida do `ROADMAP.md` mexeu?) → kaizen ([[harness-kaizen]]: a lição vai par
 | Loop | Papéis (skill de hoje) |
 |---|---|
 | Intake | triador (`mjrp-structuring-requests`, `mjrp-pdlc`) |
-| Discovery | designer de UI — a tela e a descrição dela, numa atividade só (`mjrp-designing-ui`) · coach de produto (`mjrp-coaching-pm`) · analista (`mjrp-writing-reqs`) · designer de identidade (`mjrp-defining-design-systems`) · juiz de UX (`mjrp-critiquing-ux`) · arquiteto (`mjrp-designing-architecture`) |
+| Discovery | designer de UI — a tela e a descrição dela, numa atividade só (`mjrp-designing-ui`) · coach de produto (`mjrp-coaching-pm`) · analista (`mjrp-writing-reqs`) · designer de identidade (`mjrp-defining-design-systems`) · juiz de UX (`mjrp-critiquing-ux`) · arquiteto (`mjrp-designing-architecture`) · crítico de arquitetura (`mjrp-critiquing-architecture`, troca de chapéu declarada ou agente separado) · registro (`mjrp-recording-decisions`, ADR `Proposed`) |
 | Contrato | analista (`mjrp-writing-reqs`, Ready) · registro (`mjrp-recording-decisions`) · gate (`mjrp-ensuring-sdd`) |
-| Delivery | especificador (`mjrp-specifying-sdd-artifacts`) · executor (`mjrp-implementing-tasks`, `mjrp-debugging`) · verificador (`mjrp-ensuring-sdd`, `mjrp-assessing-code-quality`) |
+| Delivery | especificador (`mjrp-specifying-sdd-artifacts`) · arquiteto (`mjrp-designing-architecture`, escolha arquitetural no Plan, com a crítica antes do aceite) · executor (`mjrp-implementing-tasks`, `mjrp-debugging`) · verificador (`mjrp-ensuring-sdd`, `mjrp-assessing-code-quality`; `mjrp-critiquing-architecture` no portão do marco) |
 | UAT | QA (`mjrp-ensuring-quality`) · documentador (`mjrp-syncing-docs`) |
-| Learn | auditor (`mjrp-auditing-docs`) · kaizen (`mjrp-crafting-skills`, `mjrp-recording-decisions`) |
+| Learn | auditor (`mjrp-auditing-docs`) · documentador (`mjrp-syncing-docs`, achado com evidência fora do contrato) · crítico de arquitetura (`mjrp-critiquing-architecture`, deriva) · kaizen (`mjrp-crafting-skills`, `mjrp-recording-decisions`) |
 | Sempre | orquestrador (`mjrp-pdlc`) · `mjrp-pdlc-onboarding` (lê o estado) · `mjrp-saving-context` (grava o estado) |
+
+Os dois críticos — o juiz de UX e o crítico de arquitetura — seguem a mesma regra de separação: a passada que julga
+nunca se mistura com a que produz. Roda por troca de chapéu declarada (mesmo agente) ou num agente separado, que
+recebe só a skill e os artefatos; a auditoria diz qual das duas.
 
 Plugar um agente é preencher a vaga, com a governança da IA agêntica:
 identificador por agente, log de atividade, interrupção sem corromper o estado, humano no alto impacto.
@@ -142,7 +155,7 @@ identificador por agente, log de atividade, interrupção sem corromper o estado
 | Etapa | Lê | Escreve |
 |---|---|---|
 | Intake | pedido do MJRP, `uat.md`, `daily-checks/`, lição do Learn | item triado com a trilha, `prd.md` § Candidatos, `docs/log.md` |
-| Discovery | `VISION.md`, `PRINCIPLES.md`, `ROADMAP.md`, `prd.md`, `constitution.md`, `arch.md`, `design-system.md`, o item | `design/inception/`, `design/wireframes/`, `inception-notes.md`, `ROADMAP.md` (^OUT, medida, tags), `prd.md` (épicos, fora de escopo), `info-arch.md` (inventário, ^estados), `design-system.md`, `design/prototypes/` + auditoria, `requirements/` (Backlog → Ready), `arch.md` + `data-model.md` |
+| Discovery | `VISION.md`, `PRINCIPLES.md`, `ROADMAP.md`, `prd.md`, `constitution.md`, `arch.md`, `design-system.md`, o item | `design/inception/`, `design/wireframes/`, `inception-notes.md`, `ROADMAP.md` (^OUT, medida, tags), `prd.md` (épicos — no subprojeto do harness, as stories por release; fora de escopo), `info-arch.md` (inventário, ^estados), `design-system.md`, `design/prototypes/` + auditoria, `requirements/` (Backlog → Ready), `docs/decisions/NNNN-*.md` (`Proposed`), `arch.md` + `data-model.md`, `reports/audits/` (UX e arquitetura) |
 | Contrato | `requirements/` Ready, `info-arch.md`, inventário com destino | decisão no `docs/log.md`, `gates:` opcionais |
 | Delivery | `requirements/` Ready, `arch.md`, `data-model.md`, `design-system.md`, `constitution.md` | `features/F-xx/spec.md`, `plan.md`, `tasks.md`, `src/` + `tests/`, evidência no nó (`delivered_by`), PR |
 | UAT | o entregue rodando, `requirements/` | `uat.md`, nó Accepted |
@@ -174,6 +187,9 @@ concluída**.
 
 ## History
 
+- **2026-10-09 21:23** · Diagrama oficial passa à v5 (`2026-10-09-2121-pdlc-loops-v5`): a v4 com a revisão geral — a ADR passa pelo crítico de arquitetura antes do aceite, todo protótipo vem com info-arch e wireframes (guarda), `design-system.md` sai do Desenhar e entra no Contrato, requisito `<ID>-<slug>.md`. A v4 fica como histórico.
+- **2026-10-09 20:55** · Revisão geral de 2026-10-09: o esqueleto da arquitetura nasce no fim do Enquadrar (não na fundação), com ADR `Proposed` e a crítica (troca de chapéu declarada ou agente separado) antes do aceite; o Fast track pede ADR `Accepted`; a saída da Discovery inclui o `design-system.md` quando há UI (a lacuna do Control Center); o guarda protótipo × info-arch × wireframes (W14); papéis e artefatos acertados.
+- **2026-10-09 19:58** · O arquiteto ganhou um crítico: `mjrp-critiquing-architecture` (Reviewer) julga a ADR em `Proposed` e os esqueletos antes do aceite do humano, e o código no portão do marco — sempre num agente que não desenhou (pedido do MJRP; a Architecture Review saiu da `mjrp-designing-architecture`).
 - **2026-10-09 13:23** · Diagrama oficial passa à v4 (`2026-10-09-1318-pdlc-loops-v4`): a v3 com o kaizen do design — Desenhar = a tela e a descrição dela,
   `designing-ui` no lugar das quatro skills de tela, `design/wireframes/` entre o que a Discovery escreve. A v3 fica como histórico.
 - **2026-10-09 13:04** · Kaizen do design (decisões do MJRP, 2026-10-09): a tela e a descrição dela (texto, inventário com wireframe,
@@ -192,5 +208,5 @@ concluída**.
 
 ## Related
 
-[[product-discovery]] · sketch-vs-prototype · [[loop-engineering-concept]] · [[requirements-graph]] ·
-[[harness-elements]] · [[harness-kaizen]] · [[git-governance]]
+[[product-discovery]] · [[sketch-vs-prototype]] · [[loop-engineering-concept]] · [[requirements-graph]] ·
+[[harness-elements]] · [[harness-kaizen]] · [[git-governance]] · [[architecture-review]] · [[adr-practice]]

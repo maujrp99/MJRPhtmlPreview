@@ -4,10 +4,10 @@ aliases: [product-discovery, discovery, enquadrar, FASE 1b, rapid discovery, ful
 summary: o processo da estação Enquadrar da Discovery do MJRP — Rapid (cinco passos essenciais, iterativo com o LLM) e Full (o Rapid mais técnicas que o PM marca no início), os quatro riscos transformados em teste, a decisão matar · iterar · avançar e onde cada saída mora no grafo do projeto
 tags: [kernel, pdlc, discovery, produto]
 status: em formação
-atualizado: 2026-10-07
+atualizado: 2026-10-09
 fontes: [originals/product-discovery-handbook/2026-10-07-handbook-v0.md, originals/product-discovery-handbook/2026-10-07-handbook-v1.md, wiki/sources/2026-10-07-mjrp-product-discovery-handbook.md, kernel/roadmap/requirements-graph, kernel/design/sketch-vs-prototype]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b774b53 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte 99b47e5 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # Product Discovery — do problema à decisão (Rapid × Full)
 
@@ -34,9 +34,10 @@ PM escolhe no início). É uma estação aberta: o processo oferece, o PM decide
   15 min) são padrão recomendado e ajustável.
 - **Quem decide.** O PM decide o modo, as técnicas, quanto basta em cada passo e a decisão final. O agente propõe, pergunta,
   registra e lembra — não fixa número de rodadas, fidelidade nem condição de parada.
-- **A entrada principal é o protótipo aprovado.** Antes do passo 1, o coach monta o **inventário do protótipo** — cada
-  função que a tela mostra, uma linha, em `info-arch.md` § *Inventário do protótipo* — e cada item termina ligado a um
-  resultado ou cortado pelo PM com motivo. O resultado e a medida cobrem o que o protótipo aprovado mostra. Pular isso é
+- **A entrada principal é o protótipo aprovado e o seu inventário** — escrito pela `mjrp-designing-ui` na mesma rodada
+  da tela (`info-arch.md` § *Inventário do protótipo*, com os wireframes em `design/wireframes/`). O coach lê, manda
+  escrever se faltar, e cada item termina numa função do produto (do `VISION.md`) ou num resultado, ou é cortado pelo PM
+  com motivo. O resultado e a medida cobrem o que o protótipo aprovado mostra. Pular isso é
   escrever resultados e requisitos que deixam de fora o que o PM já aprovou (o furo de 2026-10-07).
 - **Um tema por vez, com candidatos.** Em cada passo o coach traz perguntas ou respostas candidatas, tiradas do que já existe
   (as Inception Notes do Explorar, o ROADMAP, o log), para o PM marcar e completar — não pede lista do zero.
@@ -144,7 +145,7 @@ Não é portão: é o que o processo recomenda ter claro antes de seguir para o 
 5. Cada épico serve exatamente um resultado (`serves::`).
 6. O fora de escopo está explícito — a "coisa principal" separada do resto.
 7. Existe um critério para abortar, combinado antes.
-8. Todo item do inventário do protótipo aprovado tem destino: ligado a um resultado (e, depois, a um requisito) ou cortado com motivo.
+8. Todo item do inventário do protótipo aprovado tem destino: ligado a uma função do produto ou a um resultado (e, depois, a um requisito) ou cortado com motivo.
 
 Quando o produto vai **escalar** para outras pessoas, entram também: a amostra de um superada (entrevistas fora do PM), o
 problema qualificado na matriz (Vencedores ou Nicho) e a usabilidade testada com o público.
@@ -160,8 +161,8 @@ problema qualificado na matriz (Vencedores ou Nicho) e a usabilidade testada com
 | Resultado, medida e tags | `ROADMAP.md` (`^OUT-xx`, `tags::`) | `mjrp-coaching-pm` |
 | Premissas e desenho do teste | `docs/specs/inception-notes.md` e `docs/log.md` | `mjrp-coaching-pm` |
 | Decisão (matar · iterar · avançar) | `docs/log.md`, com data e hora | o PM decide, o agente registra |
-| Épicos e fora de escopo | `docs/specs/prd.md` | `mjrp-coaching-pm` |
-| Inventário do protótipo aprovado | `docs/specs/info-arch.md` § *Inventário do protótipo* | `mjrp-coaching-pm` cria antes do passo 1; o Desenhar completa |
+| Épicos e fora de escopo | `docs/specs/prd.md` (no subprojeto do harness: releases, sem épicos) | `mjrp-coaching-pm` |
+| Inventário do protótipo aprovado | `docs/specs/info-arch.md` § *Inventário do protótipo* | `mjrp-designing-ui`, na mesma rodada do protótipo; o coach lê e liga cada item |
 | Requisitos | `docs/specs/requirements/` | `mjrp-writing-reqs` (no nível do problema aqui; Ready no contrato) |
 
 ## Anexo A · Casos citados nos handbooks
@@ -187,6 +188,7 @@ problema qualificado na matriz (Vencedores ou Nicho) e a usabilidade testada com
 
 ## History
 
+- **2026-10-09 20:55** · Revisão geral de 2026-10-09: o inventário do protótipo é escrito pela `mjrp-designing-ui` na mesma rodada da tela (com os wireframes); o coach lê, manda escrever se faltar e liga cada item a uma função do produto ou a um resultado; no subprojeto do harness o `prd.md` organiza por release, sem épicos.
 - **2026-10-07 20:29** · Onda E do PDLC em loops (`design/proposals/pdlc-loops-migration-plan.md`): a numeração antiga de fases deu lugar às estações e ao contrato de [[pdlc-loops]] §11.
 - **2026-10-07 18:40** · #harness-kaizen: o protótipo aprovado e o seu inventário viram a entrada principal (antes do passo 1); o checklist ganha o item 8 (todo item com destino) e a tabela, onde o inventário mora. Origem: na Discovery do Control Center o coach partiu das 7 perguntas e deixou de fora abas que o MJRP tinha aprovado no protótipo v3.3. O processo vive agora dentro do loop Discovery de [[pdlc-loops]] (o *Enquadrar*).
 

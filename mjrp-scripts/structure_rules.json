@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte b774b53 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte 99b47e5 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "The single declaration of structure by nature (ADR-0014). Vendored to every project with the kernel; structure_check.py, the doctor (W9), the pre-commit and the PreToolUse hook all read THIS file. Edit here, in the harness, never in a copy.",
   "version": "2026-10-09",
   "rule_of_thumb": "agente precisa ler para saber o que é verdade → docs/ · resultado de olhar o projeto → reports/ · ainda sendo decidido ou mostrado → design/ · não é texto para gente → data/",
@@ -218,6 +218,10 @@
   "name_patterns_scope": [
     "docs/specs"
   ],
+  "name_patterns_exempt": [
+    "^(s|uc|ea|nfr)-\\d{2,}(-[a-z0-9]+)*\\.md$"
+  ],
+  "_name_patterns_exempt": "MJRP, 2026-10-09: requirement files are <ID>-<slug>.md; the slug is the English title and may name a prototype or a handoff as its subject, not as the file's nature",
   "data_extensions": [
     ".xlsx",
     ".xls",

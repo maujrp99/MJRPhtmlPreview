@@ -1,4 +1,4 @@
-<!-- cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte b774b53 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte 99b47e5 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # PRINCIPLES — as regras que regulam a ação no MJRP
 
 > Princípio é **a regra que regula a ação e serve de base ao método**; visão é para onde se vai;
@@ -69,8 +69,9 @@ específico da linguagem ou do framework dele.
 10. **Nenhum código sem spec aprovada.** *(Invariante — o irmão do II.4.)* Specify → Plan → Tasks
     → Implement, sem pular etapa; feature não está pronta até o dono confirmar. Aparecia em cinco
     das sete constituições dos projetos como princípio; o harness tratava como processo. É
-    princípio. *O teste:* existe `spec.md` aprovada para o que está sendo implementado — é
-    binário, não tem nível.
+    princípio. *O teste:* existe `spec.md` que passou na sua checagem para o que está sendo
+    implementado — aprovada pelo humano onde o contrato liga `gates:`; o padrão é aprovar o contrato (requisitos
+    Ready). É binário, não tem nível.
 
 11. **Assuma a responsabilidade.** Erro que acontece se assume com honestidade, e no lugar da
     desculpa vem a opção acionável. *O teste:* a frase começa com o que aconteceu, não com o
@@ -97,7 +98,8 @@ específico da linguagem ou do framework dele.
     especificar, não confirmar que ela renderiza depois de pronta; o mesmo cânone julga as duas
     pontas. *O teste:* todo estado de tela para o qual aponta um requisito Ready aparece no
     `shows::` de um protótipo visto e aprovado pelo dono, datado, com o veredito do juiz (o sensor
-    do grafo confere) — sem isso, a feature não avança mesmo com REQs certos.
+    do grafo confere) — sem isso, a feature não avança mesmo com REQs certos; e todo commit que traz versão nova
+    do protótipo traz o `info-arch.md` e os wireframes de todas as telas (hook `commit-msg`, doctor W14).
 
 14. **Segredo nunca no código.** Chave de API, token, senha e credencial vêm do ambiente — variável
     de ambiente, `.env` fora do versionamento, secret manager ou as propriedades do script — e

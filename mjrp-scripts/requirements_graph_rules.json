@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte b774b53 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte 99b47e5 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "Single declaration of the requirements graph (S-63, kernel page requirements-graph). The sensor reads this file; the kernel page explains it for humans. Edges are written in one direction only; the inverse is computed. Each edge is enforced only from the status declared in 'enforced_from' (lesson of SDD_chain_artifacts_check: checking every pair everywhere produced 366 false positives).",
   "version": 1,
   "paths": {
@@ -10,7 +10,16 @@
     "info_arch": "docs/specs/info-arch.md",
     "behavior": "docs/specs/behavior.md",
     "uat": "docs/specs/uat.md",
-    "nfr_folder": "nfr"
+    "nfr_folder": "nfr",
+    "design_system": "docs/specs/design-system.md"
+  },
+  "file_name": {
+    "_about": "MJRP, 2026-10-09: a requirement file is <ID>-<slug>.md (S-31-decide-how-data-reaches-the-screen.md). The ID is the identity (frontmatter `id:` and `aliases: [ID]`); the slug is the English title in lowercase ASCII kebab-case, at most slug_max characters, set at birth and frozen (renaming is explicit: req_file_names.py --reslug). Links and embeds name the whole stem, the ID is the display text: [[S-31-decide-how-data-reaches-the-screen|S-31]]. slug_required/alias_required stay false during the migration; a file with no slug has the ID as its whole stem, so [[S-31]] is the right link to it.",
+    "pattern": "^(?P<id>(S|UC|EA|NFR)-\\d{2,})(?:-(?P<slug>[a-z0-9]+(?:-[a-z0-9]+)*))?$",
+    "slug_max": 50,
+    "slug_required": false,
+    "alias_required": false,
+    "link_form": "stem"
   },
   "edge_syntax": {
     "file_node": "YAML frontmatter key in the node's own file: `epic: \"[[prd#^EP-01]]\"`, lists for many targets",
@@ -256,6 +265,18 @@
     {
       "id": "node_folder",
       "text": "requirement files live in the folder their epic declares with folder:: in prd.md (ep-NN-<english-slug>/), NFRs in nfr/; dormant while no epic declares folder:: (S-123, MJRP 2026-10-05)"
+    },
+    {
+      "id": "node_slug",
+      "text": "a requirement file is named <ID>-<slug>.md: the slug is lowercase ASCII kebab-case, at most file_name.slug_max characters; required when file_name.slug_required (MJRP, 2026-10-09)"
+    },
+    {
+      "id": "link_stem",
+      "text": "with file_name.link_form = stem, a link or embed to a requirement names the node's whole file stem ([[S-31-decide-how-data-reaches-the-screen|S-31]]); a bare ID or an outdated slug is flagged (Obsidian resolves file names, not aliases) (MJRP, 2026-10-09)"
+    },
+    {
+      "id": "design_system_exists",
+      "text": "a Ready requirement that points to a screen state (info-arch.md, nested included) requires docs/specs/design-system.md in the same project as that info-arch.md -- the visual identity is decided before the contract (audit C F10, MJRP 2026-10-09)"
     },
     {
       "id": "bilingual",

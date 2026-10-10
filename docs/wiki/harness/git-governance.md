@@ -4,10 +4,10 @@ aliases: [git-governance, governança de git, conventional commits, convenção 
 summary: como se commita, ramifica, integra e marca versão num projeto do harness — tipos e formato do commit, os commits de cada estação do Delivery, branch e PR por feature, o merge do agente e suas condições, tags, brownfield, e o que os hooks exigem
 tags: [kernel, git, processo]
 status: firme
-atualizado: 2026-10-07
+atualizado: 2026-10-09
 fontes: [conventionalcommits.org, mjrp-deployer (aposentada, S-76), 1999-fowler-refactoring]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b774b53 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte 99b47e5 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 **Governança de git** é o conjunto de regras que faz o histórico de um projeto ser legível por quem vem depois —
@@ -85,12 +85,17 @@ verificador passa.
    feature nova.
 
 ### O que os hooks exigem
-- **`commit-msg`:** todo commit traz uma entrada nova no `docs/log.md` (o registro da sessão); ir por cima
-  (`--no-verify`) é decisão do humano, nunca do agente.
-- **`pre-commit`:** a estrutura por natureza e as contradições do grafo de requisitos nos nós tocados.
+- **`commit-msg`:** todo commit traz uma entrada nova no `docs/log.md` (o registro da sessão); e todo commit que traz
+  versão nova ou mudada em `design/inception/<name>-vN.html` traz o `info-arch.md` e os wireframes de todas as telas da
+  versão. Ir por cima (`--no-verify`, ou o trailer `Prototype-sync: skip — <motivo>`) é decisão do humano, nunca do
+  agente.
+- **`pre-commit`:** a estrutura por natureza (inclusive `design/wireframes/` e `design/diagrams/<tema>/ep-NN/`) e as
+  contradições do grafo de requisitos nos nós tocados.
+- **`post-commit`:** o backup (`backup_repo.py`), sem bloquear.
 - **Duas sessões no mesmo repositório:** commit só por *pathspec* — nunca `git add -A` com outra sessão ativa.
 
 ## History
+- **2026-10-09 20:55** · Revisão geral de 2026-10-09: *O que os hooks exigem* ganhou o guarda do protótipo no `commit-msg` (info-arch e wireframes de todas as telas da versão; o trailer de saída é do humano), as pastas novas da estrutura no `pre-commit` e o `post-commit` do backup.
 - **2026-10-04 17:32** · Nasce da aposentadoria da `mjrp-deployer` (S-76, decisão do MJRP): a governança de git era
   a parte da skill que as outras citavam (`mjrp-dev`, `mjrp-debug`, `mjrp-pdlc`); como regra de todo projeto, mora no
   kernel e chega aos filhos no refresh. A tag de adoção passa a ser `v0-harness-adoption` (a do bootstrap

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte b774b53 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte 99b47e5 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 doctor.py - the computational sensor of the harness.
 
@@ -21,6 +21,18 @@ Usage:
 import argparse, hashlib, json, os, re, shutil, subprocess, sys, time
 from datetime import date, datetime
 from pathlib import Path
+
+
+def sp_today():
+    """Today in Brasília time, not the host's clock (the device bridge and the cloud run in UTC; 2026-10-09)."""
+    from datetime import timedelta, timezone
+    try:
+        from zoneinfo import ZoneInfo
+        tz = ZoneInfo("America/Sao_Paulo")
+    except Exception:
+        tz = timezone(timedelta(hours=-3))
+    return datetime.now(tz).date()
+
 
 try:
     import yaml                                    # when present, it is the one that parses
@@ -524,6 +536,12 @@ def _wiki_targets(root):
     if specs.is_dir():
         for f in list(specs.glob("*.md")) + list((specs / "requirements").rglob("*.md")):  # S-123: one folder per epic
             targets.add(f.stem.lower())
+        # 2026-10-09 (MJRP): a requirement file is <ID>-<slug>.md and links name the whole stem; the bare ID
+        # ([[S-31]]) still resolves here during the transition -- the graph sensor flags it (link_stem)
+        for f in (specs / "requirements").rglob("*.md"):
+            m = re.match(r"((?:S|UC|EA|NFR)-\d{2,})(?=-|$)", f.stem)
+            if m:
+                targets.add(m.group(1).lower())
     for f in root.glob("*.md"):
         targets.add(f.stem.lower())
     return targets
@@ -685,7 +703,7 @@ def _today(cfg):
         from zoneinfo import ZoneInfo
         return datetime.now(ZoneInfo(tz)).date()
     except Exception:
-        return date.today()
+        return sp_today()
 
 
 def _latest_date(text, today):
@@ -816,7 +834,7 @@ def i5_kernel(root, cfg, rep):
     v = k.get("version")
     try:
         vd = v if isinstance(v, date) else datetime.strptime(str(v), "%Y-%m-%d").date()
-        idade = (date.today() - vd).days
+        idade = (sp_today() - vd).days
     except (TypeError, ValueError):
         rep.fail("I5", f"kernel.version inválido ({v!r}) — esperado AAAA-MM-DD", inc)
         return
@@ -1116,7 +1134,7 @@ def f1_wow_growth(root, rep):
     i = texto.find("## Ways of Working")
     if i == -1:
         return
-    hoje = date.today().isoformat()
+    hoje = sp_today().isoformat()
     de_hoje = [l for l in texto[i:].splitlines() if l.startswith("- **" + hoje)]
     if len(de_hoje) > WOW_LINES_PER_DAY_WARN:
         rep.warn("F1", f"## Ways of Working ganhou {len(de_hoje)} linhas datadas de hoje (aviso a "
@@ -1133,7 +1151,7 @@ def f2_gates(cfg, rep):
             rep.fail("F2", f"gate aberto sem data: {g}", inc)
             continue
         d = g["since"] if isinstance(g["since"], date) else datetime.strptime(str(g["since"]), "%Y-%m-%d").date()
-        dias = (date.today() - d).days
+        dias = (sp_today() - d).days
         quem = g.get("owner", "sem dono")
         if dias > sla:
             rep.fail("F2", f"gate '{g.get('id','?')}' aberto há {dias} dias (SLA {sla}), com {quem}", inc)
@@ -1553,7 +1571,7 @@ def w10_sessions(root, rep):
         rep.note("W10", "subprojeto aninhado — travas e sessões são do repo pai")
         return
     locks = _orphan_git_locks(root)
-    hoje = date.today().strftime("%Y%m%d")
+    hoje = sp_today().strftime("%Y%m%d")
     for rel, mins in locks:
         rep.warn("W10", f"trava de git órfã: {rel} (há {mins} min) — se nenhum git estiver rodando, "
                         f"sarar: mv {rel} {rel}.orphan-{hoje}", inc)

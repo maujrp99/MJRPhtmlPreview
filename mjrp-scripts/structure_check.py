@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte b774b53 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte 99b47e5 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 structure_check.py - the structure-by-nature sensor (ADR-0014, EP-09).
 
@@ -56,6 +56,10 @@ def _finding(path, msg, to=None):
 def _suggest(name, rules, profile):
     """Where a misplaced item should go, from its name or extension - or None if unclear."""
     low = name.lower()
+    # 2026-10-09 (MJRP): a requirement file is `<ID>-<slug>.md`; its slug is the English title, which may say
+    # "prototype" or "handoff" about the subject - never about the file's nature
+    if any(re.search(rx, low) for rx in rules.get("name_patterns_exempt", [])):
+        return None
     for pat in rules["name_patterns"]:
         if re.search(pat["regex"], low):
             return pat["to"]

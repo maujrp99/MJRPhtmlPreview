@@ -4,10 +4,10 @@ aliases: [linked-notes-concept, obsidian-like, modelo obsidian, notas ligadas, n
 summary: o modelo de notas atômicas e densamente ligadas que o Obsidian popularizou — de onde vem, os nomes que ele tem, os mecanismos (wikilink, backlink, embed, block ID, MOC) e como o harness o usa como a leitura humana do grafo
 tags: [kernel, conceito, grafo, obsidian, notas]
 status: vivo
-atualizado: 2026-10-04
+atualizado: 2026-10-09
 fontes: [2020-matuschak-evergreen-notes, 2020-milo-linking-your-thinking-maps-of-content, 2026-obsidian-help-internal-links, 2026-04-04-karpathy-llm-wiki]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b774b53 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte 99b47e5 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O modelo **"Obsidian-like"** é organizar conhecimento em **notas atômicas e densamente ligadas**, em arquivos de texto
@@ -47,7 +47,10 @@ associação acima de hierarquia, que é a ponte com [[knowledge-graph-concept]]
 Notas ligadas dão navegação e associação, não **verificação**: um wikilink não diz que tipo de relação é nem se ela
 é permitida. Por isso o harness soma a ontologia ([[knowledge-graph-concept]]) — o tipo da aresta no frontmatter e
 um sensor que confere. Renomear no Obsidian atualiza os links, mas a edição do agente no disco não dispara isso:
-para o agente, a âncora tem de ser estável por construção (o ID como nome do arquivo).
+para o agente, a âncora tem de ser estável por construção: o nome do arquivo começa pelo ID e o slug é congelado ao
+nascer (`S-07-import-the-card-statement.md`). O link leva o nome inteiro, com o ID como texto
+(`S-07`), porque o Obsidian resolve nome de arquivo, não alias; renomear é
+operação explícita do agente (`req_file_names.py --reslug`), que reescreve os links.
 
 ## How MJRP uses it
 - A wiki do harness é uma LLM Wiki: página por conceito, `link` entre páginas, `index.md` como MOC.
@@ -56,6 +59,7 @@ para o agente, a âncora tem de ser estável por construção (o ID como nome do
 - O vault pessoal `MJRPvault` e o site mjrp-lab (digital garden) seguem a mesma família de ideias, fora do harness.
 
 ## History
+- **2026-10-09 20:55** · Revisão geral de 2026-10-09: a âncora estável passa a ser o nome `<ID>-<slug>.md`, com slug congelado ao nascer, link com o nome inteiro e o ID como texto, e renomear como operação explícita (`req_file_names.py --reslug`).
 - **2026-10-04 11:34** · Página criada na S-63 a pedido do MJRP: dar nome e definição ao modelo "Obsidian-like" que o
   grafo de requisitos usa. Fontes fichadas: Matuschak, Milo (LYT), Obsidian Help; Karpathy já estava fichado.
   Zettelkasten (Luhmann/Ahrens), wiki (Cunningham) e transclusão (Nelson) citados sem ficha — candidatos a fichar.

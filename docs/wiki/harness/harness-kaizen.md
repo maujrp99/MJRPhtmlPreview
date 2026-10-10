@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-10-09
 fontes: [2026-claude-code-auto-memory]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b774b53 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte 99b47e5 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O registro do que o harness **não pegou** e do que se aprendeu com isso. Achado e lição moram
@@ -159,7 +159,7 @@ deixando o ponteiro. Lição que só mora aqui é lição que ninguém aplica.
   ux-ui-designer, prompt e lifecycle — todos troca de modal, não reescrita. **Mecanismo:** o
   parecer veio de um subprojeto aninhado (`apps/control-center/docs/harness-feedback/`), que o
   `harness_feedback_check.py` não varria — passou a varrer. Loop inteiro (campo → juiz → parecer
-  → cânone/skill) numa sessão. Fonte: Buxton, sketch-vs-prototype.
+  → cânone/skill) numa sessão. Fonte: Buxton, [[sketch-vs-prototype]].
 
 - **2026-09-14 20:04** · **O template ensinou o erro, e nenhum sensor olhava a metade episódica da
   memória.** O `mjrp-fin-control-2026-27` nasceu às 13:28 pelos **dez passos manuais** da
