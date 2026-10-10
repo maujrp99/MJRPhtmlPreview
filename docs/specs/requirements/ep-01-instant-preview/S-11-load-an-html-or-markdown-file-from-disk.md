@@ -1,0 +1,48 @@
+---
+id: S-11
+aliases: [S-11]
+type: requirement
+format: story
+status: Done
+priority: P1
+epic: "[[prd#^EP-01]]"
+points_to: ["[[behavior#^file-loaded]]"]
+delivered_by: "842ba62"
+---
+# S-11 · Carregar um arquivo HTML ou Markdown do disco
+
+## pt-BR
+
+Como desenvolvedor, eu quero carregar um arquivo HTML ou Markdown do meu disco local via file picker, para que eu não precise abrir o arquivo num editor, copiar o conteúdo e colar manualmente na textarea.
+
+**Acceptance Criteria:**
+- [x] Existe um botão "📂 Open File" (ou ícone equivalente) na toolbar.
+- [x] Ao clicar, o file picker nativo do OS é aberto, filtrado para `.html`, `.htm` e `.md`.
+- [x] O conteúdo do arquivo selecionado substitui o conteúdo atual da textarea.
+- [x] O preview é atualizado automaticamente após o carregamento.
+- [x] O nome do arquivo carregado é exibido em algum lugar da UI (toolbar ou status).
+
+**Priority:** High | **Milestone:** M5 | **Status:** ✅ Done
+
+Comportamento: [[behavior#^file-loaded]] · descrição retroativa do que existe (sem julgamento registrado)
+Entregue por: `842ba62` · feature F03 (Done)
+Origem: `docs/specs/story.md` [US-11] (arquivado em `_archive/2026-10-05-story-md/story.md`)
+
+## en
+
+**Load an HTML or Markdown file from disk**
+
+As a developer, I want to load an HTML or Markdown file from my local disk via a file picker, so that I don't have to open the file in an editor, copy the content and paste it manually into the textarea.
+
+**Acceptance Criteria:**
+- [x] There is a "📂 Open File" button (or equivalent icon) in the toolbar.
+- [x] On click, the OS's native file picker opens, filtered to `.html`, `.htm` and `.md`.
+- [x] The content of the selected file replaces the current content of the textarea.
+- [x] The preview is updated automatically after loading.
+- [x] The name of the loaded file is shown somewhere in the UI (toolbar or status).
+
+**Priority:** High | **Milestone:** M5 | **Status:** ✅ Done
+
+Behavior: [[behavior#^file-loaded]] · retroactive description of what exists (no recorded judgment)
+Delivered by: `842ba62` · feature F03 (Done)
+Origin: `docs/specs/story.md` [US-11] (archived at `_archive/2026-10-05-story-md/story.md`)

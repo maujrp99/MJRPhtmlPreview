@@ -88,50 +88,50 @@ serve (`serves::`), e embute os seus requisitos. Os épicos seguem os quatro obj
 **Não-funcionais** — valem para todas as features e não são importados por nenhuma: cada um é um arquivo
 `docs/specs/requirements/nfr/NFR-xx.md` (vindos de `spec.md` §3 NFR01–NFR04; NFR05–NFR07 eram as stories S-07, S-08, S-09).
 
-![[NFR-01]]
+![[NFR-01-vanilla-architecture-no-build]]
 
-![[NFR-02]]
+![[NFR-02-iframe-isolated-by-sandbox]]
 
-![[NFR-03]]
+![[NFR-03-responsive-layout]]
 
-![[NFR-04]]
+![[NFR-04-no-content-persisted-keys-in-localstorage]]
 
 ### EP-01 · Preview instantâneo
 folder:: ep-01-instant-preview
 serves:: [[ROADMAP#^OUT-01]] ^EP-01
 
-![[S-01]]
+![[S-01-paste-html-and-see-the-preview-instantly]]
 
-![[S-07]]
+![[S-07-see-the-preview-in-full-screen-hiding-the-editor]]
 
-![[S-08]]
+![[S-08-automatically-resolve-images-with-relative-paths]]
 
-![[S-09]]
+![[S-09-keep-sensitive-images-out-of-the-public-repository]]
 
-![[S-10]]
+![[S-10-paste-markdown-with-mermaid-and-see-it-rendered]]
 
-![[S-11]]
+![[S-11-load-an-html-or-markdown-file-from-disk]]
 
 ### EP-02 · Salvar no Google Drive
 folder:: ep-02-google-drive-save
 serves:: [[ROADMAP#^OUT-02]] ^EP-02
 
-![[S-03]]
+![[S-03-save-the-html-to-google-drive-choosing-the-folder]]
 
-![[S-06]]
+![[S-06-configure-google-api-keys-without-exposing]]
 
 ### EP-03 · Salvar localmente e exportar
 folder:: ep-03-local-save-and-export
 serves:: [[ROADMAP#^OUT-03]] ^EP-03
 
-![[S-02]]
+![[S-02-download-the-html-as-a-local-file]]
 
-![[S-04]]
+![[S-04-export-the-rendered-page-as-pdf]]
 
-![[S-05]]
+![[S-05-generate-a-png-image-of-the-rendered-html]]
 
 ### EP-04 · Edição de texto no preview
 folder:: ep-04-inline-text-editing
 serves:: [[ROADMAP#^OUT-04]] ^EP-04
 
-![[S-12]]
+![[S-12-edit-any-piece-of-text-directly-in-the-preview]]

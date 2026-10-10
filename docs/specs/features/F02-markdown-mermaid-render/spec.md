@@ -1,6 +1,6 @@
 ---
 status: Done
-imports: ["[[S-10]]"]
+imports: ["[[S-10-paste-markdown-with-mermaid-and-see-it-rendered]]"]
 ---
 # Specification: M4 — Markdown & Mermaid Render
 

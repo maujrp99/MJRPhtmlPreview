@@ -1,0 +1,44 @@
+---
+id: S-05
+aliases: [S-05]
+type: requirement
+format: story
+status: Done
+priority: P3
+epic: "[[prd#^EP-03]]"
+points_to: ["[[behavior#^png-downloaded]]"]
+delivered_by: "bc00ed3"
+---
+# S-05 · Gerar uma imagem PNG do HTML renderizado
+
+## pt-BR
+
+Como desenvolvedor, eu quero gerar um print/imagem (PNG) do HTML renderizado.
+
+**Acceptance Criteria:**
+- [x] A funcionalidade importa e usa a biblioteca `html2canvas`.
+- [x] O download do arquivo de imagem reflete o visual do iframe.
+- [x] ⚠️ Limitação conhecida: HTML dinâmico (canvas, charts) pode falhar. Documentado em `docs/specs/uat.md` (UAT-001).
+
+**Priority:** Low | **Milestone:** M3 | **Status:** ✅ Done
+
+Comportamento: [[behavior#^png-downloaded]] · descrição retroativa do que existe (sem julgamento registrado)
+Entregue por: `bc00ed3` · feature F01 (Done)
+Origem: `docs/specs/story.md` [US-05] (arquivado em `_archive/2026-10-05-story-md/story.md`)
+
+## en
+
+**Generate a PNG image of the rendered HTML**
+
+As a developer, I want to generate a screenshot/image (PNG) of the rendered HTML.
+
+**Acceptance Criteria:**
+- [x] The feature imports and uses the `html2canvas` library.
+- [x] The downloaded image file reflects the look of the iframe.
+- [x] ⚠️ Known limitation: dynamic HTML (canvas, charts) may fail. Documented in `docs/specs/uat.md` (UAT-001).
+
+**Priority:** Low | **Milestone:** M3 | **Status:** ✅ Done
+
+Behavior: [[behavior#^png-downloaded]] · retroactive description of what exists (no recorded judgment)
+Delivered by: `bc00ed3` · feature F01 (Done)
+Origin: `docs/specs/story.md` [US-05] (archived at `_archive/2026-10-05-story-md/story.md`)

@@ -1,0 +1,56 @@
+---
+id: S-12
+aliases: [S-12]
+type: requirement
+format: story
+status: Done
+priority: P2
+epic: "[[prd#^EP-04]]"
+points_to: ["[[behavior#^preview-edit-mode]]"]
+delivered_by: "842ba62"
+---
+# S-12 · Editar qualquer trecho de texto direto no preview
+
+## pt-BR
+
+Como desenvolvedor, eu quero selecionar qualquer trecho de texto no preview renderizado (palavra, frase, parágrafo ou mais) e digitar a substituição diretamente, para que eu possa fazer correções rápidas sem precisar encontrar o texto no código HTML.
+
+**Acceptance Criteria:**
+- [x] Existe um toggle "✏️ Edit" na toolbar que ativa/desativa o modo de edição.
+- [x] Em Edit Mode, o corpo do iframe se torna editável (`contentEditable=true` no body).
+- [x] O usuário pode selecionar qualquer extensão de texto (click+drag, double-click, Ctrl+A, etc.) e digitar para substituir.
+- [x] O cursor de texto (`text`) indica visualmente que o conteúdo é editável.
+- [x] Um indicador visual sutil (borda, badge, cor de fundo) diferencia o modo Edit do modo View.
+- [x] Ao sair do Edit Mode, o HTML editado é sincronizado de volta para a textarea via serialização do DOM (`innerHTML`).
+- [x] Se o input original era Markdown, o sistema exibe aviso: "Editing will convert Markdown to HTML".
+- [x] Apenas conteúdo de texto é editável — estrutura, imagens e estilos permanecem intactos.
+- [x] Export (Download/Drive/PDF/PNG) funciona normalmente com as edições aplicadas.
+
+**Priority:** Medium | **Milestone:** M5 | **Status:** ✅ Done
+
+Comportamento: [[behavior#^preview-edit-mode]] · descrição retroativa do que existe (sem julgamento registrado)
+Entregue por: `842ba62` · feature F03 (Done)
+Origem: `docs/specs/story.md` [US-12] (arquivado em `_archive/2026-10-05-story-md/story.md`)
+
+## en
+
+**Edit any piece of text directly in the preview**
+
+As a developer, I want to select any piece of text in the rendered preview (word, sentence, paragraph or more) and type the replacement directly, so that I can make quick fixes without having to find the text in the HTML code.
+
+**Acceptance Criteria:**
+- [x] There is an "✏️ Edit" toggle in the toolbar that turns edit mode on/off.
+- [x] In Edit Mode, the iframe body becomes editable (`contentEditable=true` on the body).
+- [x] The user can select any span of text (click+drag, double-click, Ctrl+A, etc.) and type to replace it.
+- [x] The text cursor (`text`) visually signals that the content is editable.
+- [x] A subtle visual indicator (border, badge, background color) tells Edit mode apart from View mode.
+- [x] On leaving Edit Mode, the edited HTML is synced back to the textarea via DOM serialization (`innerHTML`).
+- [x] If the original input was Markdown, the system shows the warning: "Editing will convert Markdown to HTML".
+- [x] Only text content is editable — structure, images and styles stay intact.
+- [x] Export (Download/Drive/PDF/PNG) works normally with the edits applied.
+
+**Priority:** Medium | **Milestone:** M5 | **Status:** ✅ Done
+
+Behavior: [[behavior#^preview-edit-mode]] · retroactive description of what exists (no recorded judgment)
+Delivered by: `842ba62` · feature F03 (Done)
+Origin: `docs/specs/story.md` [US-12] (archived at `_archive/2026-10-05-story-md/story.md`)

@@ -1,0 +1,44 @@
+---
+id: S-09
+aliases: [S-09]
+type: requirement
+format: story
+status: Done
+priority: P1
+epic: "[[prd#^EP-01]]"
+points_to: ["[[behavior#^images-kept-private]]"]
+delivered_by: "4e3662e"
+---
+# S-09 · Manter imagens sensíveis fora do repositório público
+
+## pt-BR
+
+Como desenvolvedor, eu não quero que imagens sensíveis fiquem públicas no repositório GitHub.
+
+**Acceptance Criteria:**
+- [x] Pasta `images/` adicionada ao `.gitignore`.
+- [x] Imagens servidas via Google Drive thumbnail links em produção.
+- [x] Imagens locais funcionam no `localhost` para desenvolvimento.
+
+**Priority:** High | **Milestone:** Session 02/26 | **Status:** ✅ Done
+
+Comportamento: [[behavior#^images-kept-private]] · descrição retroativa do que existe (sem julgamento registrado)
+Entregue por: `4e3662e` · feature F01 (Done)
+Origem: `docs/specs/story.md` [US-09] (arquivado em `_archive/2026-10-05-story-md/story.md`)
+
+## en
+
+**Keep sensitive images out of the public repository**
+
+As a developer, I do not want sensitive images to be public in the GitHub repository.
+
+**Acceptance Criteria:**
+- [x] `images/` folder added to `.gitignore`.
+- [x] Images served via Google Drive thumbnail links in production.
+- [x] Local images work on `localhost` for development.
+
+**Priority:** High | **Milestone:** Session 02/26 | **Status:** ✅ Done
+
+Behavior: [[behavior#^images-kept-private]] · retroactive description of what exists (no recorded judgment)
+Delivered by: `4e3662e` · feature F01 (Done)
+Origin: `docs/specs/story.md` [US-09] (archived at `_archive/2026-10-05-story-md/story.md`)

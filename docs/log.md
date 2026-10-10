@@ -2,6 +2,13 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`. Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-10-09 21:43] session — requisitos com o título no nome do arquivo (<ID>-<slug>.md)
+
+> Participantes: MJRP + Claude (Claude Code) · Branch: main
+> Session: https://claude.ai/code/session_014Njz6sPfb4eXwKy8bvGxqq
+
+Revisão geral do harness de 9/10, aplicada aqui: os 16 arquivos de requisito passam a `<ID>-<slug>.md` (o slug é o título em inglês, encurtado por julgamento quando passa de 50 caracteres), com `aliases: [<ID>]`; os links e embeds do PRD e das specs usam o nome inteiro com o ID como texto (`[[S-07-…|S-07]]`). Feito por `req_file_names.py --map --apply` do harness; backup em `_backups/req-file-names-20261009-2143/`. Grafo sem achado novo. O kernel foi atualizado antes, no mesmo dia.
+
 ## [2026-10-05 18:53] session — cópias antigas de skills arquivadas; o GEMINI.md aponta para as skills do harness
 
 > Participantes: MJRP + Claude (Cowork, sessão do harness) · Branch: main

@@ -1,6 +1,6 @@
 ---
 status: Done
-imports: ["[[S-11]]", "[[S-12]]"]
+imports: ["[[S-11-load-an-html-or-markdown-file-from-disk]]", "[[S-12-edit-any-piece-of-text-directly-in-the-preview]]"]
 ---
 # Specification: M5 — Load & Edit
 

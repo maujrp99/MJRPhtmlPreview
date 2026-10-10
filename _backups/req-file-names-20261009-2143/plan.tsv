@@ -1,0 +1,16 @@
+NFR-01	NFR-01	NFR-01-vanilla-architecture-no-build
+NFR-02	NFR-02	NFR-02-iframe-isolated-by-sandbox
+NFR-03	NFR-03	NFR-03-responsive-layout
+NFR-04	NFR-04	NFR-04-no-content-persisted-keys-in-localstorage
+S-01	S-01	S-01-paste-html-and-see-the-preview-instantly
+S-02	S-02	S-02-download-the-html-as-a-local-file
+S-03	S-03	S-03-save-the-html-to-google-drive-choosing-the-folder
+S-04	S-04	S-04-export-the-rendered-page-as-pdf
+S-05	S-05	S-05-generate-a-png-image-of-the-rendered-html
+S-06	S-06	S-06-configure-google-api-keys-without-exposing
+S-07	S-07	S-07-see-the-preview-in-full-screen-hiding-the-editor
+S-08	S-08	S-08-automatically-resolve-images-with-relative-paths
+S-09	S-09	S-09-keep-sensitive-images-out-of-the-public-repository
+S-10	S-10	S-10-paste-markdown-with-mermaid-and-see-it-rendered
+S-11	S-11	S-11-load-an-html-or-markdown-file-from-disk
+S-12	S-12	S-12-edit-any-piece-of-text-directly-in-the-preview
