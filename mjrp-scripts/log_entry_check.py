@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte c470187 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte b065d73 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """log_entry_check.py -- every commit brings a new entry in the project log (S-61).
 
 Born 2026-10-03 17:48: in the skills revision, four commits went out with no entry in docs/log.md, and on
@@ -38,7 +38,8 @@ from doctor import log_rel  # the same contract reading as the doctor
 
 ENTRY = re.compile(r"^## \[\d{4}-\d{2}-\d{2} \d{2}:\d{2}\].*$", re.MULTILINE)
 KIND = re.compile(r"^## \[[^\]]+\] *([^\s—]*)")
-KINDS = ("session", "decision", "inventory", "ingest", "harness-feedback")   # the types the logs use
+KINDS = ("session", "decision", "inventory", "ingest", "harness-feedback", "review")   # the types the logs use;
+# review: a critique pass (UX, architecture) pointing to its report — MJRP, 2026-10-09 22:49
 DERIVED_NAMES = ("folder-index.md",)
 DERIVED_DIRS = ("daily-checks/", "_backups/")
 

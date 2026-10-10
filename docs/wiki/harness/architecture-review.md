@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-10-09
 fontes: [originals/architecture-review-handbook/2026-10-09-handbook-v0.md, wiki/sources/2026-10-09-mjrp-architecture-review-handbook.md, kernel/architecture/engineering-canon]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte c470187 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b065d73 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # Architecture Review — o cânone da crítica de arquitetura
 
@@ -34,6 +34,11 @@ nunca recita a regra; quem quer o porquê abre esta página, e quem quer o porqu
 - **Aplica-se quando.** Várias regras do handbook nascem de sistema distribuído (fila, réplica, microsserviço). Elas
   trazem a condição: se o elemento não existe na arquitetura julgada, a regra **não se aplica** — e a auditoria diz isso,
   em vez de inventar o achado ou calar.
+- **Dois eixos** (decisão do MJRP, 2026-10-09 22:30). **Técnico** — as regras do handbook: AD-01…05, MA, DD, CM, RS,
+  IV, VT, SN, mais GV-03 e GV-06; só ele dá o veredito e só ele tem P0. **Higiene da decisão** — AD-06…AD-14 e GV-05,
+  regras de processo (premissas, evidência, alternativas, aplicado antes do aceite, arquivos impactados, restrições
+  escritas): viram notas curtas no fim da auditoria, sem severidade, e nunca bloqueiam o aceite.
+- **Cita-se ID e nome curto** (`IV-03 Dependency Rule`), nunca o ID sozinho.
 - **Origem.** Sem marca, a regra é do handbook. Marcada *(crítica 2026-10-09)*, veio do que a primeira passada real da
   crítica (ADR-0002 do Control Center) precisou e o handbook não tinha.
 
@@ -64,8 +69,10 @@ Os prefixos não colidem com os do [[design-canon]] (HI, DE, CO, CP, IN, AH, RC,
 
 ## AD · Anatomia da ADR
 
-As cinco primeiras são o §2 do handbook: a ADR se escreve com clareza matemática e contratual. As outras nove são o que
-a crítica de 2026-10-09 precisou para julgar uma ADR real.
+As cinco primeiras são o §2 do handbook: a ADR se escreve com clareza matemática e contratual — eixo técnico. As
+outras nove são o que a crítica de 2026-10-09 precisou para julgar uma ADR real — **higiene da decisão**: notas, nunca
+P0, nunca bloqueiam o aceite. No marco, o AD-14 (o código contra as ADRs `Accepted` e a `constitution.md`) é deriva de
+arquitetura, e aí é técnico.
 
 | ID | Regra | Teste (S = passa) |
 |---|---|---|
@@ -82,7 +89,7 @@ a crítica de 2026-10-09 precisou para julgar uma ADR real.
 | **AD-11** | **Premissas verificáveis** *(crítica 2026-10-09)*. Cada premissa da decisão vem com o sinal observável que diria que ela falhou, e com o gatilho que reabre a decisão. | Para cada premissa há um sinal que a desmente e um gatilho de revisão? |
 | **AD-12** | **Nada aplicado antes do aceite** *(crítica 2026-10-09)*. Uma ADR `Proposed` não muda specs, não marca a ADR anterior como substituída e não move código; tudo isso espera o `Accepted` do humano. | Nenhum arquivo reflete a decisão antes do aceite? |
 | **AD-13** | **Arquivos impactados** *(crítica 2026-10-09)*. A lista de arquivos que a decisão muda está completa e bate com o que ela muda — inclusive memória, visão e ponteiros. | A lista de arquivos impactados bate com o que a decisão muda? |
-| **AD-14** | **Restrições respeitadas** *(crítica 2026-10-09)*. Nenhuma restrição declarada é quebrada: `VISION.md`, `PRINCIPLES.md`, `constitution.md`, o contrato (`.mjrp-project.yml`), uma ADR `Accepted` e as restrições permanentes do dono do produto no `MEMORY.md` (*Do Not Forget*). Uma contradição não nomeada não é compromisso — é quebra, mesmo quando é barata de corrigir. | A decisão (ou o código) respeita cada restrição declarada — ou nomeia a exceção para o humano aceitar? |
+| **AD-14** | **Restrições respeitadas** *(crítica 2026-10-09)*. Nenhuma restrição declarada é quebrada: `VISION.md`, `PRINCIPLES.md`, `constitution.md`, o contrato (`.mjrp-project.yml`), uma ADR `Accepted` e as restrições permanentes do dono do produto no `MEMORY.md` (*Do Not Forget*). Na decisão, é nota de higiene; o conteúdo técnico da contradição, se houver, é julgado pela regra técnica que ela toca. | A decisão (ou o código) respeita cada restrição declarada — ou nomeia a exceção para o humano aceitar? |
 
 ## MA · Macroarquitetura (nível 1)
 
@@ -179,22 +186,32 @@ para a `mjrp-critiquing-ux`.
 
 **Os momentos.**
 
-| Momento | O objeto | O que roda daqui |
-|---|---|---|
-| **Decisão** — ADR `Proposed`, primeiro esqueleto de `arch.md` / `data-model.md`, troca de stack | o texto da decisão e o que ele move | GV-03…06, AD-01…14, MA-01…05, os VT aplicáveis, DD/CM/RS aplicáveis, e IV-03/04/05/08/11 sobre o desenho declarado; cada regra imposta nomeia o seu SN |
-| **Marco** — antes do Specify de um marco novo, implementação grande, builder novo | o código contra a arquitetura | IV-01…11 no código, MA-06, AD-14 (o código contra as ADRs `Accepted` e a `constitution.md`), os VT aplicáveis, SN existentes e verdes |
-| **Deriva / Brownfield** — código suspeito de desvio, produto sem arquitetura escrita | o código e o que estiver escrito | as regras do marco; em vez de passa/não passa, um **recorte em ordem**: vetos e P0 estruturais primeiro, depois por custo de mudança |
+| Momento | O objeto |
+|---|---|
+| **Decisão** — ADR `Proposed`, primeiro esqueleto de `arch.md` / `data-model.md`, troca de stack | a ADR e os arquivos que o *Files impacted* dela lista; o resto é o estabelecido |
+| **Marco** — antes do Specify de um marco novo, implementação grande, builder novo | o código contra a arquitetura |
+| **Deriva / Brownfield** — código suspeito de desvio, produto sem arquitetura escrita | o código e o que estiver escrito — em vez de passa/não passa, um recorte em ordem: vetos e P0 estruturais primeiro, depois por custo de mudança |
+
+Que regras cada momento roda está num lugar só: `reference/moment-checks.md` da `mjrp-critiquing-architecture`.
 
 **Severidades.**
 
-- **P0 — estrutural:** veto aplicável violado; Dependency Rule quebrada no núcleo; restrição declarada contrariada
-  (AD-14); premissa falsa que muda a decisão (AD-06); compromisso irreversível sem necessidade (MA-03); decisão aplicada
-  antes do aceite que não se desfaz sozinha (AD-12). Na decisão, a ADR não vai ao aceite com P0 aberto: o designer
+- **P0 — estrutural, só do eixo técnico:** veto aplicável violado; Dependency Rule quebrada no núcleo (IV-03 — o
+  domínio depende de framework, de detalhe de I/O ou, no código, de conceito de tela); compromisso irreversível sem
+  necessidade (MA-03). O contrato com forma de tela é P1 na decisão (sem código, barato de mover) e P0 no marco quando o
+  domínio importa a tela. Na decisão, a ADR não vai ao aceite com P0 aberto: o designer
   corrige, ou o P0 vira **exceção que o humano aceita explicitamente**, registrada na ADR e na auditoria. No marco, o P0
   se resolve do mesmo jeito antes do Specify.
 - **P1 — caro depois:** funciona, mas falta uma costura, uma regra não tem sensor, um risco não tem nome, um custo está
   subestimado. Corrige-se, ou o humano o aceita como compromisso custeado.
 - **P2 — acabamento:** clareza, nomes, lista desatualizada. Registra-se; não se agenda.
+- **Higiene da decisão — sem severidade:** AD-06…AD-14 e GV-05, como notas no fim da auditoria; dizem o que se achou e
+  quem age. Quando uma nota muda uma conclusão técnica (o desenho se apoia numa premissa falsa), o achado técnico a cita
+  e leva a severidade.
+
+**Onde a crítica aparece.** Toda passada grava o relatório em `reports/audits/`, com um frontmatter que o Control
+Center lê (System Monitor · Health Check), e uma entrada `review` no log do projeto que aponta para ele — a crítica nunca
+fica só num arquivo.
 
 Um compromisso que a decisão já nomeia e custeia não é achado, salvo se o custo estiver subestimado. Uma decisão já
 escrita (ADR `Accepted`, regra da `constitution.md`) não é achado contra si mesma — a contradição com ela é.
@@ -214,6 +231,8 @@ ou numa ADR `Accepted` dele, e não contrarie a Parte I do `PRINCIPLES.md`.
 ## History
 
 - **2026-10-09 20:55** · Página criada a partir do handbook do MJRP (*Handbook MJRP: Architecture Review, Crítica a ADRs e Verificação Contínua (v0)*, original em `docs/originals/architecture-review-handbook/`). Decisões dele na revisão geral de 2026-10-09: o handbook vira página do kernel com ID estável por regra, como o [[design-canon]] para a crítica de UX; os vetos valem quando se aplicam ("não se aplica" quando o elemento não existe); a separação da crítica é troca de chapéu declarada ou agente separado. As regras marcadas *(crítica 2026-10-09)* vêm das 12 lacunas que a primeira passada real da `mjrp-critiquing-architecture` (ADR-0002 do Control Center, 20:05) encontrou.
+
+- **2026-10-09 22:55** · **O veredito é técnico** (MJRP, 22:30: o foco da crítica é técnico, não processual; os P0 de processo da ADR-0002 não são P0). Dois eixos: o técnico (as regras do handbook, mais GV-03 e GV-06) dá o veredito e só ele tem P0; AD-06…AD-14 e GV-05 viram *higiene da decisão*, notas sem severidade. O AD-12 e o AD-14 saem dos gatilhos de P0; o contrato com forma de tela é P1 na decisão. A tabela dos momentos perde a coluna "o que roda" (a fonte única é a skill); cita-se ID e nome curto; a crítica aparece no log (entrada `review`) e no Control Center. Proposta e diagramas: `design/proposals/2026-10-09-2234-critiquing-architecture-refocus-proposal.md`.
 
 ## Related
 [[engineering-canon]] · [[adr-practice]] · [[design-canon]] · [[pdlc-loops]] · [[doctor]]
