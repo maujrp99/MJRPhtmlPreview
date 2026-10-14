@@ -1,5 +1,5 @@
 #!/bin/sh
-# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte b065d73 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte 593c609d · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 # commit-msg - every commit brings a new entry in the project log (S-61). Born 2026-10-03/04: commits
 # without a log entry, and decisions that survived a context compaction only in the AI Platform's summary.
 # It runs wherever git runs, so it guards local and cloud sessions alike.
@@ -7,6 +7,13 @@
 # Installed per clone by:  git config core.hooksPath mjrp-scripts/hooks   (new_project.py does it)
 # Bypass is the human's call, never the agent's:  git commit --no-verify
 ROOT=$(git rev-parse --show-toplevel) || exit 0
+# 2026-10-13 (ADR-0019): the human's valves - the trailers `Conformance-waiver:` and `Catalog-editorial:` - are refused in a
+# commit that also carries an agent's `Co-Authored-By:`. The agent signs what it writes, so the two cannot live together.
+# First, so that it runs even where the log check is absent.
+CONF="$ROOT/mjrp-scripts/conformance_check.py"
+if [ -f "$CONF" ] && command -v python3 >/dev/null 2>&1; then
+  python3 "$CONF" --check-msg "$1" || exit 1
+fi
 CHECK="$ROOT/mjrp-scripts/log_entry_check.py"
 [ -f "$CHECK" ] || exit 0
 command -v python3 >/dev/null 2>&1 || exit 0

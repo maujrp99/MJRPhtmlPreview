@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-10-09
 fontes: [pasquadev-loop-engineering, anthropic-context-engineering, ibm-skills-mcp-rag-memory, fowler-guides-sensors]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b065d73 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte 593c609d · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 As **onze peças** que compõem o entorno de um modelo de linguagem para que ele produza trabalho
@@ -159,7 +159,7 @@ fase, loop** (o trabalho do papel é exploratório).
   detalhado — o Zé valida depois. Não é ponteiro para o nada.
 - **2026-09-21 16:51** · **A peça #10 (Observabilidade) ganha corpo: o Harness Control Center (EP-08).** Brief
   aprovado pelo MJRP — escopo discovery + prototipação (entrega um protótipo das informações do
-  cockpit, não o app). Casa: subprojeto aninhado `apps/control-center/`, porque o cockpit lê os
+  cockpit, não o app). Casa: projeto aninhado `apps/control-center/`, porque o cockpit lê os
   arquivos do próprio harness e pertence ao repo. A seção "resultado dos sensores" do cockpit é a
   #10 de verdade; o resto (diagrama, docs por fase, Kernel, memory/log, roadmap) é um Docs Plane.
   Detalhe: `docs/log.md` [2026-09-21 16:51].

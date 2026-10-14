@@ -4,9 +4,9 @@ aliases: [doctor, doctor.py, sensores, o que o doctor vê]
 summary: o que o doctor mede, o que ele deliberadamente não mede, e por que uma checagem só nasce depois de um incidente
 tags: [harness, sensores, verificacao]
 status: em formação
-atualizado: 2026-10-09
+atualizado: 2026-10-12
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b065d73 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte 593c609d · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **doctor** é o sensor do harness: um script que lê a instância e devolve verde,
@@ -16,7 +16,7 @@ pegado (ADR-0002 do harness, emendada pela ADR-0007 do harness): checagem sem in
 
 ## As checagens
 
-Erro (vermelho) nas letras C, I, F e A; aviso (amarelo) no W. O código é a fonte: `mjrp-scripts/doctor.py`.
+Erro (vermelho) nas letras C, I, F e A (I6 é a 12ª e última vaga de erro do teto da ADR-0002); aviso (amarelo) no W. O código é a fonte: `mjrp-scripts/doctor.py`.
 
 | ID | O que confere |
 |---|---|
@@ -25,11 +25,13 @@ Erro (vermelho) nas letras C, I, F e A; aviso (amarelo) no W. O código é a fon
 | I2 | caminhos declarados existem |
 | I3 | links relativos e wikilinks |
 | I4 | `AGENTS.md` canônico |
-| I5 | herança do `PRINCIPLES.md`; kernel e cópias carimbadas × fonte; espelho da constituição |
+| I5 | herança do `PRINCIPLES.md`; kernel e cópias carimbadas × fonte; espelho da constituição; o kit visual só onde há tela |
 | F1 | forma do `MEMORY.md` e `## Now` × log; formato do log; crescimento do Ways of Working |
 | F2 | gate além do SLA |
 | F3 | sob git |
-| A1 | sensores do contrato |
+| I6 | conformidade canônica do filho × o catálogo (`canonical_catalog.json`): aviso até `max(since, received) + grace_days`, erro depois; nota aplicada cujo check reprova, catálogo ausente ou inválido = erro com o comando do conserto. Só o filho — o portão do Learn é o sensor `canonical_catalog` do contrato do harness |
+| A1 | sensores do contrato (só o `visual` pode ser de etapa, `when: pre-merge`, e só é anotado; sensor-mapa sem `cmd` reprova) |
+| A2 | `code-app` com tela e referência visual aprovada declara `sensors.visual`, que chega ao kit e a um config que existe |
 | W1 | descrições das skills |
 | W2 | commits aguardando push |
 | W3 | campo desconhecido no contrato; contrato sem `environment` |
@@ -44,10 +46,40 @@ Erro (vermelho) nas letras C, I, F e A; aviso (amarelo) no W. O código é a fon
 | W12 | nomes de skill aposentada |
 | W13 | backup atrás do HEAD |
 | W14 | protótipo × `info-arch.md` × wireframes |
+| W15 | branch de correção × status do UAT na `main` |
 
 ## History
 
-- **2026-10-09 20:55** · Revisão geral de 2026-10-09: a página ganhou a tabela *As checagens* (C1, I1–I5, F1–F3, A1, W1–W14, tirada do código); as ADRs citadas passam a dizer "do harness", em texto, porque a cópia do kernel nos filhos ligava à ADR de mesmo número do filho (o Control Center tem a própria ADR-0002).
+- **2026-10-13 13:20** · **I6 — conformidade canônica dos filhos** (ADR-0019, aceita pelo MJRP em 1ª iteração; 12ª e última vaga de erro). Incidente: a auditoria do
+  fin-control — kernel instalado, doctor verde, artefatos canônicos nunca construídos. O mecanismo: `canonical_catalog.json` (checagens declarativas, cláusulas e
+  parâmetros fechados; composição lista = todas, `any`, `if`, `requires`), `conformance_check.py` (leitor único, vendorizado), uma nota `CM-NNNN` por passo de versão
+  (cadeia imutável; frontmatter só `id/item/from/to`) e `conformance: {applied, received, waived}` no contrato. A carência (30 dias por item) conta de `received`, carimbado só pelo
+  `--refresh-kernel`; `applied` é conferido contra o check da versão que a nota alvejou; `waived` e o rebaseline editorial são válvulas do humano (trailers
+  `Conformance-waiver:` e `Catalog-editorial:`, recusados pelo `commit-msg` ao lado de um `Co-Authored-By:` de agente; dispensa até 90 dias, uma renovação). O portão do
+  Learn saiu do doctor: é o sensor `canonical_catalog` (`--learn-gate`), que roda o check de cada item contra o seu `template`. O W7 nomeia as notas pendentes e os
+  "nunca conformados". `english-names` é só aviso. Selftest: `conformance_check_selftest.py`.
+
+- **2026-10-12 17:34** · A ADR-0017 do harness foi **aceita** pelo MJRP: o A2 ocupa a 11ª das 12 vagas de erro; o A1 só aceita `when`
+  no `sensors.visual`; o hook `pre-merge-commit` cobra a reconferência visual (`verdict: pass` no frontmatter).
+
+- **2026-10-12 16:34** · Revisão depois da crítica da ADR-0017 (P0 0 · P1 8; decisões do MJRP). **A1:** só `sensors.visual`
+  pode ter `when`, e só `pre-merge`; qualquer outro sensor com `when`, outro valor, ou sensor-mapa sem `cmd` reprova
+  (nunca `sh("")`, que saía verde). **A2:** além da presença, o sensor tem de ser de etapa, apontar para um `config` que
+  existe e chegar ao kit (o `run.mjs` ou um juiz do projeto que importe dele); a exigência passa a ser **referência
+  visual aprovada** registrada no `info-arch.md` (viva ou estática). A tela é a do `screen:` do contrato (campo novo),
+  ou a heurística padrão — uma definição só, em `visual_gate.py`, que o hook `pre-merge-commit` também usa. **I5:** o kit
+  de paridade visual vai só para `code-app` com tela; com tela e sem o kit reprova, kit sem tela avisa. Selftests no
+  `doctor_selftest.py` (seis declarações ruins do A2, três escapes do A1) e no `visual_gate_selftest.py` (o hook).
+
+- **2026-10-12 15:55** · **A2 — paridade visual declarada** (ADR-0017 do harness, *Proposed*; 11ª das 12 vagas de erro). Reprova um
+  `code-app` com tela (`web/`, ou `src/` com arquivo de UI) e protótipo aprovado no `info-arch.md` (§ *Protótipos
+  aprovados*, linha `Aprovado por:` que não é o molde) que não declara `sensors.visual`, ou o declara sem comando. O A1
+  passou a aceitar sensor como mapa `{cmd, when}`: com `when: pre-merge` é sensor de etapa — o doctor não o roda
+  (minutos de Playwright e dois servidores) e o `--skip-sensors` não lhe cobra registro; quem o roda é a reconferência
+  visual do Delivery. Incidente: o Control Center 1.0 chegou ao UAT com a tela longe do protótipo v4.1 e todos os
+  sensores verdes ([[harness-kaizen]] 2026-10-11 12:09). Selftest: quatro casos no `doctor_selftest.py`.
+
+- **2026-10-09 20:55** · Revisão geral de 2026-10-09: a página ganhou a tabela *As checagens* (C1, I1–I5, F1–F3, A1, W1–W14 (W15 entrou em 13/10), tirada do código); as ADRs citadas passam a dizer "do harness", em texto, porque a cópia do kernel nos filhos ligava à ADR de mesmo número do filho (o Control Center tem a própria ADR-0002).
 
 > Página criada em 09/09/2026 pelo BACKLOG #28a, por indicação do Zé. As entradas abaixo vieram
 > **inteiras** do `MEMORY.md` — nada foi condensado na mudança; a edição, se vier, vem depois e

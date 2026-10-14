@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte b065d73 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte 593c609d · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """req_file_names.py -- names every requirement file `<ID>-<slug>.md` and rewrites the links to it (MJRP, 2026-10-09).
 
 The ID is the node's identity (frontmatter `id:` plus `aliases: [ID]`); the slug is the English title -- the bold line
@@ -17,7 +17,7 @@ run changes nothing (idempotent). Code (fences and inline) is an example, never 
 files of the git repository are touched; history, copies and sources are not (EXCLUDED_DIRS, EXCLUDED_PATHS). In
 every folder-index.md under requirements/, `<OLD>.md` becomes `<NEW>.md` (tree, link label and target).
 
-<root> is a project root: the harness (one folder per epic + nfr/), a subproject (apps/<app>/, flat requirements/)
+<root> is a project root: the harness (one folder per epic + nfr/), a nested project (apps/<app>/, flat requirements/)
 or a child project. Its links are rewritten in the whole git repository that holds it.
 
 Usage:
@@ -245,7 +245,7 @@ def structure_judge(name):
 
 
 def other_project_ids(top, req_dir):
-    """IDs of the other requirements graphs in the same repository (a subproject's, the harness's)."""
+    """IDs of the other requirements graphs in the same repository (a nested project's, the harness's)."""
     ids = {}
     mine = req_dir.resolve().relative_to(top).as_posix() + "/" if req_dir.resolve().is_relative_to(top) else None
     for rel in live_files(top):
@@ -433,7 +433,7 @@ def main(argv):
     stamp = now_sp().strftime("%Y%m%d-%H%M")
     backup = top / "_backups" / f"req-file-names-{stamp}"
     n = 2
-    while backup.exists():      # two runs in the same minute (harness, then a subproject) keep both backups
+    while backup.exists():      # two runs in the same minute (harness, then a nested project) keep both backups
         backup = top / "_backups" / f"req-file-names-{stamp}-{n}"
         n += 1
     touched = sorted({r["path"].relative_to(top).as_posix() for r in rows} | set(link_changes) | set(ref_changes))

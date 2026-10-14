@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte b065d73 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte 593c609d · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """requirements_graph_check.py -- checks the requirements graph of a project against its single declaration,
 requirements_graph_rules.json (S-63, kernel page requirements-graph).
 
@@ -21,6 +21,16 @@ characters (node_slug). Links and embeds name the whole stem with the ID as disp
 (`[[S-31-decide-how-data-reaches-the-screen|S-31]]`); a bare ID or an outdated slug pointing to a slugged file is
 flagged (link_stem). A file with no slug has the ID as its whole stem, so `[[S-31]]` is the right link to it. Every
 finding about a node starts with its ID, so --staged/--changed match them against the touched nodes.
+
+contributes_to (ADR-0020 A.2): an outcome declares the outcome of ANOTHER roadmap it contributes to, in its section of
+the ROADMAP (`contributes_to:: [[../../ROADMAP#^OUT-03]]`). The target is a path relative to the declaring file + `#^ID`,
+never a bare ID, and is read only when it is the ROADMAP.md of a project with a contract in the same repository.
+Three outcomes: resolved (passes); missing -- the block is not there, the target is the own roadmap, a bare ID, a
+cycle -- an error (exit 1); unreachable -- outside the repository, not on disk, not a project's ROADMAP.md -- not
+evaluable (exit 2 under --strict, "NÃO AVALIÁVEL", never green, never read).
+
+Identity (ADR-0020 D.3): an ID is unique in the repository. A project nested in the repository of another one carries
+the contract's `id_prefix` (CC) in outcome, epic and NFR IDs, and a node ID repeated in the root project is an error.
 
 Design system (audit C F10, MJRP 2026-10-09): a Ready requirement that points to a screen state (info-arch.md)
 needs docs/specs/design-system.md in the same project -- the visual identity is decided before the contract.
@@ -54,7 +64,7 @@ INLINE_FIELD = re.compile(r"^\s*(?:[-*]\s+)?([a-z_]+)::\s*(.+)$")
 BLOCK_ANCHOR = re.compile(r"\s\^([A-Za-z0-9-]+)\s*$")
 HEADING = re.compile(r"^(#{1,6})\s+(.*)$")
 # the ID prefix of a requirement file stem: S-31 in S-31-decide-how-data-reaches-the-screen (MJRP, 2026-10-09)
-NODE_ID = re.compile(r"^((?:S|UC|EA|NFR)-\d{2,})(?=-|$)")
+NODE_ID = re.compile(r"^((?:S|UC|EA|(?:[A-Z]{2,}-)?NFR)-\d{2,})(?=-|$)")
 
 
 def node_id(stem):
@@ -95,6 +105,27 @@ def local_ids(value, pattern):
     return [m for item in as_list(value) for m in re.findall(pattern, str(item))]
 
 
+def repo_top(path):
+    """The directory of the nearest `.git` (a folder, or a file in a worktree) at or above `path`; None when there is none."""
+    p = Path(path).resolve()
+    for d in [p, *p.parents]:
+        if (d / ".git").exists():
+            return d
+    return None
+
+
+def contract_of(root):
+    """The `mjrp_harness` block of the project contract at `root` ({} when absent or unreadable)."""
+    f = Path(root) / ".mjrp-project.yml"
+    if not f.exists():
+        return {}
+    try:
+        data = read_yaml(f.read_text(encoding="utf-8")) or {}
+        return data.get("mjrp_harness") or {}
+    except Exception:
+        return {}
+
+
 class Graph:
     def __init__(self, root, rules):
         self.root = Path(root)
@@ -104,18 +135,17 @@ class Graph:
         self.nodes = {}      # id -> {"type", "file", "status", "edges": {name: [targets]}}
         self.features = {}   # fid -> {"status", "imports", "reqs": {REQ: verified_by[]}, "tasks": {TASK: [REQ]}, "dir"}
         self.findings = []
-        # 2026-10-09 (MJRP): a subproject of the harness (apps/<app>/) declares in its contract the harness epic it
-        # belongs to (`parent_epic: EP-08`); it has no epics of its own -- its stories carry no `epic:` and are
-        # organised by release (`planned_for`, required from Prioritized on).
-        self.parent_epic = None
-        contract = self.root / ".mjrp-project.yml"
-        if contract.exists():
-            try:
-                y = read_yaml(contract.read_text(encoding="utf-8")) or {}
-                pe = (y.get("mjrp_harness") or {}).get("parent_epic")
-                self.parent_epic = str(pe).strip() if pe else None
-            except Exception:
-                self.parent_epic = None
+        # ADR-0020 D.3: the contract's id_prefix (a nested project) makes outcome, epic and NFR IDs accept `<PREFIX>-`
+        contract = contract_of(self.root)
+        pfx = contract.get("id_prefix")
+        self.prefix = str(pfx).strip() if pfx else None
+        # ADR-0020 A.5: planned_for is optional unless the contract turns release_required on
+        rr = (self.rules.get("release_required") or {})
+        opt = (contract.get("requirements") or {}).get("release_required", rr.get("default", False))
+        self.release_required = opt is True or str(opt).strip().lower() == "true"
+        # ADR-0020 A.2: contributes_to targets that could not be read (outside the repository, not on disk, not a
+        # project's ROADMAP.md) -- not evaluable: neither a finding nor green
+        self.unreachable = []
 
     def find(self, rule, msg):
         self.findings.append((rule, msg))
@@ -123,9 +153,16 @@ class Graph:
     def tags_field(self):
         return (self.rules.get("tags") or {}).get("field", "tags")
 
+    def id_pattern(self, name):
+        """The ID pattern of a node type; the types the identity rule prefixes also accept this project's `<PREFIX>-`."""
+        pat = self.types[name].get("id_pattern")
+        if pat and self.prefix and name in (self.rules.get("identity") or {}).get("prefixed_types", []):
+            pat = "^(?:" + re.escape(self.prefix) + "-)?" + pat.lstrip("^")
+        return pat
+
     def type_of(self, nid):
         for name, t in self.types.items():
-            pat = t.get("id_pattern")
+            pat = self.id_pattern(name)
             if pat and t.get("form") != "local_id" and re.match(pat, nid) and name != "observable_state":
                 return name
         return None
@@ -135,13 +172,18 @@ class Graph:
         path = self.p.get(key)
         if not path or not path.exists():
             return
-        section, tags_in, anchors_in = 0, {}, {}
+        section, tags_in, anchors_in, edges_in = 0, {}, {}, {}
+        # inline edges an outcome declares in its section (contributes_to, ADR-0020 A.2), read like the tags line
+        outcome_edges = {e["name"] for e in self.rules["edges"]
+                         if "outcome" in (e["from"] if isinstance(e["from"], list) else [e["from"]])}
         for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
             if HEADING.match(line):
                 section += 1
             f = INLINE_FIELD.match(BLOCK_ANCHOR.sub("", line))
             if f and f.group(1) == self.tags_field():
                 tags_in.setdefault(section, []).extend(f.group(2).replace(",", " ").split())
+            elif f and f.group(1) in outcome_edges and "outcome" in wanted_types:
+                edges_in.setdefault(section, {}).setdefault(f.group(1), []).extend(link_targets(f.group(2)))
             m = BLOCK_ANCHOR.search(line)
             if not m:
                 continue
@@ -160,6 +202,16 @@ class Graph:
                 self.nodes[outs[0]]["tags"] = tags
             elif len(outs) > 1:
                 self.find("tags", f"{', '.join(outs)}: uma linha `tags::` numa seção com mais de um resultado — um resultado por seção")
+        for sec, found in edges_in.items():
+            outs = [a for a in anchors_in.get(sec, []) if (self.nodes.get(a) or {}).get("type") == "outcome"]
+            names = "/".join(found)
+            if len(outs) == 1:
+                for name, targets in found.items():
+                    self.nodes[outs[0]]["edges"].setdefault(name, []).extend(targets)
+            elif len(outs) > 1:
+                self.find("contributes_to", f"{', '.join(outs)}: uma linha `{names}::` numa seção com mais de um resultado — um resultado por seção")
+            else:
+                self.find("contributes_to", f"{path.name}: linha `{names}::` numa seção sem resultado ancorado (^OUT-NN) — a aresta pertence a um resultado")
 
     def load_inline_nodes(self, key, node_type):
         """Nodes that live inside a document: the heading names them, the paragraph below carries the inline
@@ -167,7 +219,7 @@ class Graph:
         path = self.p.get(key)
         if not path or not path.exists():
             return
-        pat = self.types[node_type]["id_pattern"].strip("^$")
+        pat = self.id_pattern(node_type).strip("^$")
         current = None
         for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
             h = HEADING.match(line)
@@ -331,32 +383,112 @@ class Graph:
         elif node["type"] not in allowed:
             self.find("edge_type", f"{src} —{edge['name']}→ {tid}: alvo é {node['type']}, a aresta pede {'/'.join(allowed)}")
 
-    def check_subproject(self):
-        """A subproject (contract with parent_epic) has no epics: the epic lives in the harness."""
-        if not self.parent_epic:
+    # ---- contributes_to (ADR-0020 A.2) ---------------------------------------------------------------------
+    def foreign_outcomes(self, project_root):
+        """The outcomes (with their own contributes_to) of the ROADMAP.md of another project, loaded once."""
+        cache = self.__dict__.setdefault("_foreign", {})
+        key = str(project_root)
+        if key not in cache:
+            g = Graph(project_root, self.rules)
+            g.load_anchors("roadmap", {"outcome", "release"})
+            cache[key] = g
+        return cache[key]
+
+    def resolve_contributes_to(self, g, target):
+        """Where does a contributes_to target of Graph `g` land? Returns (state, detail):
+        ("ok", (project Graph, outcome ID)) | ("missing", reason) | ("type", reason) | ("unreachable", reason).
+        Only the ROADMAP.md of a project with a contract, in the same repository, is ever opened."""
+        f, tid = target
+        if not f or "/" not in f or tid == Path(f).stem:       # no path, or no #^ID (link_targets then names the file)
+            return "missing", ("o alvo é um ID nu, sem caminho — escreva o caminho relativo ao arquivo que declara + #^ID "
+                               "([[../../ROADMAP#^OUT-03]]); um ID nu casaria só no grafo local")
+        roadmap = g.p["roadmap"]
+        tpath = (roadmap.parent / (f if f.endswith(".md") else f + ".md")).resolve()
+        top = repo_top(g.root)
+        if top is None or not tpath.is_relative_to(top) or repo_top(tpath.parent) != top:
+            return "unreachable", "o caminho sai do repositório (ou este repositório não é um clone git) — o alvo não é lido"
+        if tpath == roadmap.resolve():
+            return "missing", "o alvo é o próprio roadmap — contribuir é para o resultado de OUTRO roadmap"
+        if tpath.name != Path(g.rules["paths"]["roadmap"]).name:
+            return "unreachable", f"{tpath.name} não é o ROADMAP.md de um projeto — o alvo não é lido"
+        if not tpath.is_file():
+            return "unreachable", "o arquivo não está no disco (ponte, nuvem ou projeto ausente)"
+        if not (tpath.parent / ".mjrp-project.yml").is_file():
+            return "unreachable", f"{tpath.parent.name}/ não tem contrato (.mjrp-project.yml) — não é um projeto do harness, o alvo não é lido"
+        fg = self.foreign_outcomes(tpath.parent)
+        node = fg.nodes.get(tid)
+        if node is None:
+            return "missing", f"o bloco ^{tid} não existe em {tpath.relative_to(top)}"
+        if node["type"] != "outcome":
+            return "type", f"o alvo é {node['type']}, a aresta pede outcome"
+        return "ok", (fg, tid)
+
+    def check_contributes_to(self, nid, edge, targets):
+        for t in targets:
+            shown = f"[[{t[0]}#^{t[1]}]]" if t[0] else f"[[#^{t[1]}]]"
+            state, detail = self.resolve_contributes_to(self, t)
+            if state == "unreachable":
+                self.unreachable.append(f"{nid} —contributes_to→ {shown}: {detail}")
+                continue
+            if state == "missing":
+                rule = "target_exists" if detail.startswith("o bloco ") else "contributes_to"
+                self.find(rule, f"{nid} —contributes_to→ {shown}: {detail}")
+                continue
+            if state == "type":
+                self.find("edge_type", f"{nid} —contributes_to→ {shown}: {detail}")
+                continue
+            # ok: follow the chain; coming back to a node already seen is a cycle (the chain has 0..1 edge per node)
+            seen = {(self.p["roadmap"].resolve(), nid)}
+            fg, tid = detail
+            while True:
+                key = (fg.p["roadmap"].resolve(), tid)
+                if key in seen:
+                    self.find("contributes_to", f"{nid} —contributes_to→ {shown}: ciclo — a cadeia volta a "
+                                                f"{key[0].parent.name}/{key[1]}")
+                    break
+                seen.add(key)
+                nxt = fg.nodes[tid]["edges"].get("contributes_to") or []
+                if not nxt:
+                    break
+                s2, d2 = self.resolve_contributes_to(fg, nxt[0])
+                if s2 != "ok":
+                    break          # a broken link further up is that roadmap's own finding
+                fg, tid = d2
+
+    # ---- identity (ADR-0020 D.3) ----------------------------------------------------------------------------
+    def check_id_unique(self):
+        """A node ID of a project nested in a repository is not repeated in the root project of that repository."""
+        top = repo_top(self.root)
+        if top is None or top == self.root.resolve() or not (top / ".mjrp-project.yml").is_file():
             return
-        if not re.match(self.types["epic"]["id_pattern"], self.parent_epic):
-            self.find("subproject", f"parent_epic: {self.parent_epic} fora do padrão EP-NN")
+        unique = set((self.rules.get("identity") or {}).get("unique_types", []))
+        root_graph = Graph(top, self.rules)
+        root_graph.load()
+        root_ids = {n for n, v in root_graph.nodes.items() if v["type"] in unique}
         for nid, node in self.nodes.items():
-            if node["type"] == "epic":
-                self.find("subproject", f"{nid}: subprojeto não declara épico — o épico mora no harness (parent_epic: {self.parent_epic}); "
-                                        "as stories daqui se organizam por release")
-            elif node["type"] in ("requirement", "nfr") and node["edges"].get("epic"):
-                self.find("subproject", f"{nid}: subprojeto — a story não declara `epic:` (o épico é {self.parent_epic}, no contrato); "
-                                        "declare a release em `planned_for:`")
+            if node["type"] in unique and nid in root_ids:
+                pfx = f" — o projeto aninhado leva o prefixo do contrato (`id_prefix: {self.prefix}`)" if self.prefix else \
+                      " — o projeto aninhado declara `id_prefix` no contrato e o leva nos IDs de resultado, épico e NFR"
+                self.find("id_unique", f"{nid}: ID repetido no repositório, já existe no projeto da raiz do repositório{pfx}")
+
+    def epic_release(self, node):
+        epic = (node["edges"].get("epic") or [(None, None)])[0][1]
+        return (self.nodes.get(epic) or {}).get("edges", {}).get("planned_for", [])
 
     def check_node_edges(self):
-        sub_from = self.rules.get("subproject", {}).get("planned_for_from", "Prioritized")
+        rr_from = (self.rules.get("release_required") or {}).get("from", "Prioritized")
         for nid, node in self.nodes.items():
             for edge in self.rules["edges"]:
                 srcs = edge["from"] if isinstance(edge["from"], list) else [edge["from"]]
                 if node["type"] not in srcs:
                     continue
-                if self.parent_epic and edge["name"] == "epic":
-                    continue      # the subproject's epic is the contract's parent_epic (check_subproject)
-                if self.parent_epic and edge["name"] == "planned_for" and node["type"] == "requirement":
-                    edge = dict(edge, min=1, enforced_from=sub_from)
+                shortcut = False
+                if self.release_required and edge["name"] == "planned_for" and node["type"] == "requirement":
+                    edge = dict(edge, min=1, enforced_from=rr_from)    # ADR-0020 A.5; the epic's own release satisfies it
+                    shortcut = True
                 targets = node["edges"].get(edge["name"], [])
+                if shortcut and not targets:
+                    targets = self.epic_release(node)
                 if edge.get("to") == "acceptance":
                     # S-79: an acceptance is an anchor of uat.md or a log entry, not a node -- resolved by
                     # acceptance_resolves (the uat.md anchors were reported as missing targets before)
@@ -364,13 +496,17 @@ class Graph:
                     if raw and not self.acceptance_resolves(raw):
                         self.find("target_exists", f"{nid} —accepted_in→ {raw}: aceite não encontrado (âncora do uat.md ou entrada do log)")
                     continue
-                for t in targets:
-                    self.check_target(nid, edge, t)
+                if edge["name"] == "contributes_to":
+                    self.check_contributes_to(nid, edge, targets)       # never falls back to the local graph
+                else:
+                    for t in targets:
+                        self.check_target(nid, edge, t)
                 if not self.enforced(edge, node["status"]):
                     continue
                 if len(targets) < edge["min"]:
                     self.find(f"edge_{edge['name']}", f"{nid}: precisa de pelo menos {edge['min']} aresta '{edge['name']}'"
-                              + (f" (cobrada a partir de {edge['enforced_from']})" if edge.get("enforced_from") != "always" else ""))
+                              + (f" (cobrada a partir de {edge['enforced_from']})" if edge.get("enforced_from") != "always" else "")
+                              + (" — na própria story ou no épico dela (release_required)" if shortcut else ""))
                 if edge.get("max") is not None and len(targets) > edge["max"]:
                     self.find(f"edge_{edge['name']}", f"{nid}: no máximo {edge['max']} aresta '{edge['name']}', tem {len(targets)}")
             if node["type"] == "epic" and not node.get("anchored", True):
@@ -465,8 +601,51 @@ class Graph:
         code, out = self.git("log", "-1", *follow, "--format=%ct", "--", str(Path(path).relative_to(self.root)))
         return int(out) if code == 0 and out.isdigit() else None
 
+    def state_line_changed(self, doc, tid, node_path):
+        """The state's own line (the one ending with ^tid) differs between the node's last commit and now.
+        A Ready criterion ages when ITS state changes, not when another state of the same file does
+        (MJRP, 2026-10-10: one new tab in info-arch.md flagged every Ready node)."""
+        rel = str(Path(node_path).relative_to(self.root))
+        follow = ["--follow", "--diff-filter=AMC"] if Path(node_path).is_file() else []
+        code, sha = self.git("log", "-1", *follow, "--format=%H", "--", rel)
+        if code != 0 or not sha:
+            return True
+        code, old = self.git("show", f"{sha}:./{Path(doc).relative_to(self.root).as_posix()}")   # ./ = relative to cwd (a nested project)
+        if code != 0:
+            return True
+        pick = lambda text: next((l.rstrip() for l in text.splitlines() if l.rstrip().endswith("^" + tid)), None)
+        before, now = pick(old), pick(Path(doc).read_text(encoding="utf-8", errors="replace"))
+        return before is None or before != now
+
+    SHA = re.compile(r"^[0-9a-f]{7,40}$")
+
     def commit_exists(self, sha):
-        return bool(re.match(r"^[0-9a-f]{7,40}$", sha)) and self.git("cat-file", "-e", sha + "^{commit}")[0] == 0
+        """Does the commit exist? One `git cat-file --batch-check` answers every `delivered_by` of the graph at the first
+        question (2026-10-13: ~200 `git cat-file -e` processes were 1.7 s of the 1.8 s of the pre-commit hook and broke the
+        commit budget, ADR-0004 #7); a hash the batch did not see falls back to the single question. Same answer, fewer forks."""
+        if not self.SHA.match(sha):
+            return False
+        cache = self.__dict__.setdefault("_commits", {})
+        if not cache:
+            self.prefetch_commits(cache)
+        if sha not in cache:
+            cache[sha] = self.git("cat-file", "-e", sha + "^{commit}")[0] == 0
+        return cache[sha]
+
+    def prefetch_commits(self, cache):
+        shas = sorted({s for n in self.nodes.values() if n["type"] == "requirement" for s in n["delivered_by"] if self.SHA.match(s)})
+        if not shas:
+            return
+        try:
+            r = subprocess.run(["git", "cat-file", "--batch-check"], cwd=self.root, capture_output=True, text=True,
+                               input="".join(f"{s}^{{commit}}\n" for s in shas))
+        except FileNotFoundError:
+            return
+        lines = r.stdout.splitlines()
+        if r.returncode != 0 or len(lines) != len(shas):
+            return                                   # no repository, or an unexpected shape: ask one by one
+        for sha, line in zip(shas, lines):
+            cache[sha] = not line.endswith((" missing", " ambiguous"))
 
     def languages(self):
         """Languages every node is written in (rules `languages`; the contract's
@@ -584,7 +763,7 @@ class Graph:
                 for f, tid in node["edges"].get("points_to", []):
                     doc = self.state_doc(f)
                     dts = self.last_commit_ts(doc) if doc and doc.exists() else None
-                    if rts and dts and dts > rts:
+                    if rts and dts and dts > rts and self.state_line_changed(doc, tid, node["path"]):
                         self.find("ready_state_changed", f"{nid}: o estado observável ^{tid} ({doc.name}) mudou depois do Ready — o critério pode ter envelhecido")
                     # a screen state is judged when an approved prototype shows it; behavior states have no screen
                     if doc and doc.exists() and doc.stem == "info-arch" and tid not in self.shown_states(doc):
@@ -615,6 +794,8 @@ class Graph:
             return "aceite do humano (uat.md)"
         if st == "Deferred":
             return "adiado — nada a fazer"
+        if st == "Cancelled":
+            return "cancelado — nada a fazer (não volta; o retorno é um nó novo)"
         return "nada a fazer"
 
     def summary(self):
@@ -716,7 +897,7 @@ class Graph:
             if fd in seen:
                 self.find("node_folder", f"{nid}: folder:: {fd} já é a pasta de {seen[fd]}")
             seen[fd] = nid
-            if not re.match(r"^ep-\d{2}-[a-z0-9]+(-[a-z0-9]+)*$", fd) or not fd.startswith(nid.lower() + "-"):
+            if not re.match(r"^(?:[a-z]+-)?ep-\d{2}-[a-z0-9]+(-[a-z0-9]+)*$", fd) or not fd.startswith(nid.lower() + "-"):
                 self.find("node_folder", f"{nid}: folder:: {fd} fora do padrão {nid.lower()}-<slug-em-inglês>")
         for nid, n in self.nodes.items():
             if not n.get("path"):
@@ -738,7 +919,7 @@ class Graph:
 
     def run(self):
         self.load()
-        self.check_subproject()
+        self.check_id_unique()
         self.check_node_folder()
         self.check_node_edges()
         self.check_tags()
@@ -816,13 +997,23 @@ def main(argv):
             v = g.nodes[nid]
             serves = ", ".join(t for _, t in v["edges"].get("serves", []))
             print(f"  {nid}{' → ' + serves if serves else ''}: {' '.join(g.effective_tags(nid)) or '(sem tag)'}")
-    if not findings:
+    if not findings and not g.unreachable:
         print(f"[requirements_graph] VERDE — {n_nodes} nó(s), {len(g.features)} feature(s), nenhuma regra violada")
         return 0
-    print(f"[requirements_graph] {len(findings)} achado(s) em {n_nodes} nó(s) e {len(g.features)} feature(s):")
-    for rule, msg in findings:
-        print(f"  [{rule}] {msg}")
-    return 1 if strict else 0
+    if findings:
+        print(f"[requirements_graph] {len(findings)} achado(s) em {n_nodes} nó(s) e {len(g.features)} feature(s):")
+        for rule, msg in findings:
+            print(f"  [{rule}] {msg}")
+    if g.unreachable:
+        # ADR-0020 A.2: a target outside the repository, off the disk or not a project's ROADMAP.md is not read and is
+        # not an error: the verdict is "not evaluable" (exit 2) -- never green
+        verdict = "NÃO AVALIÁVEL" if not findings else "além disso, NÃO AVALIÁVEL"
+        print(f"[requirements_graph] {verdict} — {len(g.unreachable)} alvo(s) de contributes_to fora de alcance (não lidos):")
+        for msg in g.unreachable:
+            print(f"  [contributes_to] {msg}")
+    if findings:
+        return 1 if strict else 0
+    return 2 if strict else 0
 
 
 if __name__ == "__main__":

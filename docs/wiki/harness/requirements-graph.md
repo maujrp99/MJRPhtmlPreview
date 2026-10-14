@@ -1,13 +1,13 @@
 ---
 title: Grafo de requisitos — nós, arestas tipadas e releases
-aliases: [requirements-graph, grafo de requisitos, knowledge graph, rastreabilidade, arestas tipadas, cardinalidade feature requisito, release, planned_for]
-summary: como requisitos e artefatos do PDLC viram nós com ID estável e arestas tipadas, legíveis no Obsidian e por script; a cardinalidade feature × requisito; como a release agrupa requisitos e épicos
+aliases: [requirements-graph, grafo de requisitos, knowledge graph, rastreabilidade, arestas tipadas, cardinalidade feature requisito, release, planned_for, contributes_to, Cancelled, release_required, identidade de ID]
+summary: como requisitos e artefatos do PDLC viram nós com ID estável e arestas tipadas, legíveis no Obsidian e por script; a cardinalidade feature × requisito; como a release agrupa requisitos e épicos; a aresta contributes_to entre roadmaps, o estado Cancelled e a identidade de ID no repositório
 tags: [kernel, sdd, requisitos, grafo, release]
 status: em formação
-atualizado: 2026-10-09
-fontes: [design/proposals/requirements-knowledge-graph-proposal.md, kernel/architecture/knowledge-graph-concept, kernel/architecture/linked-notes-concept, kernel/architecture/graph-engineering-concept, kernel/ways-of-working/spec-kit]
+atualizado: 2026-10-13
+fontes: [design/proposals/requirements-knowledge-graph-proposal.md, decisions/0020-control-center-as-product-contributes-to, kernel/architecture/knowledge-graph-concept, kernel/architecture/linked-notes-concept, kernel/architecture/graph-engineering-concept, kernel/ways-of-working/spec-kit]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b065d73 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte 593c609d · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **grafo de requisitos** é a documentação do PDLC tratada como grafo de conhecimento: cada requisito, épico,
@@ -33,12 +33,12 @@ dos agentes; este é o grafo de **dados** que o comportamento lê como estado.
   arquivo, com o ID como texto — `S-07`, `!S-07-import-the-card-statement` —,
   porque o Obsidian resolve nome de arquivo, não alias; o sensor acusa link com ID solto ou slug velho (`link_stem`) e
   nome fora da forma (`node_slug`). Status e arestas no frontmatter. A pasta é a que o épico declara
-  (`folder:: ep-NN-<slug-em-inglês>`); NFR em `nfr/`. No subprojeto do harness, sem épico, o nó mora direto em
-  `requirements/`. Regra `node_folder` no sensor, dormente enquanto nenhum épico declara `folder::`. O corpo vem em cada língua declarada — por padrão `## pt-BR` e `## en`, no mesmo arquivo, com um ID e um frontmatter só (regra `bilingual`; o contrato muda a lista em `mjrp_harness.requirements.languages`, `[]` desliga). É o nó mais ligado do grafo, por isso tem a âncora mais estável.
+  (`folder:: ep-NN-<slug-em-inglês>`); NFR em `nfr/`. Regra `node_folder` no sensor, dormente enquanto nenhum épico declara `folder::`. O corpo vem em cada língua declarada — por padrão `## pt-BR` e `## en`, no mesmo arquivo, com um ID e um frontmatter só (regra `bilingual`; o contrato muda a lista em `mjrp_harness.requirements.languages`, `[]` desliga). É o nó mais ligado do grafo, por isso tem a âncora mais estável.
 - **Feature:** uma pasta por ciclo SDD, `docs/specs/features/<F-ID>-<slug>/` com `spec.md`, `plan.md`, `tasks.md`.
   Dentro da pasta, `REQ-` e `TASK-` são IDs locais, resolvidos pelo script dentro dela.
 - **Épico:** no `prd.md`, com as arestas dele numa linha logo abaixo do heading (`serves:: ROADMAP#^OUT-01`).
-  **Resultado e release:** no `ROADMAP.md`, com block ID (`^OUT-01`, `^REL-01`). A direção é do ROADMAP
+  **Resultado e release:** no `ROADMAP.md`, com block ID (`^OUT-01`, `^REL-01`); o resultado leva as arestas dele numa
+  linha `contributes_to::` na seção (ver *O resultado que contribui*). A direção é do ROADMAP
   para o PRD: o ROADMAP define os resultados, e o épico **serve** a um deles (`serves`). O ROADMAP não deriva dos
   requisitos do PRD — decisão do MJRP, 2026-10-04 12:15.
 - **Tags de categoria:** todo resultado leva **de 1 a 3 tags** numa linha `tags:: #a #b` na sua seção do ROADMAP (logo
@@ -64,7 +64,12 @@ restrições e a sintaxe de cada forma de nó. Mudou a regra, muda o arquivo —
 Os status seguem o ciclo `Backlog → Prioritized → Ready → In progress → Done → Accepted`; uma aresta cobrada "a
 partir de Ready" vale de Ready em diante. **Ready é o contrato** ([[pdlc-loops]] §4): o requisito vai a Ready com o OK do
 humano, registrado no log; **Accepted** é o aceite dele no UAT. `Deferred` é válido mas fica **fora do ciclo**: requisito adiado não é
-cobrado como Ready nem conta como aberto (decisão do MJRP, 2026-10-04 14:28).
+cobrado como Ready nem conta como aberto (decisão do MJRP, 2026-10-04 14:28). **`Cancelled`** também fica fora do ciclo: é o
+requisito que não será feito — superado por outro ou desistido. Nunca conta como alcançado nem como aberto e **não conta no
+andamento** (o `gen_prd_status.py` o lista, fora do `feito/total`); mantém o ID e as arestas — `epic` continua cobrada, e
+`supersedes` diz por quem foi superado. A diferença para `Deferred`: o adiado pode voltar, o cancelado não — o retorno é um
+nó novo (MJRP, 2026-10-13 17:15, ADR-0020 A.6). No board do Delivery,
+uma coluna **Cancelled** no fim.
 
 ### Arestas da primeira versão
 Escreve-se **só uma direção**; a inversa é calculada (backlink no Obsidian, script para o agente).
@@ -72,8 +77,9 @@ Escreve-se **só uma direção**; a inversa é calculada (backlink no Obsidian, 
 | Aresta | De → para | O sensor exige |
 |---|---|---|
 | `serves` | épico → resultado do ROADMAP | todo épico tem exatamente 1 |
-| `epic` | requisito → épico | todo requisito tem exatamente 1 — exceto no subprojeto do harness, onde é proibida (o épico vem de `parent_epic` no contrato) |
-| `planned_for` | requisito (ou épico, como atalho) → release | opcional — release é opcional por projeto; exceto no subprojeto do harness, onde é obrigatória a partir de `Prioritized` |
+| `epic` | requisito → épico | todo requisito tem exatamente 1, em todo projeto |
+| `planned_for` | requisito (ou épico, como atalho) → release | opcional — release é opcional por projeto; obrigatória a partir de `Prioritized` quando o contrato liga `requirements.release_required` (a release do épico cumpre) |
+| `contributes_to` | resultado → resultado de **outro** roadmap | 0..1; o alvo existe, é caminho relativo + `#^ID`, nunca o próprio roadmap, sem ciclo (ver *O resultado que contribui*) |
 | `points_to` | requisito → estado observável (de tela ou de comportamento) | requisito Ready tem pelo menos 1; o alvo existe |
 | `imports` | feature → requisito | ver *Cardinalidade* |
 | `implements` | TASK → REQ local | toda TASK tem pelo menos 1; todo REQ tem pelo menos uma TASK |
@@ -98,7 +104,9 @@ Decisão do MJRP, 2026-10-04, nas palavras dele — **limitar:**
   `supersedes` deixa de ser opcional.
 
 ### Release, épico e requisito
-- **Release é opcional por projeto** — no subprojeto do harness é a unidade de organização — e mora numa seção do `ROADMAP.md` (decisão de 2026-10-02). Wave, milestone e
+- **Release é opcional por projeto** e mora numa seção do `ROADMAP.md` (decisão de 2026-10-02). Um projeto que quer a release
+  sempre declarada liga `mjrp_harness.requirements.release_required: true` no contrato: então todo requisito a tem a partir de
+  `Prioritized` (um Backlog pode ainda não ter) — na própria story **ou no épico dela**, que cumpre pelo atalho. Wave, milestone e
   release são o mesmo nó, com um campo `kind` se o projeto quiser nomear diferente; milestone é release com data.
 - **A unidade planejada é o requisito** (`planned_for`); a feature herda a release dos requisitos que importa, e o
   sensor acusa feature que importa requisitos de releases diferentes.
@@ -110,18 +118,55 @@ Decisão do MJRP, 2026-10-04, nas palavras dele — **limitar:**
 - **Ficam fora:** *fase* é a fase do PDLC (discovery, design, SDD), outro eixo; *sprint* é caixa de tempo, não de
   conteúdo — quem usa declara como release de `kind: sprint`.
 
-### Subprojeto do harness: o épico no contrato, as stories por release
+### O resultado que contribui para o resultado de outro roadmap (`contributes_to`)
 
-Um **subprojeto** é um projeto aninhado dentro do repositório do harness (`apps/<app>/`), com contrato, sensores e
-grafo próprios. Ele **não declara épicos**: épico só existe no `prd.md` do harness, e o subprojeto diz no contrato a
-qual pertence — `parent_epic: EP-08` em `.mjrp-project.yml`. As stories do subprojeto **não levam `epic:`**; elas se
-organizam **por release** (`planned_for`, cobrada a partir de `Prioritized` — uma story em Backlog pode estar sem
-release) e o `prd.md` do subprojeto as embute por release, não por épico. O resto do grafo fica local: o requisito
-aponta para o estado da tela do próprio subprojeto, a feature importa o requisito do próprio subprojeto, e o sensor
-roda em cada um sem atravessar repositório. Só a ligação de cima — o épico — atravessa, e uma vez só, no contrato.
-O épico do harness guarda as stories que já entregou como histórico; as novas e as abertas moram no subprojeto.
-Projeto filho independente (repositório próprio: pedroso, fin-control, health-control) **não** é subprojeto: tem
-épicos próprios. (Decisão do MJRP, 2026-10-09 15:13.)
+Um produto que mora dentro do repositório de outro (um app em `apps/<app>/`) é um **projeto como os outros**: tem épicos
+próprios, cada um servindo a um resultado do roadmap dele, e toda story tem exatamente 1 épico. O fio para cima não é
+um épico emprestado: é uma aresta **de resultado para resultado**. No `ROADMAP.md` do filho, o resultado declara aquele
+do roadmap de cima para o qual contribui, na sintaxe de propriedade das outras arestas:
+
+```
+### O humano vê o estado do trabalho dos agentes numa aplicação web e mobile, …
+contributes_to:: ../../ROADMAP#^OUT-03
+… ^CC-OUT-01
+```
+
+- **Cardinalidade 0..1.** Sem `contributes_to` é o caso comum (todo filho independente). A **release** continua só
+  respondendo *quando*; o resultado, *por quê*.
+- **A forma do alvo:** sempre **caminho relativo ao arquivo que declara + `#^<ID>`** — nunca um ID nu. O resolvedor nunca cai
+  no grafo local: um alvo que só casaria por ID local é erro.
+- **Três resultados da resolução**, com saídas diferentes no sensor:
+
+  | Caso | Quando | Saída |
+  |---|---|---|
+  | **resolvido** | o caminho cai no `ROADMAP.md` de outro projeto do **mesmo repositório** (um diretório com `.mjrp-project.yml` sob a mesma raiz de repositório) e o bloco existe lá e é um resultado | passa |
+  | **inexistente** | o arquivo é alcançável e o bloco não existe nele; o alvo é o próprio roadmap; a forma é ID nu; o alvo não é resultado; há ciclo | **erro** (exit 1) |
+  | **fora de alcance** | o caminho sai do repositório, o arquivo não está no disco (ponte, nuvem, repositório irmão ausente) ou não é o `ROADMAP.md` de um projeto com contrato | **não avaliável** (exit 2 com `--strict`) — nunca verde, nunca lido |
+
+  A leitura do alvo fica limitada aos `ROADMAP.md` de projetos com contrato do mesmo repositório — o servidor de um app
+  nunca abre um caminho livre.
+- **O rollup — contribuir não é igualar, e o filho não segura o pai.** O status de um resultado é derivado **só dos
+  épicos próprios** dele. O status do resultado filho **não entra** nessa derivação, nem como unidade: o filho costuma ser
+  mais largo que o pai (o `^CC-OUT-01` inclui a release do iPhone; o `^OUT-03` se cumpre no Mac). O filho aparece **ao
+  lado**, numa lista "Resultados que contribuem" com `{projeto, ID, título, status derivado no projeto dele}`. O caso
+  "próprios fechados, contribuinte aberto" não é mostrado como 100% sozinho: a tela diz *"Trabalho próprio: concluído ·
+  1 resultado que contribui em andamento"*. Filho ilegível ou fora de alcance: a linha dele diz **desconhecido** e o
+  motivo — nunca um palpite, nunca omitida. A leitura e a tela são do Control Center; o grafo só provê a aresta.
+- **"Aninhado" vem do caminho,** não de campo no contrato: um projeto cujo contrato está sob a raiz de um repositório
+  cuja raiz tem outro contrato é aninhado (`kind: nested`). Projeto filho com repositório próprio não é aninhado: é
+  independente, e um `contributes_to` dele para o harness é fora de alcance fora da máquina que tem os dois.
+- **Todo app novo dentro do harness** nasce assim: épicos próprios, `contributes_to` quando contribui, e o prefixo de
+  identidade abaixo.
+
+### Identidade: o ID é único no repositório
+
+Duas sequências com o mesmo prefixo em projetos que dividem um repositório (`OUT-01` no harness e no app) fazem um ID
+deixar de dizer de que projeto é. A regra (ADR-0020 D.3): um projeto aninhado leva o prefixo do contrato
+(`mjrp_harness.id_prefix: CC`) em **toda sequência por projeto que o projeto que o contém também usa** — ADR
+(`CC-ADR-0002`), épico (`CC-EP-01`), resultado (`CC-OUT-01`), NFR (`CC-NFR-01`). Ficam sem prefixo o que o outro projeto
+não usa ou que é uma sequência só no repositório: release, story (`S-NN`), feature, issue do UAT. O sensor aceita o prefixo
+do contrato nos resultados, épicos e NFR do projeto e **reprova (`id_unique`) um ID de nó repetido** entre o aninhado e a
+raiz do repositório. O nome do arquivo de uma ADR não muda; muda o título (`# CC-ADR-0002: …`, formato `decision@2`).
 
 ### O status pede evidência
 O status é declarado no frontmatter, e declarado sozinho ele mente: ninguém atualiza, ou atualiza errado, e quem lê o
@@ -151,21 +196,22 @@ Quando o sensor acusa contradição ou status apodrecido, quem lê o grafo **rec
 6. Registre cada reconciliação no log (uma entrada por decisão) e rode o sensor de novo.
 
 É procedimento de Guardian: a `mjrp-ensuring-sdd` o assume (S-66), e a `mjrp-pdlc` o chama antes de decidir a
-próxima estação. A passada diária só **propõe** (relatório em `reports/audits/`); o status muda numa sessão. O agente
+próxima etapa. A passada diária só **propõe** (relatório em `reports/audits/`); o status muda numa sessão. O agente
 que executa a reconciliação por conta própria é do EP-03 (brief do MJRP).
 
 ### Quem faz o quê (arquétipos)
-- **Escrevem as arestas:** `mjrp-writing-reqs` (`epic`, `points_to`, `planned_for`), `mjrp-specifying-sdd-artifacts`
+- **Escrevem as arestas:** `mjrp-writing-reqs` (`epic`, `points_to`, `planned_for`), `mjrp-coaching-pm` (`serves`, `contributes_to`), `mjrp-specifying-sdd-artifacts`
   (`imports`, `implements`), quem escreve o teste ou o `uat.md` (`verified_by`).
 - **Escrevem os estados observáveis:** o de tela, `mjrp-designing-ui` (block ID no
   `info-arch.md`, a partir do protótipo aprovado); o de comportamento, `mjrp-writing-reqs` no Example Mapping, com os
   exemplos julgados pelo humano antes do Ready (decisão D-04 do MJRP, 2026-10-04).
 - **Confere o grafo:** `mjrp-ensuring-sdd` (Guardian), sobre o sensor determinístico
   (`requirements_graph_check.py`; o `SDD_chain_artifacts_check` foi aposentado em 05/10, S-77).
-- **Percorre o grafo:** `mjrp-pdlc` (Orchestrator) decide a próxima estação pelo estado dos nós.
+- **Percorre o grafo:** `mjrp-pdlc` (Orchestrator) decide a próxima etapa pelo estado dos nós.
 - **Julga o conteúdo:** `mjrp-ensuring-quality` (Reviewer) — a aresta existir não prova que o teste prova o REQ.
 
 ## History
+- **2026-10-13 19:00** · **ADR-0020 (T1)**: a seção *Subprojeto do harness* e as exceções nas arestas `epic` e `planned_for` saem — o app é um projeto como os outros, com épicos próprios, e `parent_epic` sai do contrato; entra a aresta `contributes_to` (resultado → resultado de outro roadmap, 0..1, alvo existente, sem ciclo; resolvido / inexistente / fora de alcance; o filho não segura o pai); `planned_for` obrigatório vira a opção de projeto `requirements.release_required` (a release do épico cumpre); entra o estado **`Cancelled`**, fora do andamento; entra a identidade de ID no repositório (`id_prefix`, `id_unique`). Sensor, `doctor.py`, `gen_prd_status.py` e as skills mudaram no mesmo trilho.
 - **2026-10-09 20:55** · Revisão geral de 2026-10-09: nome do nó `<ID>-<slug>.md` (slug do título em inglês, até 50 caracteres, congelado ao nascer; `aliases: [<ID>]`; link com o nome inteiro e o ID como texto; renomear com `req_file_names.py --reslug`); exceções do subprojeto do harness nas arestas `epic` e `planned_for`; regra `design_system_exists` no Ready com tela; sensor `requirements_graph_check.py` no lugar do aposentado; S-63 fechada.
 - **2026-10-09 15:13** · Subprojeto do harness (decisão do MJRP): épico só no harness; o subprojeto declara `parent_epic` no contrato e organiza as stories por release; o sensor reprova épico no subprojeto, `epic:` em story dele e story `Prioritized` sem release. O Control Center é o primeiro (EP-08).
 - **2026-10-07 20:29** · Onda E do PDLC em loops: Ready é o contrato — vai a Ready com o OK do humano, registrado no log (decisão do MJRP; `mjrp-writing-reqs` atualizada na onda D).

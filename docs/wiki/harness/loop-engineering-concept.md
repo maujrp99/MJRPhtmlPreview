@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-10-07
 fontes: [wiki/sources/2026-10-07-mjrp-loop-engineering-handbook.md, pasquadev-harness-e-loop-engineering, waldemar-neto-loop-engineering-500k-linhas, google-cloud-tech-graph-engineering-101, google-cloud-tech-ai-agents-explained, karpathy-no-priors-skill-issue, austin-marchese-karpathy-method]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b065d73 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte 593c609d · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 **Loop engineering** é projetar o ciclo que roda **sem você**: o agente raciocina, age, observa e
@@ -144,7 +144,7 @@ externo** (o sistema de deploy). *"The verifier is the quality check station by 
 
 ### Cuidados que as fontes registram
 
-- **Teto de iterações**: três, em duas fontes independentes (Google ADK, Waldemar).
+- **Teto de iterações**: três, em duas fontes independentes (Google ADK, Waldemar). O MJRP adotou três por task em 2026-10-13 (tinha cinco).
 - **Loop que não converge, drift, custo** (Frank Coyle): *"loops can break, loops can drift as
   agents start talking to each other, and loops can cost you money — token counts crank up."*
 - **Sem critério objetivo, não é loop** — é o Opala.
@@ -195,6 +195,8 @@ loop esgota**. O MJRP tem o roadmap como documento de fases com prova — e a pr
 a stop condition do loop daquela fase. O roadmap não é insumo do loop; é o mapa dos loops.
 
 ## History
+
+- **2026-10-13 09:58** · O teto do `loop.py` passa de 5 para 3 rodadas por task, alinhado às fontes; cada task registra `rounds::` e `model::` no `tasks.md` (ver [[pdlc-loops]]).
 
 - **2026-10-07 20:37** · Onda F do PDLC em loops: o `loop.py` ganhou a falta de progresso (exit 3) e o orçamento de tokens (exit 4); a lacuna de 18:38 fechou. Selftest com os casos 6 a 7c.
 - **2026-10-07 18:38** · Correção pela proposta do PDLC em loops: a decisão de continuar é do harness, não do modelo; as cinco peças e as quatro regras de parada (handbook de Loop Engineering: Garage Labs, IBM); LLM nunca como juiz único. Lacuna: o `loop.py` sem orçamento de tokens nem detecção de falta de progresso. Ver [[pdlc-loops]].

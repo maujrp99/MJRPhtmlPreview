@@ -4,10 +4,10 @@ aliases: [harness-kaizen, lições, licoes, aprendizados, o que não funcionou, 
 summary: onde o harness falhou e o que se aprendeu com isso — o erro e a correção no mesmo lugar
 tags: [harness, memoria, kaizen]
 status: em formação
-atualizado: 2026-10-09
+atualizado: 2026-10-12
 fontes: [2026-claude-code-auto-memory]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b065d73 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte 593c609d · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O registro do que o harness **não pegou** e do que se aprendeu com isso. Achado e lição moram
@@ -38,6 +38,65 @@ deixando o ponteiro. Lição que só mora aqui é lição que ninguém aplica.
 > próprio harness`.
 
 ## Findings
+
+- **2026-10-11 12:09** · **O Delivery entregou tela que não bate com o protótipo aprovado, com todos os sensores verdes.** No UAT
+  do Control Center 1.0 o MJRP abriu a tela e achou, de cara: os componentes de UI padronizados do protótipo ausentes, o
+  minimizar e expandir que valia para todos os cards em todas as telas, a marca "MJRP" no topo, a ordem do menu — "muitos
+  detalhes de UI falhando". **Por quê:** (1) nenhuma feature comparou a tela com o protótipo. A conferência no navegador
+  (`PRINCIPLES.md` I.12) foi lida como "vista rodando" e conferiu os critérios de aceite do `spec.md`, um por um, por
+  texto e DOM (`read_page`, `get_page_text`), quase sempre com o painel oculto e sem captura. Só a F10 escreveu "comparado
+  com o protótipo v4.1", e mesmo assim por leitura. (2) Nenhum Playwright, nenhuma captura lado a lado, nenhuma diferença
+  visual. (3) A `mjrp-ensuring-quality` não foi invocada em nenhuma feature: as skills usadas foram a
+  `mjrp-specifying-sdd-artifacts` e a `mjrp-implementing-tasks`, cujo passo 5.2 aceita "screenshot, snapshot ou assert
+  datado" sem exigir o protótipo como referência. (4) Os critérios de aceite apontam para estados (`points_to`), não para o
+  que é transversal no protótipo — o padrão de componente, o comportamento de todos os cards, a ordem do menu, a marca —, e
+  por isso nenhum spec os importou. **Lição:** "a tela bate com o protótipo aprovado" tem que ser um critério com
+  mecanismo (captura das mesmas telas e estados no protótipo e no produto, lado a lado, por Playwright, julgada por quem
+  não implementou), não um passo de "ver rodando" que o próprio implementador cumpre lendo o DOM.
+  **Fechado em 2026-10-12 15:55** (Learn aprovado pelo MJRP às 15:41) — o que mudou e onde: (L1) a `mjrp-implementing-tasks` (passo
+  5.2, o item *Screen* do check e o PR) compara a tela com o protótipo aprovado pelo sensor de paridade visual e pelos
+  olhos nos pares, e não mergeia feature de tela sem a reconferência; (L2) a `mjrp-specifying-sdd-artifacts` e os modelos
+  (`spec.md`, `plan.md`, `tasks.md`, o cross-check, a `constitution` da `mjrp-pdlc-bootstrap`): toda feature de tela importa
+  a camada transversal do protótipo, a primeira feature de tela porta o CSS, as fontes e os componentes do design system,
+  a última task é a paridade visual, e cortar algo do design system exige decisão registrada (o `theme.css` cortou as
+  webfonts sozinho); (L3) a etapa **reconferência visual independente** no Delivery ([[pdlc-loops]] § 5), o modo
+  *visual parity* da `mjrp-ensuring-quality`, apontada pela tabela da `mjrp-pdlc`; (L4) o juiz do Control Center virou o
+  kit do kernel `mjrp-scripts/visual_parity/` (o Control Center o consome; mesma saída, byte a byte, nas três passadas
+  guardadas), o contrato ganhou `sensors.visual` e o doctor a checagem **A2** ([[doctor]], ADR-0017 *Proposed*); (L5) a
+  `mjrp-debugging` e a `mjrp-ensuring-quality` registram a divergência confirmada como issue no `uat.md` na hora, e o
+  cartão no quadro quando o projeto tem um.
+
+- **2026-10-11 02:40** · **A conferência no navegador achou defeito real em quase toda feature do Delivery.** No Control Center 1.0, os
+  sensores (lint, tipos, testes, schema, contraste) passaram em todas as features antes da conferência, e ela ainda achou: o
+  git vazio mostrado como "não lido" (F01), a marca da última visita apagada por um F5 (F02), a história parada zerada pela
+  renomeação dos arquivos (F03), o plural errado (F04, F05), "Sem release" sem status e a frase da história com metadados
+  (F05), "de esta máquina" (F08) — além do harness mostrado "sem kernel" contra o `data-model.md` (F04, achado ao ler o
+  modelo). **Lição:** a última task de tela (o navegador, `PRINCIPLES.md` I.12) não é cerimônia; e o contrato aprovado
+  (o `data-model.md`) precisa ser relido pelo orquestrador na revisão, porque o subagente implementa o plano, não o modelo.
+- **2026-10-11 02:40** · **Subagente com o mesmo roteiro de commit erra igual.** Dois subagentes Sonnet escreveram a mensagem de commit
+  com `-m` de várias linhas e um deles saiu truncado (F05, `7721591`); outro commitou com o lint vermelho porque o roteiro
+  não barrava (F03). **Correção:** os briefs passaram a pedir `git commit -F <arquivo>` com a conferência `git log -1`, e o
+  auxiliar do orquestrador roda os seis sensores antes de commitar. **Lição:** o que se repete em todo brief vira ferramenta
+  — candidato no Intake ("o commit não espera os sensores").
+
+- **2026-10-10 22:01** · **O template da feature produzia link que o doctor reprovava.** O `plan.md` e o `tasks.md` da
+  `mjrp-specifying-sdd-artifacts` abrem com `spec` e `plan`, o arquivo ao lado. O I3 do doctor (a checagem de
+  links) só conhecia páginas da wiki, aliases e ADRs. Então a primeira feature feita pelo template, a F01 do Control Center,
+  saiu vermelha sem erro de quem a escreveu. **Correção:** o I3 resolve o arquivo irmão; caso no selftest. **Lição:** o
+  template e o sensor que julga o que ele gera precisam de um teste juntos. O selftest do I3 nunca rodou sobre um arquivo
+  saído do template.
+- **2026-10-10 22:01** · **Instalar uma ferramenta pelo Homebrew quebrou outra.** O `brew install uv node@22` atualizou `simdjson` e
+  `simdutf` como dependências e deixou o Node padrão sem as bibliotecas que ele ligava. O sensor da tela do Control Center
+  falhou com exit -6, e o subagente teve de contornar com um wrapper. **Correção:** `brew reinstall node`. **Lição:**
+  depois de um `brew install` numa máquina de trabalho, rodar de novo os sensores que dependem do que já estava instalado.
+
+- **2026-10-10 21:38** · **O hook de uso de skill criou uma pasta que a própria estrutura não conhecia.** Na primeira skill
+  invocada numa sessão local, o `session_journal.py skill` (o hook que conta uso de skill) gravou
+  `data/raw/skill-usage.csv`. A pasta `data/` não estava declarada no `structure.yml`, então o sensor de estrutura reprovou e
+  deixou o doctor vermelho na sessão seguinte, sem nada de errado no trabalho. Achado ao abrir o Delivery do Control Center 1.0.
+  **Correção:** `data/` e `data/raw/` declaradas no `structure.yml`; `STRUCTURE.md` regenerado. **Lição:** um hook que cria
+  arquivo precisa da casa declarada na mesma mudança. O teste do hook rodou num repositório descartável, que não tem o sensor
+  de estrutura, e por isso não pegou.
 
 - **2026-10-09 22:02** · **Registrei como decisão o que era só herança.** Ao extrair o `design-system.md` do Control
   Center do protótipo aprovado, escrevi "Padrão: L2 Navy & Gold" — mas a L2 só estava no protótipo porque veio dos

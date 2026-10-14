@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-10-09
 fontes: [agentic-lab-claude-code-hooks-explained, don-woodlock-what-is-harness-engineering, quintanilha-o-que-e-harness, austin-marchese-karpathy-method, pasquadev-harness-e-loop-engineering, fernanda-kipper-harness-alem-do-claude-md]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b065d73 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte 593c609d · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 Um **hook** é um evento que dispara um script: **o evento responde *quando* o código roda; o

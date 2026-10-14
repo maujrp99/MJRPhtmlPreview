@@ -1,13 +1,13 @@
 ---
 title: Product Discovery — do problema à decisão (Rapid × Full)
 aliases: [product-discovery, discovery, enquadrar, FASE 1b, rapid discovery, full discovery, handbook de discovery, quatro riscos, premissa mais arriscada, matar iterar avançar]
-summary: o processo da estação Enquadrar da Discovery do MJRP — Rapid (cinco passos essenciais, iterativo com o LLM) e Full (o Rapid mais técnicas que o PM marca no início), os quatro riscos transformados em teste, a decisão matar · iterar · avançar e onde cada saída mora no grafo do projeto
+summary: o processo da etapa Enquadrar da Discovery do MJRP — Rapid (cinco passos essenciais, iterativo com o LLM) e Full (o Rapid mais técnicas que o PM marca no início), os quatro riscos transformados em teste, a decisão matar · iterar · avançar e onde cada saída mora no grafo do projeto
 tags: [kernel, pdlc, discovery, produto]
 status: em formação
 atualizado: 2026-10-09
 fontes: [originals/product-discovery-handbook/2026-10-07-handbook-v0.md, originals/product-discovery-handbook/2026-10-07-handbook-v1.md, wiki/sources/2026-10-07-mjrp-product-discovery-handbook.md, kernel/roadmap/requirements-graph, kernel/design/sketch-vs-prototype]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b065d73 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte 593c609d · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # Product Discovery — do problema à decisão (Rapid × Full)
 
@@ -19,11 +19,11 @@ fontes: [originals/product-discovery-handbook/2026-10-07-handbook-v0.md, origina
 
 ## Definition
 
-O **Enquadrar** é a estação da Discovery ([[pdlc-loops]] §3) em que o responsável pelo produto (o PM), com o agente coach,
+O **Enquadrar** é a etapa da Discovery ([[pdlc-loops]] §3) em que o responsável pelo produto (o PM), com o agente coach,
 transforma o que o Explorar mostrou numa decisão: o problema que vale resolver, o resultado que se quer mover e como medi-lo, os quatro riscos
 do produto convertidos em testes, a premissa mais arriscada e o desenho do teste dela — e então **matar, iterar ou avançar**.
 Tem dois modos: o **Rapid** (o essencial, em cinco passos, iterativo com o LLM) e o **Full** (o Rapid mais as técnicas que o
-PM escolhe no início). É uma estação aberta: o processo oferece, o PM decide quanto basta.
+PM escolhe no início). É uma etapa aberta: o processo oferece, o PM decide quanto basta.
 
 ## 0. Como usar
 
@@ -161,7 +161,7 @@ problema qualificado na matriz (Vencedores ou Nicho) e a usabilidade testada com
 | Resultado, medida e tags | `ROADMAP.md` (`^OUT-xx`, `tags::`) | `mjrp-coaching-pm` |
 | Premissas e desenho do teste | `docs/specs/inception-notes.md` e `docs/log.md` | `mjrp-coaching-pm` |
 | Decisão (matar · iterar · avançar) | `docs/log.md`, com data e hora | o PM decide, o agente registra |
-| Épicos e fora de escopo | `docs/specs/prd.md` (no subprojeto do harness: releases, sem épicos) | `mjrp-coaching-pm` |
+| Épicos e fora de escopo | `docs/specs/prd.md` | `mjrp-coaching-pm` |
 | Inventário do protótipo aprovado | `docs/specs/info-arch.md` § *Inventário do protótipo* | `mjrp-designing-ui`, na mesma rodada do protótipo; o coach lê e liga cada item |
 | Requisitos | `docs/specs/requirements/` | `mjrp-writing-reqs` (no nível do problema aqui; Ready no contrato) |
 
@@ -188,6 +188,7 @@ problema qualificado na matriz (Vencedores ou Nicho) e a usabilidade testada com
 
 ## History
 
+- **2026-10-13 19:00** · A linha *Épicos e fora de escopo* perde a exceção do subprojeto (ADR-0020): o app dentro do harness tem épicos próprios.
 - **2026-10-09 20:55** · Revisão geral de 2026-10-09: o inventário do protótipo é escrito pela `mjrp-designing-ui` na mesma rodada da tela (com os wireframes); o coach lê, manda escrever se faltar e liga cada item a uma função do produto ou a um resultado; no subprojeto do harness o `prd.md` organiza por release, sem épicos.
 - **2026-10-07 20:29** · Onda E do PDLC em loops (`design/proposals/pdlc-loops-migration-plan.md`): a numeração antiga de fases deu lugar às estações e ao contrato de [[pdlc-loops]] §11.
 - **2026-10-07 18:40** · #harness-kaizen: o protótipo aprovado e o seu inventário viram a entrada principal (antes do passo 1); o checklist ganha o item 8 (todo item com destino) e a tabela, onde o inventário mora. Origem: na Discovery do Control Center o coach partiu das 7 perguntas e deixou de fora abas que o MJRP tinha aprovado no protótipo v3.3. O processo vive agora dentro do loop Discovery de [[pdlc-loops]] (o *Enquadrar*).

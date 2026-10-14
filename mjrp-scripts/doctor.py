@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte b065d73 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte 593c609d · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 doctor.py - the computational sensor of the harness.
 
@@ -190,16 +190,27 @@ INSTALLED_DIRS = [".agent/skills", "skills", ".claude/skills"]
 ERRO, AVISO = "erro", "aviso"
 
 
+# A message that opens with a repository path ("MEMORY.md: ...", "docs/log.md: ...") names the
+# file of the finding. The Control Center's Health Check shows area, since when, FILE and rule
+# for each open finding (S-133 R5); until 2026-10-10 the ledger carried only the text.
+_FILE_PREFIX = re.compile(r"^([\w.\-]+(?:/[\w.\-]+)*\.(?:md|ya?ml|json|py|html|txt|sh))\b")
+
+
+def _file_from_msg(msg):
+    m = _FILE_PREFIX.match(msg)
+    return m.group(1) if m else None
+
+
 class Report:
     def __init__(self):
-        self.findings = []   # (id, level, msg, incident)
+        self.findings = []   # (id, level, msg, incident, file)
         self.notes = []      # (id, text) - what was evaluated and passed, or could not be evaluated
 
-    def fail(self, cid, msg, incident):
-        self.findings.append((cid, ERRO, msg, incident))
+    def fail(self, cid, msg, incident, file=None):
+        self.findings.append((cid, ERRO, msg, incident, file or _file_from_msg(msg)))
 
-    def warn(self, cid, msg, incident):
-        self.findings.append((cid, AVISO, msg, incident))
+    def warn(self, cid, msg, incident, file=None):
+        self.findings.append((cid, AVISO, msg, incident, file or _file_from_msg(msg)))
 
     def note(self, cid, msg):
         self.notes.append((cid, msg))
@@ -226,12 +237,31 @@ def sh(cmd, cwd, timeout=30):
 
 def git_toplevel(root):
     """A working tree do git a que `root` pertence, ou None. Sobe até um `.git` de ANCESTRAL:
-    um subprojeto aninhado (apps/<app>/, sem `.git` próprio) conta como 'sob git' pelo repo do
+    um projeto aninhado (apps/<app>/, sem `.git` próprio) conta como 'sob git' pelo repo do
     pai — achado 21/09: F3/W4 iam vermelho num nested legítimo. `.git` na própria raiz segue
     sendo o caso comum; nested é reconhecido, não penalizado."""
     code, out = sh(["git", "rev-parse", "--show-toplevel"], root)
     if code == 0 and out:
         return Path(out.splitlines()[0].strip())
+    return None
+
+
+def kernel_in_repo(cfg):
+    """ADR-0020 D.2: the contract says the kernel is read in place (`kernel: {source: in-repo}`), not copied."""
+    k = (cfg or {}).get("kernel")
+    return isinstance(k, dict) and str(k.get("source") or "").strip() == "in-repo"
+
+
+def repo_kernel_root(root):
+    """The nearest ancestor of `root`, inside the same repository, that holds the kernel (docs/wiki/kernel/) and a
+    contract of its own - the folder a nested project reads the kernel from. None when there is none."""
+    if (Path(root) / ".git").exists():
+        return None                      # its own repository: nothing above it is its repository
+    for d in Path(root).resolve().parents:
+        if (d / CONTRACT).is_file() and (d / "docs" / "wiki" / "kernel").is_dir():
+            return d
+        if (d / ".git").exists():
+            return None
     return None
 
 
@@ -367,7 +397,10 @@ SCHEMA = {
     # 19/09 (EP-07): the child projects whose docs/harness-feedback/ the harness_feedback_check.py
     # sweeps into docs/wiki/feedback-from-other-projects/ - folder names, siblings of this repo.
     "children": list,
-    "children_root": str,  # optional: where the children live when they are not siblings of this repo
+    "children_root": str,
+    # 2026-10-12 (ADR-0017, revised): where this project's screen lives - path prefixes ending in `/`, exact paths or
+    # globs. The doctor's A2 and the pre-merge-commit gate (visual_gate.py) read the same declaration.
+    "screen": list,  # optional: where the children live when they are not siblings of this repo
     # 03/10 (S-62): format of the requirements (story | use-case | ears), written by new_project.py - W3 flagged it
     # in every new project until 04/10. 04/10 (S-67): stale_days - days without activity that make an In progress
     # requirement stale for the requirements graph sensor.
@@ -375,9 +408,19 @@ SCHEMA = {
     # 04/10 (MJRP): the content profile's fields, written by new_project.py since 09/09 - W3 flagged them in every
     # content project ("campo desconhecido"); the onboarding skill carried a note explaining the warning.
     "content_root": str, "session_history": str, "destinations": list,
-    # 09/10 (MJRP): a subproject of the harness (apps/<app>/) names the harness epic it belongs to; it has no
-    # epics of its own and its stories are organised by release (requirements_graph_check.py, kernel requirements-graph).
-    "parent_epic": str,
+    # 2026-10-13 (ADR-0020 D.3): the identity prefix (CC) of a project nested in the repository of another one - carried by
+    # the outcome, epic and NFR IDs that the containing project also uses (requirements_graph_check.py, rule id_unique).
+    # `parent_epic` left the contract in the same ADR (A.4): "inside the harness" is derived from the path, not declared.
+    "id_prefix": str,
+    # 11/10 (ADR-0004 of the Control Center, accepted by the MJRP): files that carry their own history - a commit that
+    # touches only them, with a new item in their history list, is exempt from the log entry (log_entry_check.py).
+    "self_logged": list,
+    # 2026-10-13 (ADR-0019): the canonical conformance of the children - `applied: [CM-NNNN]` (migration notes the project
+    # carried out) and `waived: [{item, reason, until}]` (a dated, reasoned exception). Read by I6 and --refresh-kernel.
+    "conformance": dict,
+    # 2026-10-13 (ADR-0020 D.1): the root contract names the paths whose commits always owe the entry to the ROOT log:
+    # `log_owner: {root_paths: [docs/wiki/kernel/, mjrp-scripts/, ...]}` (log_entry_check.py).
+    "log_owner": dict,
 }
 ENUMS = {
     "profile": {"code-app", "content", "meta"},
@@ -505,17 +548,21 @@ def i2_paths(root, cfg, rep, skill_files):
     rep.note("I2", msg)
 
 
-def _wiki_targets(root):
+def _wiki_targets(root, cfg=None):
     """Everything a [[wikilink]] may resolve to: concept page, declared alias, terms.md entry
     and ADR. Empty => wikilinks are not evaluable."""
     targets = set()
     conc = root / "docs" / "wiki"
-    if conc.is_dir():
+    pages = []
+    src = repo_kernel_root(root) if kernel_in_repo(cfg) else None   # ADR-0020: a nested project reads the root's kernel
+    if src is not None:
+        pages = list((src / "docs" / "wiki" / "kernel").rglob("*.md"))
+    if conc.is_dir() or pages:
         # 14/09: the kernel copied by new_project.py lives in docs/wiki/harness/ and links to
         # itself ([[terms]], [[base-concept]]); those pages are part of this project's wiki.
         # 2026-10-09: the kernel source is organised by theme (docs/wiki/kernel/<theme>/<page>.md)
         for f in (list(conc.glob("*.md")) + list((conc / "harness").glob("*.md"))
-                  + list((conc / "kernel").rglob("*.md"))):
+                  + list((conc / "kernel").rglob("*.md")) + pages):
             targets.add(f.stem.lower())
             al = frontmatter(f).get("aliases") or []
             if isinstance(al, str):
@@ -547,11 +594,11 @@ def _wiki_targets(root):
     return targets
 
 
-def i3_links(root, rep):
+def i3_links(root, rep, cfg=None):
     inc = "a renomeação para mjrp-harness quebrou dois caminhos no visual-notes-hub sem que nada acusasse"
     inc_wiki = "a revisão de 07/09 tirou definições do VISION apontando para páginas de conceito que não existiam, e nada acusou"
     docs = [root / d for d in IDENTITY_DOCS] + sorted((root / "docs").rglob("*.md"))
-    targets = _wiki_targets(root)
+    targets = _wiki_targets(root, cfg)
     n = nw = 0
     for doc in docs:
         if not doc.exists() or "_backups" in doc.parts or "_archive" in doc.parts:
@@ -572,7 +619,10 @@ def i3_links(root, rep):
             nw += 1
             if not target:
                 continue  # [[#heading]] - a link inside the same page
-            if targets and target not in targets:
+            # A sibling file resolves too: the feature templates link plan.md to [[spec]] and tasks.md to
+            # [[plan]] in the same folder, as Obsidian does (2026-10-10, F01 of the Control Center).
+            sibling = doc.parent / (m.group(1).strip().split("#", 1)[0].strip() + ".md")
+            if targets and target not in targets and not sibling.exists():
                 rep.fail("I3", f"{doc.relative_to(root)}: wikilink [[{m.group(1).strip()}]] não resolve "
                                f"(nem página em docs/wiki/, nem alias, nem ADR)", inc_wiki)
     rep.note("I3", f"{n} documentos conferidos · {nw} wikilink(s)")
@@ -706,6 +756,18 @@ def _today(cfg):
         return sp_today()
 
 
+def _now_iso(cfg):
+    """The instant of this pass, in the configured zone (Brasília by default), ISO-8601 with the offset.
+    The Control Center shows when the last pass ran (S-133); until 2026-10-10 the state kept only dates."""
+    tz = ((cfg or {}).get("locale") or {}).get("timezone", "America/Sao_Paulo")
+    try:
+        from zoneinfo import ZoneInfo
+        return datetime.now(ZoneInfo(tz)).isoformat(timespec="seconds")
+    except Exception:
+        from datetime import timedelta, timezone
+        return datetime.now(timezone(timedelta(hours=-3))).isoformat(timespec="seconds")
+
+
 def _latest_date(text, today):
     found = [date(int(y), int(m), int(d)) for y, m, d in _ISO_RE.findall(text)]
     found += [date(today.year, int(m), int(d)) for d, m in _DM_RE.findall(text)]
@@ -823,6 +885,9 @@ def i5_kernel(root, cfg, rep):
         rep.warn("I5", "contrato sem `kernel:` — o projeto não carrega os conceitos do harness; "
                        "rode `new_project.py --refresh-kernel <pasta>`", inc)
         return
+    if kernel_in_repo(cfg):
+        _i5_kernel_in_repo(root, cfg, rep)
+        return
     pages = k.get("pages") or []
     if isinstance(pages, str):
         pages = [x.strip() for x in pages.strip("[] ").split(",") if x.strip()]
@@ -886,6 +951,52 @@ def i5_kernel(root, cfg, rep):
         elif not faltam_v:
             rep.note("I5", f"vendorizados: {len(vendored)} arquivo(s) conferidos contra a "
                            f"fonte, versão {vd}")
+    # 2026-10-12 (ADR-0017, revised): the visual parity kit is copied only to a code-app with a screen
+    vg = _visual_gate()
+    if vg is not None and cfg.get("profile") == "code-app":
+        declared = cfg.get("screen") if isinstance(cfg.get("screen"), list) else None
+        has_screen = vg.screen_on_disk(root, declared) is not None
+        has_kit = any(str(v).startswith("mjrp-scripts/visual_parity/") for v in vendored)
+        if has_screen and not has_kit:
+            rep.fail("I5", "o projeto tem tela e o kernel não traz o kit de paridade visual "
+                           "(mjrp-scripts/visual_parity/) — rode `new_project.py --refresh-kernel <pasta>`", inc_v)
+        elif has_kit and not has_screen:
+            rep.warn("I5", "o kit de paridade visual está vendorizado num projeto sem tela — o próximo "
+                           "`--refresh-kernel` não o traz mais; ele pode ir para `_archive/`", inc_v)
+
+
+def _i5_kernel_in_repo(root, cfg, rep):
+    """ADR-0020 D.2: a project nested in the harness repository reads the kernel in place - no pages, no vendored files,
+    no version. What I5 confirms is that the kernel exists at the root of the repository, and that no stale copy is left
+    to be read instead of it."""
+    inc = ("2026-10-13 (ADR-0020): o Control Center carregava 29 páginas e ~50 scripts copiados do kernel para dentro do "
+           "repositório que contém a fonte - uma cópia conferida contra o original no mesmo disco")
+    src = repo_kernel_root(root)
+    if src is None:
+        rep.fail("I5", "kernel.source: in-repo, mas nenhuma pasta acima deste projeto, no mesmo repositório, traz o kernel "
+                       "(docs/wiki/kernel/) e um contrato — declaração sem disco é a herança de mentira que o I5 existe "
+                       "para pegar", inc)
+        return
+    extra = sorted(set(cfg["kernel"]) - {"source"})
+    if extra:
+        rep.warn("I5", f"kernel.source: in-repo não leva {', '.join(extra)} — o kernel é lido no lugar, sem versão nem "
+                       "cópia; tire esses campos do contrato", inc)
+    needed = ["mjrp-scripts/doctor.py", "mjrp-scripts/hooks/commit-msg", "mjrp-scripts/canonical_catalog.json"]
+    faltam = [n for n in needed if not (src / n).is_file()]
+    vg = _visual_gate()
+    declared = cfg.get("screen") if isinstance(cfg.get("screen"), list) else None
+    if vg is not None and cfg.get("profile") == "code-app" and vg.screen_on_disk(root, declared) is not None:
+        if not (src / "mjrp-scripts" / "visual_parity").is_dir():
+            faltam.append("mjrp-scripts/visual_parity/")
+    if faltam:
+        rep.fail("I5", f"o kernel lido no lugar ({src.name}) não traz {', '.join(faltam)}", inc)
+    copias = [n for n in ("docs/wiki/harness", "mjrp-scripts") if (root / n).exists()]
+    if copias:
+        rep.warn("I5", f"cópia do kernel ainda no disco ({', '.join(copias)}) num projeto que o lê no lugar - aposente-a "
+                       "para `_backups/` (mjrp-scripts/_safe.py); os leitores seguem `kernel.source`, mas a cópia envelhece "
+                       "calada", inc)
+    if not faltam:
+        rep.note("I5", f"kernel: lido no lugar, na raiz do repositório ({src.name}) - sem cópia a conferir")
 
 
 def _kernel_divergentes(root, pages):
@@ -931,6 +1042,7 @@ def _sem_banner(texto):
                      if not l.startswith("<!-- kernel do MJRP Harness")
                      and not l.startswith("<!-- cópia carimbada do MJRP Harness")
                      and not l.startswith("# cópia carimbada do MJRP Harness")
+                     and not l.startswith("// cópia carimbada do MJRP Harness")
                      and not l.startswith('  "_vendored": "cópia carimbada do MJRP Harness')).strip()
 
 
@@ -962,6 +1074,25 @@ SPECKIT_MIRROR = Path(".specify") / "memory" / "constitution.md"
 GENERATED_MARK = "GERADO de docs/specs/constitution.md"
 
 
+def _pending_notes_count(child, child_cfg):
+    """ADR-0019: how many canonical migration notes a neighbour has neither applied nor waived; None when it has no
+    catalog copy of its own ("nunca conformado": never refreshed, so its old doctor cannot accuse itself)."""
+    sys.dont_write_bytecode = True
+    try:
+        import conformance_check as cc
+        cat = Path(child) / "mjrp-scripts" / "canonical_catalog.json"
+        if not cat.is_file() and (Path(child).parent.name == "apps"):
+            cat = cc.find_catalog(child) or cat      # a nested project is judged by its repository's catalog
+        if not cat.is_file():
+            return None
+        vg = _visual_gate()
+        declared = child_cfg.get("screen") if isinstance(child_cfg.get("screen"), list) else None
+        has_screen = None if vg is None else bool(vg.screen_on_disk(child, declared))
+        return len(cc.pending(child, child_cfg, cc.load_catalog(cat), cat.parent / "migrations", has_screen, _today(child_cfg)))
+    except Exception:
+        return False        # could not tell: W7 says so, it never swallows it into "0 pending"
+
+
 def w7_kernel_downstream(root, cfg, rep):
     """Do lado da FONTE: mudei uma pagina do kernel - quem ficou defasado?
 
@@ -979,18 +1110,31 @@ def w7_kernel_downstream(root, cfg, rep):
            "velha; o I5 so acusa quando alguem abre o projeto, e ninguem abriu")
     vizinhos = sorted(d for d in root.parent.iterdir()
                       if d.is_dir() and d != root and (d / CONTRACT).exists())
+    vizinhos += sorted(d for d in (root / "apps").glob("*") if d.is_dir() and (d / CONTRACT).exists())   # EP-13: nested projects too
+    croot = Path(str(cfg.get("children_root") or root.parent)).expanduser()                              # EP-13: `children:` of the contract
+    for nm in cfg.get("children") or []:
+        d = croot / str(nm)
+        if d.is_dir() and (d / CONTRACT).exists() and d != root and d not in vizinhos:
+            vizinhos.append(d)
     if not vizinhos:
         return
-    defasados, conferidos = [], 0
+    defasados, conferidos, com_notas, nunca, nao_av = [], 0, [], [], []
     for d in vizinhos:
         try:
             raw = read_yaml((d / CONTRACT).read_text(encoding="utf-8")) or {}
         except Exception:
             continue
         c = raw.get("mjrp_harness") or {}
+        n_notas = _pending_notes_count(d, c) if c.get("profile") in ("code-app", "content") else 0   # ADR-0019
+        if n_notas is None:
+            nunca.append(d.name)
+        elif n_notas is False:
+            nao_av.append(d.name)
+        elif n_notas:
+            com_notas.append(f"{d.name} ({n_notas})")
         k = c.get("kernel")
-        if not k:
-            continue
+        if not k or kernel_in_repo(c):
+            continue   # ADR-0020: a project that reads the kernel in place has no copy to be behind
         pages = k.get("pages") or []
         if isinstance(pages, str):
             pages = [x.strip() for x in pages.strip("[] ").split(",") if x.strip()]
@@ -1000,6 +1144,14 @@ def w7_kernel_downstream(root, cfg, rep):
         conferidos += 1
         if fora:
             defasados.append(f"{d.name} ({len(fora)}: {', '.join(fora[:3])})")
+    if nao_av:
+        rep.warn("W7", f"notas de migração canônica não avaliáveis em {len(nao_av)} projeto(s) — {' · '.join(nao_av)} (catálogo ilegível ou erro ao avaliar)", inc)
+    if nunca:
+        rep.warn("W7", f"{len(nunca)} projeto(s) nunca conformado(s) — sem mjrp-scripts/canonical_catalog.json: {' · '.join(nunca)}. "
+                       "O doctor velho deles não tem o I6 e não se acusa sozinho; rode `new_project.py <pasta> --refresh-kernel`", inc)
+    if com_notas:
+        rep.warn("W7", f"{len(com_notas)} projeto(s) com notas de migração canônica pendentes (ADR-0019) — {' · '.join(com_notas)}. "
+                       "O `--refresh-kernel` as lista; a bootstrap em modo conform as executa", inc)
     if defasados:
         rep.warn("W7", f"{len(defasados)} projeto(s) com o kernel defasado desta fonte — "
                        f"{' · '.join(defasados)}. Rode `new_project.py <pasta> --refresh-kernel`", inc)
@@ -1058,9 +1210,9 @@ def f1_memory(root, rep, cfg=None):
     # four blocks, pointers instead of detail, pending items dated and fresh (now_shape).
     fails, warns, _notes = now_shape(root, texto, cfg)
     for m in fails:
-        rep.fail("F1", m, inc)
+        rep.fail("F1", m, inc, file="MEMORY.md")
     for m in warns:
-        rep.warn("F1", m, inc_08)
+        rep.warn("F1", m, inc_08, file="MEMORY.md")
     for m in _notes:
         rep.note("F1", m)
     # A section that ADR-0008 ordered emptied coming back means the write half regressed: a
@@ -1071,16 +1223,16 @@ def f1_memory(root, rep, cfg=None):
               and t.strip() not in ("## Now", "## Ways of Working")]
     if voltou:
         rep.fail("F1", f"MEMORY.md tem seção que a ADR-0008 esvaziou: {', '.join(voltou)} — "
-                       f"decisão mora na página do assunto, não aqui", inc_08)
+                       f"decisão mora na página do assunto, não aqui", inc_08, file="MEMORY.md")
     behind = now_behind_log(root, now_section(texto))
     if behind:
-        rep.fail("F1", behind, inc)
+        rep.fail("F1", behind, inc, file="MEMORY.md")
     rep.note("F1", f"MEMORY.md: {len(linhas)} linhas (contagem informativa — o veredito é a forma)")
 
 
 # --- the episodic half of memory: docs/log.md and the growth of ## Ways of Working ------------
 LOG_HEADER = "# log — o que aconteceu, em ordem"
-LOG_ENTRY = re.compile(r"^## \[(\d{4}-\d{2}-\d{2})( \d{2}:\d{2})?\] (session|decision|ingest|inventory|harness-feedback)\b.* — ")
+LOG_ENTRY = re.compile(r"^## \[(\d{4}-\d{2}-\d{2})( \d{2}:\d{2})?\] (session|decision|ingest|inventory|harness-feedback|review)\b.* — ")
 LOG_TIME_REQUIRED_FROM = "2026-09-10"   # the hour became mandatory on this date (log.md header)
 WOW_LINES_PER_DAY_WARN = 4              # corrections of conduct do not arrive in batches
 
@@ -1103,7 +1255,7 @@ def f1_log_shape(root, rep):
     primeira = next((l.strip() for l in linhas if l.strip()), "")
     if primeira != LOG_HEADER:
         rep.fail("F1", f"docs/log.md abre com '{primeira[:60]}' — o cabeçalho canônico é "
-                       f"'{LOG_HEADER}': o log é episódico (o QUANDO), decisão mora na wiki", inc)
+                       f"'{LOG_HEADER}': o log é episódico (o QUANDO), decisão mora na wiki", inc, file="docs/log.md")
     ruins, sem_hora = [], []
     for l in linhas:
         if not l.startswith("## "):
@@ -1116,11 +1268,11 @@ def f1_log_shape(root, rep):
     if ruins:
         rep.fail("F1", f"{len(ruins)} entrada(s) do log.md fora do formato "
                        f"'## [AAAA-MM-DD HH:MM] tipo — título' (ex.: {ruins[0]!r}) — sem o "
-                       f"prefixo, o log deixa de responder por data e por grep", inc)
+                       f"prefixo, o log deixa de responder por data e por grep", inc, file="docs/log.md")
     if sem_hora:
         rep.warn("F1", f"{len(sem_hora)} entrada(s) do log.md sem hora depois de "
                        f"{LOG_TIME_REQUIRED_FROM} (a primeira: {sem_hora[0]}) — duas do mesmo dia "
-                       f"perdem a ordem entre si", inc)
+                       f"perdem a ordem entre si", inc, file="docs/log.md")
 
 
 def f1_wow_growth(root, rep):
@@ -1139,7 +1291,7 @@ def f1_wow_growth(root, rep):
     if len(de_hoje) > WOW_LINES_PER_DAY_WARN:
         rep.warn("F1", f"## Ways of Working ganhou {len(de_hoje)} linhas datadas de hoje (aviso a "
                        f"partir de {WOW_LINES_PER_DAY_WARN + 1}) — correção de conduta não vem em "
-                       f"lote; marco de entrega mora no log.md, decisão mora na wiki", inc)
+                       f"lote; marco de entrega mora no log.md, decisão mora na wiki", inc, file="MEMORY.md")
 
 
 def f2_gates(cfg, rep):
@@ -1166,9 +1318,9 @@ def f3_git(root, rep):
         return
     aninhado = top.resolve() != Path(root).resolve()
     if aninhado:
-        # subprojeto aninhado: o repo é do pai. Push e edições não-commitadas são do doctor
+        # projeto aninhado: o repo é do pai. Push e edições não-commitadas são do doctor
         # DELE (W2/W4 rodam lá, sobre a árvore inteira) — reportar de novo aqui seria eco.
-        rep.note("F3", f"sob git do repo pai ({top.name}) — subprojeto aninhado, sem repo próprio")
+        rep.note("F3", f"sob git do repo pai ({top.name}) — projeto aninhado, sem repo próprio")
         return
     code, out = sh(["git", "status", "-sb"], root)
     m = re.search(r"ahead (\d+)", out or "")
@@ -1218,11 +1370,37 @@ def repo_fingerprint(root):
     return hashlib.sha1("\n".join(partes).encode("utf-8")).hexdigest()[:16]
 
 
+# 2026-10-12 (ADR-0017, revised after its architecture audit; decision of the MJRP): a sensor may be a mapping
+# {cmd, when, config}. `when: pre-merge` is allowed for `sensors.visual` ONLY - the visual parity runs two servers and
+# browsers for minutes, at the independent visual recheck before a screen feature's merge, and the pre-merge-commit
+# gate (visual_gate.py) is what holds it there. Any other sensor with `when`, any other value, or a mapping without
+# `cmd` fails: an escape of one line out of the A1 is how "declared and never run" comes back.
+STATION_SENSOR, STATION_WHEN = "visual", "pre-merge"
+
+
+def _is_station(name, spec):
+    return name == STATION_SENSOR and str(spec.get("when", "")).strip() == STATION_WHEN
+
+
+def _sensor_map_problem(name, spec):
+    """Why a sensor declared as a mapping cannot run in the A1, or None. The stage's sensor is judged by the A2."""
+    if "when" in spec and name != STATION_SENSOR:
+        return (f"sensor '{name}' declara `when: {spec.get('when')}` — só `sensors.{STATION_SENSOR}` pode ser de "
+                f"etapa (`when: {STATION_WHEN}`); os demais rodam a cada doctor")
+    if "when" in spec and str(spec.get("when", "")).strip() != STATION_WHEN:
+        return f"sensor '{name}': `when: {spec.get('when')}` desconhecido — o único valor é `{STATION_WHEN}`"
+    if not str(spec.get("cmd") or "").strip():
+        return f"sensor '{name}' declarado como mapa sem `cmd` — não há o que rodar (nunca vira verde vazio)"
+    return None
+
+
 def a1_sensors(root, cfg, rep, skip):
     inc = "o contrato declara {lint, test, build} e nada verifica que rodam; o Albums v0 tem 310 arquivos em produção sem que se saiba se o teste dele roda"
     inc_cache = ("09/09: o `.mjrp/sensors.json` guardava `code: 1` para o sensor do loop enquanto "
                  "o loop_selftest já estava consertado e passando — o registro era verdadeiro "
                  "quando foi escrito e falso quando foi lido, e nada nele dizia qual dos dois")
+    inc_map = ("2026-10-12, crítica da ADR-0017 (achados 2 e 3): um sensor-mapa sem `cmd` virava `sh(\"\")`, que sai "
+               "0 — verde sem rodar nada; e o `when` tirava qualquer sensor do A1, calado")
     sensors = cfg.get("sensors") or {}
     if not sensors:
         rep.fail("A1", "contrato sem sensores declarados — não há o que medir, só opinião", inc)
@@ -1238,6 +1416,13 @@ def a1_sensors(root, cfg, rep, skip):
     if skip:
         velhos, lidos = [], 0
         for name in sensors:
+            if isinstance(sensors[name], dict):
+                if _is_station(name, sensors[name]):
+                    continue                     # the stage's sensor: the doctor never runs it (A2 judges it)
+                bad = _sensor_map_problem(name, sensors[name])
+                if bad:
+                    rep.fail("A1", bad, inc_map)
+                    continue
             r = cache.get(name)
             if not r:
                 rep.fail("A1", f"sensor '{name}' nunca foi executado (sem registro)", inc)
@@ -1257,7 +1442,17 @@ def a1_sensors(root, cfg, rep, skip):
         if lidos:
             rep.note("A1", f"{lidos} sensor(es) lidos do registro, no estado atual (--skip-sensors)")
         return
-    for name, cmd in sensors.items():
+    stage = {}
+    for name, cmd in list(sensors.items()):
+        if isinstance(cmd, dict):
+            if _is_station(name, cmd):
+                stage[name] = cmd
+                continue
+            bad = _sensor_map_problem(name, cmd)
+            if bad:
+                rep.fail("A1", bad, inc_map)
+                continue
+            cmd = str(cmd.get("cmd")).strip()
         code, out = sh(cmd, root, SENSOR_TIMEOUT)
         cache[name] = {"code": code, "when": datetime.now().isoformat(timespec="seconds"),
                        "fingerprint": agora, "v": SENSOR_CACHE_VERSION}
@@ -1267,7 +1462,180 @@ def a1_sensors(root, cfg, rep, skip):
             rep.fail("A1", f"sensor '{name}' reprovou (exit {code}): {out.splitlines()[-1][:120] if out else ''}", inc)
     cache_file.parent.mkdir(parents=True, exist_ok=True)
     cache_file.write_text(json.dumps(cache, indent=2, ensure_ascii=False))
-    rep.note("A1", f"{len(sensors)} sensor(es) executados")
+    rep.note("A1", f"{len(sensors) - len(stage)} sensor(es) executados"
+                   + (f" · {len(stage)} de etapa, fora desta passada ({', '.join(sorted(stage))}: when: pre-merge)"
+                      if stage else ""))
+
+
+# 2026-10-12 (ADR-0017 of the harness, Accepted): a project with a screen and an approved prototype declares how its
+# screen is compared with that prototype. The incident (2026-10-11): the Control Center 1.0 reached the UAT with the UI
+# far from its approved prototype v4.1 - standardized components and the collapse of every card missing, the brand,
+# the shell's order, the fonts and the design system's CSS off - with every sensor green; no sensor compared the two,
+# and the fix took a Playwright diagnosis, four rounds of correction and three rechecks by a separate agent.
+def _visual_gate():
+    """visual_gate.py (vendored next to this file): the one definition of "this project has a screen"."""
+    sys.dont_write_bytecode = True
+    try:
+        import visual_gate
+        return visual_gate
+    except ModuleNotFoundError:
+        return None
+
+
+def _npm_script(cwd, words):
+    """`npm run [--prefix D] S` / `npm --prefix D run S`: (the folder, the script's text), or None."""
+    if not words or words[0] != "npm":
+        return None
+    prefix, rest, i = cwd, [], 1
+    while i < len(words):
+        if words[i] == "--prefix" and i + 1 < len(words):
+            prefix = cwd / words[i + 1]
+            i += 2
+            continue
+        rest.append(words[i])
+        i += 1
+    if len(rest) >= 2 and rest[0] in ("run", "run-script"):
+        try:
+            scripts = json.loads((prefix / "package.json").read_text(encoding="utf-8")).get("scripts", {})
+        except Exception:
+            return prefix, ""
+        return prefix, scripts.get(rest[1], "")
+    return None
+
+
+def _visual_files(root, cmd, depth=0):
+    """The existing files a visual sensor's command reaches (npm scripts expanded), as absolute paths."""
+    found = []
+    for part in re.split(r"&&|\|\||;", cmd):
+        words = part.split()
+        npm = _npm_script(root, words)
+        if npm and depth < 3:
+            found += _visual_files(npm[0], npm[1], depth + 1)
+            continue
+        for w in words:
+            w = w.strip("\"'")
+            if ("/" in w or w.endswith((".mjs", ".js", ".ts", ".cjs"))) and not w.startswith("-"):
+                f = (root / w).resolve()
+                if f.is_file():
+                    found.append(f)
+    return found
+
+
+def _visual_reach(root, spec):
+    """Why the declared visual sensor does not reach the kit and an existing config, or None."""
+    cmd = str(spec.get("cmd") or "").strip() if isinstance(spec, dict) else str(spec or "").strip()
+    if not cmd:
+        return "`sensors.visual` declarado sem comando (`cmd`) — não há o que rodar na reconferência visual"
+    if not isinstance(spec, dict) or str(spec.get("when", "")).strip() != STATION_WHEN:
+        return ("`sensors.visual` sem `when: pre-merge` — é o sensor da reconferência visual, de etapa; "
+                "a string solta roda a cada doctor e nada a liga à etapa")
+    config = str(spec.get("config") or "").strip()
+    if not config or not (root / config).is_file():
+        return (f"`sensors.visual.config` {'ausente' if not config else 'não existe: ' + config} — o sensor tem de "
+                f"apontar para o config visual do projeto (referência, cenários, condições)")
+    files = _visual_files(root, cmd)
+    kit = [f for f in files if f.name == "run.mjs" and f.parent.name == "visual_parity"
+           or "visual_parity/" in f.read_text(encoding="utf-8", errors="replace")]
+    if not kit:
+        return (f"`sensors.visual` ({cmd[:60]}) não chega ao kit de paridade visual — nem "
+                f"`mjrp-scripts/visual_parity/run.mjs` nem um juiz do projeto que importe dele")
+    return None
+
+
+def a2_visual_sensor(root, cfg, rep):
+    """A2 - a code-app with a screen and an approved prototype declares its visual parity sensor (sensors.visual)."""
+    inc = ("2026-10-11: o Control Center 1.0 chegou ao UAT com a tela longe do protótipo aprovado v4.1 — componentes "
+           "padronizados, o minimizar/expandir dos cards, a marca, a ordem da casca, as fontes e o CSS do design system "
+           "— com todos os sensores verdes: nenhum comparava a tela com o protótipo")
+    if cfg.get("profile") != "code-app":
+        return
+    vg = _visual_gate()
+    if vg is None:
+        rep.note("A2", "visual_gate.py ausente nesta instância — paridade visual não avaliada "
+                       "(chega com o kernel: `new_project.py --refresh-kernel`)")
+        return
+    ia = root / "docs" / "specs" / "info-arch.md"
+    approved = vg.approved_reference(ia.read_text(encoding="utf-8", errors="replace")) if ia.is_file() else None
+    declared = cfg.get("screen") if isinstance(cfg.get("screen"), list) else None
+    screen = vg.screen_on_disk(root, declared)
+    if not approved or not screen:
+        rep.note("A2", "paridade visual: " + ("sem referência visual aprovada no info-arch.md" if not approved else "sem tela")
+                 + " — não se aplica")
+        return
+    visual = (cfg.get("sensors") or {}).get("visual")
+    if not visual:
+        rep.fail("A2", f"o projeto tem tela ({screen}) e referência visual aprovada no info-arch.md, e o contrato não declara "
+                       "`sensors.visual` — nada compara a tela com a referência aprovada (kit: mjrp-scripts/visual_parity/)",
+                 inc, file=".mjrp-project.yml")
+        return
+    bad = _visual_reach(root, visual)
+    if bad:
+        rep.fail("A2", bad, inc, file=".mjrp-project.yml")
+    else:
+        rep.note("A2", f"paridade visual declarada e alcançável: {str(visual.get('cmd')).strip()[:60]} · "
+                       f"config {visual.get('config')}")
+
+
+# 2026-10-13 (ADR-0019): the fin-control audit found the bootstrap had installed the kernel and nothing else - doctor
+# green, while info-arch.md, a design system with themes, a ROADMAP in Now/Next/Later, uat@2 and the visual-sensor
+# declaration were never built. I6 is the 12th and last error slot (ADR-0002's ceiling) and judges the CHILD only; the
+# source's side (the Learn gate) is a sensor of the harness contract, run by A1:
+#   `sensors.canonical_catalog: python3 mjrp-scripts/conformance_check.py . --learn-gate`.
+# It compares the project with the catalog of what is canonical today (conformance_check.py + canonical_catalog.json,
+# vendored with the kernel): warning until max(since, received) + grace_days, error after; a note in `applied` whose check
+# fails is an error at once; a missing or invalid catalog is an error with the fix command; "não avaliável" is a note,
+# never a pass.
+def i6_conformance(root, cfg, rep):
+    """I6 - canonical conformance of a child (code-app, content)."""
+    if cfg.get("profile") not in ("code-app", "content"):
+        return
+    inc = ("2026-10-13: a auditoria do fin-control mostrou o kernel instalado, o doctor verde e os artefatos canônicos "
+           "(info-arch, temas, ROADMAP Now/Next/Later, uat@2, screen/sensors.visual) nunca construídos")
+    in_repo = kernel_in_repo(cfg)
+    fix = ("o kernel deste projeto é lido no lugar (kernel.source: in-repo): restaure mjrp-scripts/ na raiz do repositório"
+           if in_repo else "rode `python3 <harness>/mjrp-scripts/new_project.py <esta pasta> --refresh-kernel`")
+    sys.dont_write_bytecode = True
+    try:
+        import conformance_check as cc
+    except ModuleNotFoundError:
+        rep.fail("I6", f"sem conformance_check.py nesta instância — a conformidade canônica não pode ser avaliada; {fix}", inc,
+                 file=".mjrp-project.yml")
+        return
+    catalog = cc.find_catalog(root)
+    if catalog is None:
+        rep.fail("I6", f"sem mjrp-scripts/canonical_catalog.json — nada diz o que este projeto deve ter; {fix}", inc, file=".mjrp-project.yml")
+        return
+    try:
+        items = cc.load_catalog(catalog)
+    except cc.CatalogError as e:
+        rep.fail("I6", f"catálogo inválido ({e}); {fix}", inc, file="mjrp-scripts/canonical_catalog.json")
+        return
+    vg = _visual_gate()
+    declared = cfg.get("screen") if isinstance(cfg.get("screen"), list) else None
+    has_screen = None if vg is None else bool(vg.screen_on_disk(root, declared))
+    results = cc.evaluate(root, cfg, _today(cfg), items, has_screen, catalog.parent / "migrations")
+    gaps, unstamped = 0, False
+    for r in results:
+        text = cc.describe(r)
+        if r["status"] == "unknown":
+            rep.note("I6", text)
+        elif r["status"] == "waived":
+            rep.note("I6", f"{r['item']['title']}: {r['reasons'][0]}")
+        elif r["status"] == "gap":
+            gaps += 1
+            unstamped = unstamped or r.get("no_stamp", False)
+            (rep.fail if r["severity"] == "error" else rep.warn)("I6", text, r["item"]["born_of"], file=".mjrp-project.yml")
+        for d in r.get("delegated", []):
+            rep.note("I6", f"{r['item']['title']}: pré-condição vale; o veredito é do {d}")
+    if unstamped and in_repo:
+        # ADR-0020 D.2: `received` leaves the contract of a nested project - it lives with the source, the grace counts from `since`
+        rep.note("I6", "projeto aninhado que lê o kernel no lugar: o item entrou na data do seu `since`, na fonte; "
+                       "a carência corre desde então (não há `conformance.received` aqui)")
+    elif unstamped:
+        rep.note("I6", "algum item sem carimbo em `conformance.received` — a carência conta do `since`; "
+                       "o `--refresh-kernel` carimba o dia em que o projeto recebeu a obrigação")
+    if not gaps:
+        rep.note("I6", f"conformidade canônica: {len(items)} item(ns) no catálogo, nenhuma lacuna neste projeto")
 
 
 # Repository areas where an uncommitted edit matters to the agent right at session start:
@@ -1474,11 +1842,14 @@ def w8_cowork_marker(root, cfg, rep):
 
     idade_dias = int((time.time() - datetime.strptime(marco["quando"], "%Y-%m-%d %H:%M").timestamp()) / 86400)
     if nomes:
-        listagem = ", ".join(sorted(nomes)) if len(nomes) <= 6 else f"{len(nomes)} skills"
-        rep.warn("W8", f"{len(nomes)} skill(s) mudaram desde a última subida pro Cowork "
-                       f"({marco['quando']}, {idade_dias}d atrás) e ainda não foram reempacotadas: "
-                       f"{listagem}. `propose_skills` + git commit fecham isto "
-                       f"(Ways of Working, MEMORY.md 17/09 21:46)", inc)
+        # one warning per changed skill (2026-10-10, Control Center F04): the skill name is part of
+        # the finding identity, so each skill has its own age in the ledger and the one that is
+        # uploaded closes alone on the next pass
+        for nome in sorted(nomes):
+            rep.warn("W8", f"skill {nome} mudou desde a última subida pro Cowork "
+                           f"({marco['quando']}, {idade_dias}d atrás) e ainda não foi reempacotada — "
+                           f"`propose_skills` + git commit fecham isto "
+                           f"(Ways of Working, MEMORY.md 17/09 21:46)", inc)
     else:
         rep.note("W8", f"nenhuma skill mudou desde a última subida pro Cowork "
                        f"({marco['quando']}, {idade_dias}d atrás)")
@@ -1568,7 +1939,7 @@ def w10_sessions(root, rep):
     if top is None:
         return
     if top.resolve() != Path(root).resolve():
-        rep.note("W10", "subprojeto aninhado — travas e sessões são do repo pai")
+        rep.note("W10", "projeto aninhado — travas e sessões são do repo pai")
         return
     locks = _orphan_git_locks(root)
     hoje = sp_today().strftime("%Y%m%d")
@@ -1705,6 +2076,78 @@ def w13_repo_backup(root, rep):
         rep.note("W13", "backup do repositório em dia com o HEAD")
 
 
+def _uat_statuses(text):
+    """{UAT-NN: status cell} read from every table of a uat.md (the Status column is found by header)."""
+    out, col = {}, None
+    for line in text.splitlines():
+        if not line.startswith("|"):
+            continue
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if cells and cells[0] == "ID" and "Status" in cells:
+            col = cells.index("Status")
+        elif col is not None and re.match(r"UAT-\d+$", cells[0]) and len(cells) > col:
+            out[cells[0]] = cells[col]
+    return out
+
+
+def _uat_state(cell):
+    """open | fixing | fixed | other - the first word of the Status cell."""
+    m = re.match(r"(open|fixing|fixed)\b", cell or "")
+    return m.group(1) if m else "other"
+
+
+def w15_fix_branch_status(root, cfg, rep):
+    """W15 - a fix branch that changes a UAT issue's Status while main still says `open`."""
+    inc = ("13/10/2026: as correções UAT-72, UAT-73..75 e UAT-76 foram feitas em branches `fix/uat-…` enquanto o "
+           "`docs/specs/uat.md` da main seguia `open` (o status mudou só dentro de cada branch); o quadro Delivery, "
+           "que lê a main, mostrou \"Em correção 0\" e o MJRP estranhou — o processo manda marcar `fixing (<Fxx>)` "
+           "na main, ligada a uma feature da trilha Fix, antes de corrigir")
+    root = Path(root)
+    projects = [root]
+    if cfg.get("profile") == "meta" and (root / "apps").is_dir():
+        projects += sorted(p for p in (root / "apps").iterdir() if (p / CONTRACT).exists())
+    projects = [p for p in projects if (p / "docs" / "specs" / "uat.md").is_file()]
+    if not projects:
+        return
+    top = git_toplevel(root)
+    principal = _principal_branch(top) if top else None
+    if top is None or principal is None:
+        rep.note("W15", "correções em branch × status na main: não avaliável (sem git ou sem branch principal)")
+        return
+    code, out = sh(["git", "for-each-ref", "--format=%(refname:short)", "--no-merged", principal, "refs/heads"], top)
+    if code != 0:
+        rep.note("W15", f"correções em branch × status na main: não avaliável (git falhou: {out[:80]})")
+        return
+    branches = [b for b in out.splitlines() if b.strip() and b != principal]
+    found = False
+    for proj in projects:
+        rel = (proj.resolve().relative_to(top.resolve()) / "docs" / "specs" / "uat.md").as_posix()
+        c, main_txt = sh(["git", "show", f"{principal}:{rel}"], top)
+        if c != 0:
+            continue                                   # the file is not on main yet: nothing there to be stale
+        main_st = _uat_statuses(main_txt)
+        for b in branches:
+            if sh(["git", "diff", "--quiet", f"{principal}...{b}", "--", rel], top)[0] == 0:
+                continue                               # the branch does not touch this uat.md
+            c1, base = sh(["git", "merge-base", principal, b], top)
+            c2, base_txt = sh(["git", "show", f"{base}:{rel}"], top) if c1 == 0 else (1, "")
+            c3, br_txt = sh(["git", "show", f"{b}:{rel}"], top)
+            if c2 != 0 or c3 != 0:
+                continue
+            base_st, br_st = _uat_statuses(base_txt), _uat_statuses(br_txt)
+            ids = sorted(i for i, v in br_st.items()
+                         if base_st.get(i) is not None and _uat_state(v) != _uat_state(base_st[i])
+                         and _uat_state(main_st.get(i)) == "open")
+            if ids:
+                found = True
+                rep.warn("W15", f"a branch `{b}` já mexe no status de {', '.join(ids)} em {rel}, mas na `{principal}` "
+                                f"{'essa issue segue' if len(ids) == 1 else 'essas issues seguem'} `open` — o quadro Delivery, que lê a "
+                                f"`{principal}`, mostra \"Em correção 0\". Marque `fixing (<Fxx>)` na `{principal}`, ligada a uma "
+                                f"feature da trilha Fix (`docs/specs/features/Fxx-*/spec.md` com `track: Fix` e `fixes:`)", inc, rel)
+    if not found:
+        rep.note("W15", "correções em branch: nenhuma branch aberta muda status de UAT que a main ainda tenha como `open`")
+
+
 def run(root, skip_sensors):
     rep = Report()
     cfile = root / CONTRACT
@@ -1725,7 +2168,7 @@ def run(root, skip_sensors):
     c1_conformance(root, cfg, rep)
     i1_contract(cfg, rep)
     i2_paths(root, cfg, rep, skill_files)
-    i3_links(root, rep)
+    i3_links(root, rep, cfg)
     i4_agents(root, rep)
     i5_principles_inheritance(root, rep)
     i5_kernel(root, cfg, rep)
@@ -1737,6 +2180,8 @@ def run(root, skip_sensors):
     f2_gates(cfg, rep)
     f3_git(root, rep)
     a1_sensors(root, cfg, rep, skip_sensors)
+    a2_visual_sensor(root, cfg, rep)
+    i6_conformance(root, cfg, rep)
     w1_descriptions(rep, skill_files)
     w4_uncommitted_edits(root, rep)
     w5_boundary_skills(root, rep, skill_files)
@@ -1748,6 +2193,7 @@ def run(root, skip_sensors):
     w12_retired_names(root, rep)
     w13_repo_backup(root, rep)
     w14_prototype_sync(root, rep)
+    w15_fix_branch_status(root, cfg, rep)
     _daily_checks_ledger(root, cfg, rep)
     return rep, (1 if rep.errors else 0)
 
@@ -1769,12 +2215,17 @@ def _daily_checks_ledger(root, cfg, rep):
     try:
         import daily_checks
         when = _today(cfg).isoformat()
-        avisos = [(_finding_identity(cid, msg), f"[{cid}] {msg}")
-                  for cid, lvl, msg, _inc in rep.findings if lvl == AVISO]
-        erros = [(_finding_identity(cid, msg), f"[{cid}] {msg}")
-                 for cid, lvl, msg, _inc in rep.findings if lvl == ERRO]
-        daily_checks.report(root, "doctor", "sensor-warnings.md", "doctor.py (avisos correntes)", avisos, when)
-        daily_checks.report(root, "doctor", "sensor-errors.md", "doctor.py (erros correntes)", erros, when)
+        def item(cid, lvl, msg, f):
+            # the extra fields travel in .mjrp/<owner>__<ledger>_state.json, which the Control
+            # Center reads (sensor_state); the markdown ledger stays as it was
+            meta = {"check_id": cid, "severity": "error" if lvl == ERRO else "warning",
+                    "file": f, "rule": f"doctor#{cid}"}
+            return (_finding_identity(cid, msg), f"[{cid}] {msg}", meta)
+        avisos = [item(cid, lvl, msg, f) for cid, lvl, msg, _inc, f in rep.findings if lvl == AVISO]
+        erros = [item(cid, lvl, msg, f) for cid, lvl, msg, _inc, f in rep.findings if lvl == ERRO]
+        run_at = _now_iso(cfg)
+        daily_checks.report(root, "doctor", "sensor-warnings.md", "doctor.py (avisos correntes)", avisos, when, run_at=run_at)
+        daily_checks.report(root, "doctor", "sensor-errors.md", "doctor.py (erros correntes)", erros, when, run_at=run_at)
     except Exception as e:
         rep.note("F1", f"daily-checks/ nao pode ser escrito ({e}) -- rastro pulado, doctor segue normal")
 
@@ -1799,15 +2250,15 @@ def main():
     if a.json:
         print(json.dumps({
             "root": str(root), "exit": code,
-            "erros": [{"id": i, "msg": m} for i, l, m, _ in rep.findings if l == ERRO],
-            "avisos": [{"id": i, "msg": m} for i, l, m, _ in rep.findings if l == AVISO],
+            "erros": [{"id": i, "msg": m, "file": f} for i, l, m, _, f in rep.findings if l == ERRO],
+            "avisos": [{"id": i, "msg": m, "file": f} for i, l, m, _, f in rep.findings if l == AVISO],
         }, indent=2, ensure_ascii=False))
         sys.exit(code)
 
     print(f"\n  doctor · {root.name}")
     for cid, msg in rep.notes:
         print(f"  · [{cid}] {msg}")
-    for cid, level, msg, inc in rep.findings:
+    for cid, level, msg, inc, _f in rep.findings:
         tag = "ERRO " if level == ERRO else "aviso"
         print(f"\n  [{tag} {cid}] {msg}")
         print(f"          nasceu de: {inc}")

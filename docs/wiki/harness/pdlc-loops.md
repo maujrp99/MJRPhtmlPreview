@@ -4,10 +4,10 @@ aliases: [pdlc-loops, PDLC, ciclo de vida, lifecycle, loops do PDLC, Intake, tri
 summary: o ciclo de vida do produto no MJRP como uma fundação e três loops — Intake com quatro trilhas, Discovery (o que construir), Delivery (construir certo) e Learn (deu certo?) —, cada um com critério de saída, verificador e regras de parada; o humano na intenção e no risco de negócio
 tags: [kernel, pdlc, loop, discovery, delivery, processo]
 status: em formação
-atualizado: 2026-10-09
+atualizado: 2026-10-12
 fontes: [kernel/ways-of-working/product-discovery, kernel/ways-of-working/loop-engineering-concept, kernel/design/sketch-vs-prototype, kernel/roadmap/requirements-graph, wiki/sources/2026-10-07-mjrp-product-discovery-handbook.md, wiki/sources/2026-10-07-mjrp-loop-engineering-handbook.md, wiki/sources/2026-10-07-mjrp-agentic-ai-handbook.md]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b065d73 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte 593c609d · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # PDLC em loops — Intake, Discovery, Delivery, Learn
 
@@ -69,7 +69,7 @@ o sensor diz se cabe, o humano escolhe.
 ## 3. Loop Discovery — o que construir
 
 Interativo; o avaliador é o humano, com o juiz de UX. Pelas fontes de produto (Cagan, Torres, Perri, Olsen), **design é
-Discovery**: as três estações são uma só volta.
+Discovery**: as três etapas são uma só volta.
 
 1. **Explorar** — prototipação rápida, ligada por padrão, pode pular ([[sketch-vs-prototype]]). Saída: `design/inception/`
    vN, `inception-notes.md` e, na mesma rodada, a descrição da tela (texto, inventário com o wireframe em
@@ -102,10 +102,34 @@ tasks é **opção do contrato** (`gates:`), não padrão.
 
 Goal-based (nível 2 da escada da Anthropic); o verificador é determinístico.
 
-- **Estações:** especificar (`spec.md`) → planejar (`plan.md`) → quebrar (`tasks.md`) → executar ⇄ verificar (testes,
-  sensores, grafo).
+- **Etapas:** especificar (`spec.md`) → planejar (`plan.md`) → quebrar (`tasks.md`) → executar ⇄ verificar (testes,
+  sensores, grafo) → **reconferência visual independente** (só em feature que toca tela, antes do merge).
+- **Tela se compara com a referência visual aprovada, não se "vê rodando"** (`PRINCIPLES.md` I.12). Referência visual
+  aprovada é qualquer ferramenta que dê o visual da tela aprovada — o protótipo em HTML (viva) ou as exportações do
+  Figma ou de outra ferramenta de design (estática) —, registrada no `info-arch.md` com o tipo e onde mora. No executar ⇄
+  verificar, a verificação de tela é o sensor de paridade visual do projeto (`sensors.visual`, o kit
+  `mjrp-scripts/visual_parity/`) **e** os pares lado a lado olhados nas condições do projeto (larguras, paletas,
+  navegadores). Ler o DOM, ou conferir só os critérios do spec, não conta. Toda feature de tela importa a camada
+  transversal da referência (tokens e fontes, componentes compartilhados, casca, responsividade) e a primeira feature de
+  tela de um produto porta o CSS e as fontes do design system.
+- **Reconferência visual independente** — a etapa antes do merge de feature de tela. Um agente que **não implementou**
+  roda a `mjrp-ensuring-quality` no modo *visual parity*: o sensor e os olhos nos pares. Veredito **passa** só com o
+  sensor avaliado e sem divergência real P0/P1 — o **exit 2** do sensor (não avaliável: sem Node ou Playwright, sem fatos,
+  zero cenários) é **não passa**, e projeto com tela e sem Node instala o Node. Cada linha P0/P1 do juiz se julga com o
+  par: o que é dado, não forma, é falso positivo dito com a evidência; o que o juiz lê errado vira proposta de regra
+  testada, nunca valor aceito calado. Qualquer outra coisa volta ao executar, como uma volta nova. Cada divergência
+  confirmada vira issue no `uat.md` na hora. O relatório (`reports/audits/<data>-<produto>-visual-parity-recheck[-n].md`,
+  com `verdict: pass | fail` no frontmatter, em inglês — o único campo que o hook lê; a prosa pode dizer "Veredito:
+  passa" para o humano) vai no ramo, depois do último commit de tela.
+- **O hook `pre-merge-commit` segura a etapa.** Ele recusa o merge de um ramo que mudou arquivo de tela (o `screen:` do
+  contrato) sem relatório de reconferência com `verdict: pass` no frontmatter commitado depois do último commit de tela
+  do ramo. A
+  saída é do humano, nunca do agente (`VISUAL_RECHECK_SKIP="<motivo>"` ou `git merge --no-verify`), como o trailer
+  `Prototype-sync: skip`. Só o sensor visual pode ser de etapa (`when: pre-merge`); o doctor reprova qualquer outro.
 - **Pronto** = o verificador passa (exit 0); nunca o auto-relato do agente.
-- **Parada:** teto de voltas, orçamento de tokens, sem progresso (o diff zerou por duas voltas) → escala.
+- **Parada:** teto de **3 rodadas por task**, orçamento de tokens, sem progresso (o diff zerou por duas voltas) → escala.
+- **Modelo por task:** toda task do `tasks.md` leva `model:: sonnet` (mecânica: textos e chaves de registro, resumos, amostras e testes de formato, derivados, renomeações) ou `model:: opus` (desenho de código, arquitetura, crítica, reconferência visual). Quem escreve as tasks decide; não há padrão — task sem marca reprova no cross-check.
+- **Medida:** a task fechada leva `rounds:: N` (rodadas gastas); o `loop.py --check-tasks` lê as duas marcas.
 - **Escalada em três níveis:** o código falhou → corrige e verifica de novo · a spec está errada → para e volta ao
   contrato (emenda com o humano; requisito entregue não se edita — nó novo com `supersedes`) · a premissa caiu → volta à
   Discovery.
@@ -155,7 +179,7 @@ identificador por agente, log de atividade, interrupção sem corromper o estado
 | Etapa | Lê | Escreve |
 |---|---|---|
 | Intake | pedido do MJRP, `uat.md`, `daily-checks/`, lição do Learn | item triado com a trilha, `prd.md` § Candidatos, `docs/log.md` |
-| Discovery | `VISION.md`, `PRINCIPLES.md`, `ROADMAP.md`, `prd.md`, `constitution.md`, `arch.md`, `design-system.md`, o item | `design/inception/`, `design/wireframes/`, `inception-notes.md`, `ROADMAP.md` (^OUT, medida, tags), `prd.md` (épicos — no subprojeto do harness, as stories por release; fora de escopo), `info-arch.md` (inventário, ^estados), `design-system.md`, `design/prototypes/` + auditoria, `requirements/` (Backlog → Ready), `docs/decisions/NNNN-*.md` (`Proposed`), `arch.md` + `data-model.md`, `reports/audits/` (UX e arquitetura) |
+| Discovery | `VISION.md`, `PRINCIPLES.md`, `ROADMAP.md`, `prd.md`, `constitution.md`, `arch.md`, `design-system.md`, o item | `design/inception/`, `design/wireframes/`, `inception-notes.md`, `ROADMAP.md` (^OUT, medida, tags), `prd.md` (épicos; fora de escopo), `info-arch.md` (inventário, ^estados), `design-system.md`, `design/prototypes/` + auditoria, `requirements/` (Backlog → Ready), `docs/decisions/NNNN-*.md` (`Proposed`), `arch.md` + `data-model.md`, `reports/audits/` (UX e arquitetura) |
 | Contrato | `requirements/` Ready, `info-arch.md`, inventário com destino | decisão no `docs/log.md`, `gates:` opcionais |
 | Delivery | `requirements/` Ready, `arch.md`, `data-model.md`, `design-system.md`, `constitution.md` | `features/F-xx/spec.md`, `plan.md`, `tasks.md`, `src/` + `tests/`, evidência no nó (`delivered_by`), PR |
 | UAT | o entregue rodando, `requirements/` | `uat.md`, nó Accepted |
@@ -186,6 +210,23 @@ concluída**.
 | EP-90 · Intake (triagem do harness) | Intake, em todo projeto |
 
 ## History
+
+- **2026-10-13 19:00** · O Discovery perde a exceção do subprojeto do harness (ADR-0020): o `prd.md` carrega os épicos em todo projeto.
+- **2026-10-13 09:58** · Decisão do MJRP: o teto do Execute ⇄ Verify cai de 5 para **3 rodadas por task** (a parada por 2 passadas sem progresso segue); toda task do `tasks.md` leva `model:: sonnet|opus` (mecânica em Sonnet, sem padrão); a task fechada leva `rounds:: N`, para medir em vez de estimar. `loop.py` com `--max` 3, `--check-tasks` e `--task/--tasks-file`.
+
+- **2026-10-12 16:57** · "Estação" vira **etapa** no texto em português (preferência do MJRP, mais comum em pt-BR); *stage* nas skills, em inglês (decisão do MJRP, 2026-10-13); as entradas antigas desta seção ficam como foram escritas. O relatório de reconferência passa a ser lido pelo hook só no frontmatter, em inglês: `verdict: pass | fail`.
+
+- **2026-10-12 16:34** · Revisão do Learn depois da crítica da ADR-0017 (decisões do MJRP): a etapa ganhou mecanismo —
+  o hook `pre-merge-commit` recusa o merge de ramo que mudou tela sem relatório com veredito de passa depois do último
+  commit de tela; o exit 2 do sensor é **não passa**; só `sensors.visual` pode ser de etapa; "protótipo aprovado" passa
+  a "referência visual aprovada" (viva ou estática — Figma e outras ferramentas de design), como o `PRINCIPLES.md` I.12
+  emendado.
+
+- **2026-10-12 15:55** · Learn do Control Center 1.0 (a UI chegou ao UAT longe do protótipo v4.1, com todos os sensores verdes —
+  [[harness-kaizen]] 2026-10-11 12:09): o Delivery ganhou a etapa **reconferência visual independente**, antes do merge
+  de feature de tela (agente separado, sensor + olhos, passa só sem P0/P1 real); a verificação de tela no executar ⇄
+  verificar passou a ser a comparação com o protótipo aprovado, pelo kit de paridade visual do kernel; o doctor cobra a
+  declaração do sensor (A2, ADR-0017 do harness, *Proposed*). Decisão do MJRP em 2026-10-12 15:41.
 
 - **2026-10-09 21:23** · Diagrama oficial passa à v5 (`2026-10-09-2121-pdlc-loops-v5`): a v4 com a revisão geral — a ADR passa pelo crítico de arquitetura antes do aceite, todo protótipo vem com info-arch e wireframes (guarda), `design-system.md` sai do Desenhar e entra no Contrato, requisito `<ID>-<slug>.md`. A v4 fica como histórico.
 - **2026-10-09 20:55** · Revisão geral de 2026-10-09: o esqueleto da arquitetura nasce no fim do Enquadrar (não na fundação), com ADR `Proposed` e a crítica (troca de chapéu declarada ou agente separado) antes do aceite; o Fast track pede ADR `Accepted`; a saída da Discovery inclui o `design-system.md` quando há UI (a lacuna do Control Center); o guarda protótipo × info-arch × wireframes (W14); papéis e artefatos acertados.

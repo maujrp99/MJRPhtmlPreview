@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte b065d73 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte 593c609d · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "_about": "Single declaration of the requirements graph (S-63, kernel page requirements-graph). The sensor reads this file; the kernel page explains it for humans. Edges are written in one direction only; the inverse is computed. Each edge is enforced only from the status declared in 'enforced_from' (lesson of SDD_chain_artifacts_check: checking every pair everywhere produced 366 false positives).",
   "version": 1,
   "paths": {
@@ -15,7 +15,7 @@
   },
   "file_name": {
     "_about": "MJRP, 2026-10-09: a requirement file is <ID>-<slug>.md (S-31-decide-how-data-reaches-the-screen.md). The ID is the identity (frontmatter `id:` and `aliases: [ID]`); the slug is the English title in lowercase ASCII kebab-case, at most slug_max characters, set at birth and frozen (renaming is explicit: req_file_names.py --reslug). Links and embeds name the whole stem, the ID is the display text: [[S-31-decide-how-data-reaches-the-screen|S-31]]. slug_required/alias_required stay false during the migration; a file with no slug has the ID as its whole stem, so [[S-31]] is the right link to it.",
-    "pattern": "^(?P<id>(S|UC|EA|NFR)-\\d{2,})(?:-(?P<slug>[a-z0-9]+(?:-[a-z0-9]+)*))?$",
+    "pattern": "^(?P<id>(?:S|UC|EA|(?:[A-Z]{2,}-)?NFR)-\\d{2,})(?:-(?P<slug>[a-z0-9]+(?:-[a-z0-9]+)*))?$",
     "slug_max": 50,
     "slug_required": false,
     "alias_required": false,
@@ -35,17 +35,25 @@
     "Accepted"
   ],
   "off_track_statuses": [
-    "Deferred"
+    "Deferred",
+    "Cancelled"
   ],
-  "_off_track": "valid statuses outside the lifecycle order: never count as reached for enforced_from, never open (MJRP, 2026-10-04 14:28: Deferred joins the rules)",
+  "_off_track": "valid statuses outside the lifecycle order: never count as reached for enforced_from, never open (MJRP, 2026-10-04 14:28: Deferred joins the rules; 2026-10-13 17:15, ADR-0020 A.6: Cancelled joins it -- a requirement that will not be done, superseded or given up; it keeps its ID and its edges (`epic` is still required, `supersedes` says who replaced it) and, unlike Deferred, never comes back: the return is a new node. It does not count in the progress)",
   "open_feature_statuses": [
     "Ready",
     "In progress"
   ],
-  "subproject": {
-    "_about": "MJRP, 2026-10-09: a subproject of the harness (apps/<app>/) declares `parent_epic: EP-NN` in its contract and has no epics; its stories carry no `epic:` and are organised by release — `planned_for` is required from this status on (a Backlog story may still be unplanned).",
-    "contract_field": "parent_epic",
-    "planned_for_from": "Prioritized"
+  "release_required": {
+    "_about": "ADR-0020 A.5: `planned_for` is optional unless the project's contract turns it on with `mjrp_harness.requirements.release_required: true`; then a requirement must have a release from this status on (a Backlog requirement may still be unplanned). The epic's own `planned_for` satisfies it -- it is a shortcut for all the epic's requirements.",
+    "contract_field": "mjrp_harness.requirements.release_required",
+    "default": false,
+    "from": "Prioritized"
+  },
+  "identity": {
+    "_about": "ADR-0020 D.3: an ID is unique in the REPOSITORY. A project nested in the repository of another one (its contract is under the git toplevel whose root has another contract) carries `mjrp_harness.id_prefix` (e.g. CC) on every per-project sequence the containing project also uses: the prefix is optional in the patterns of these node types, and the sensor refuses a node ID repeated between the nested project and the root one.",
+    "contract_field": "mjrp_harness.id_prefix",
+    "prefixed_types": ["outcome", "epic", "nfr"],
+    "unique_types": ["outcome", "release", "epic", "requirement", "nfr"]
   },
   "node_types": {
     "outcome": {
@@ -125,6 +133,18 @@
     }
   },
   "edges": [
+    {
+      "name": "contributes_to",
+      "from": "outcome",
+      "to": "outcome",
+      "min": 0,
+      "max": 1,
+      "enforced_from": "always",
+      "scope": "same_repository",
+      "target_form": "relative_path",
+      "on_unreachable": "not_evaluable",
+      "note": "ADR-0020 A.2: an outcome declares the outcome of ANOTHER roadmap it contributes to (`contributes_to:: [[../../ROADMAP#^OUT-03]]` in its section). The target is always a path relative to the declaring file + #^ID, never a bare ID, and is read only when it is the ROADMAP.md of a project with a contract in the same repository. Resolved: passes. Missing (the block does not exist, the target is the own roadmap, a bare ID, a cycle): error, exit 1. Unreachable (outside the repository, not on disk, not a project's ROADMAP.md): not evaluable, exit 2 -- never green, never read."
+    },
     {
       "name": "serves",
       "from": "epic",
@@ -277,6 +297,14 @@
     {
       "id": "design_system_exists",
       "text": "a Ready requirement that points to a screen state (info-arch.md, nested included) requires docs/specs/design-system.md in the same project as that info-arch.md -- the visual identity is decided before the contract (audit C F10, MJRP 2026-10-09)"
+    },
+    {
+      "id": "id_unique",
+      "text": "a node ID of a project nested in a repository is not repeated in the root project of that repository (ADR-0020 D.3): the nested one carries the contract's id_prefix"
+    },
+    {
+      "id": "contributes_to_target",
+      "text": "a contributes_to target is a relative path + #^ID to an outcome of the ROADMAP.md of another project of the same repository: never a bare ID, never the own roadmap, no cycle (ADR-0020 A.2)"
     },
     {
       "id": "bilingual",

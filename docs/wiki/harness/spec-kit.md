@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-10-09
 fontes: [github/spec-kit, BMAD, feedback-from-other-projects/spec-kit, feedback-from-other-projects/speckit-artifact-reconciliation]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b065d73 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte 593c609d · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 **SpecKit** é a adaptação do MJRP ao Spec Kit do GitHub: os **9 documentos vivos** de `docs/specs/` — a cadeia `prd → spec → plan → tasks → uat`, em que cada um deriva do anterior (os requisitos são nós, um arquivo cada, e o PRD é o mapa deles; spec, plan e tasks moram na pasta de cada feature), mais o contexto durável que a cadeia consulta, `constitution`, `arch`, `data-model` e `design-system`. Três coisas têm o mesmo nome e confundi-las gera achado errado: **Spec Kit** (com espaço) é o método original do GitHub, `constitution → specify → plan → tasks → implement`; **SpecKit** (sem espaço) é esta adaptação; e o **uso real de cada projeto**, que pode acrescentar arquivos de apoio (um diagrama, uma planilha) sem que isso mude a lista.
@@ -19,7 +19,7 @@ Até 16/09 o glossário dizia 6 artefatos e a skill `mjrp-sdd-speckit` (hoje `mj
 
 | Artefato | Papel | Origem |
 |---|---|---|
-| `prd.md` | o que o produto é, para quem, e o que **não** é; carrega os épicos (cada um serve a um resultado do ROADMAP) — no subprojeto do harness, carrega as stories por release, e o épico é o `parent_epic` do contrato — e o **mapa dos requisitos**: um embed por nó de `requirements/<ID>-<slug>.md` (`!S-07-import-the-card-statement`), no formato do projeto (story, caso de uso ou EARS) | BMAD (não existe no Spec Kit; ver §3) |
+| `prd.md` | o que o produto é, para quem, e o que **não** é; carrega os épicos (cada um serve a um resultado do ROADMAP) e o **mapa dos requisitos**: um embed por nó de `requirements/<ID>-<slug>.md` (`!S-07-import-the-card-statement`), no formato do projeto (story, caso de uso ou EARS) | BMAD (não existe no Spec Kit; ver §3) |
 | `spec.md` | o quê e por quê de uma feature, em `features/Fxx-slug/`: importa os nós que entrega (`imports`), REQ locais, critérios de sucesso | Spec Kit (`/specify`) |
 | `plan.md` | o como: arquitetura, componentes, dependências | Spec Kit (`/plan`) |
 | `tasks.md` | a ordem de execução, tarefa a tarefa, verificável — cada TASK implementa um REQ (`implements`) | Spec Kit (`/tasks`) |
@@ -31,7 +31,7 @@ Até 16/09 o glossário dizia 6 artefatos e a skill `mjrp-sdd-speckit` (hoje `mj
 
 Os cinco primeiros são **a cadeia**: desde a S-63 ela é um grafo — nós com ID estável e arestas tipadas (página [[requirements-graph]]) — e o sensor do grafo (`requirements_graph_check.py`) confere órfão, aresta quebrada e cardinalidade; o `SDD_chain_artifacts_check.py` foi aposentado em 05/10 (S-77). Os quatro últimos são **contexto durável**: a cadeia os consulta, não deriva deles. Os estados observáveis que os requisitos apontam (`info-arch.md`, `behavior.md`) são do design e do grafo, não desta lista.
 
-**No PDLC em loops** ([[pdlc-loops]] §5), `spec.md`, `plan.md` e `tasks.md` são estações do Delivery: cada uma avança
+**No PDLC em loops** ([[pdlc-loops]] §5), `spec.md`, `plan.md` e `tasks.md` são etapas do Delivery: cada uma avança
 quando a sua checagem passa (o cruzamento, a cobertura, o sensor do grafo). A aprovação do humano em cada uma só vale onde
 o contrato a liga (`gates:`); o padrão é aprovar só o contrato — os requisitos Ready.
 
@@ -51,6 +51,7 @@ O Spec Kit termina no *implement*: os *Acceptance Scenarios* do `spec.md` são p
 Arquivo de apoio que um projeto cria para si (`roadmap-diagrams.md`, uma planilha de dados de referência) é do projeto, não do SpecKit: não entra na lista, não entra na cadeia, não precisa ser mencionado no harness.
 
 ## History
+- **2026-10-13 19:00** · O `prd.md` não tem mais o caso do subprojeto do harness (ADR-0020): todo projeto carrega os épicos dele.
 - **2026-10-09 20:55** · Revisão geral de 2026-10-09: nome do nó `<ID>-<slug>.md` e o embed com o nome inteiro; no subprojeto do harness o `prd.md` traz as stories por release (o épico é o `parent_epic`); o `SDD_chain_artifacts_check.py` aparece como aposentado (05/10, S-77), não como em uso.
 - **2026-10-07 20:29** · Onda E do PDLC em loops: spec, plan e tasks são estações do Delivery; aprovação do humano só onde o `gates:` do contrato liga — o padrão é aprovar só o contrato.
 - **2026-10-04 17:38** — MJRP (S-63, passo 11): a lista não muda; muda onde cada artefato mora — requisitos como nós em `requirements/`, o PRD como mapa, spec/plan/tasks em `features/Fxx-slug/` ligados por `imports`, `implements` e `verified_by`; o sensor do grafo confere a cadeia; o `SDD_chain_artifacts_check.py` fica para os filhos não migrados (S-77).

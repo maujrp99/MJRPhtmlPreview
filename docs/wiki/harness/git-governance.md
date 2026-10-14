@@ -1,13 +1,13 @@
 ---
 title: Governança de git
 aliases: [git-governance, governança de git, conventional commits, convenção de commit, branching, tags]
-summary: como se commita, ramifica, integra e marca versão num projeto do harness — tipos e formato do commit, os commits de cada estação do Delivery, branch e PR por feature, o merge do agente e suas condições, tags, brownfield, e o que os hooks exigem
+summary: como se commita, ramifica, integra e marca versão num projeto do harness — tipos e formato do commit, os commits de cada etapa do Delivery, branch e PR por feature, o merge do agente e suas condições, tags, brownfield, e o que os hooks exigem
 tags: [kernel, git, processo]
 status: firme
-atualizado: 2026-10-09
+atualizado: 2026-10-11
 fontes: [conventionalcommits.org, mjrp-deployer (aposentada, S-76), 1999-fowler-refactoring]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b065d73 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte 593c609d · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 **Governança de git** é o conjunto de regras que faz o histórico de um projeto ser legível por quem vem depois —
@@ -38,8 +38,8 @@ verificador passa.
 - **O fix vai separado da limpeza que ele inspirou:** primeiro `fix:`, depois `refactor:` ou `chore:` no seu próprio
   commit. Misturados, reverter a limpeza leva o fix junto, e a revisão não sabe qual linha corrigiu o defeito.
 
-### Commits das estações do Delivery
-| Estação concluída | Commit |
+### Commits das etapas do Delivery
+| Etapa concluída | Commit |
 |---|---|
 | Specify | `docs: complete specify stage for <feature>` |
 | Plan | `docs: complete plan stage for <feature>` |
@@ -58,7 +58,7 @@ verificador passa.
 
 ### O merge
 - **É do agente**, quando o verificador passa (exit 0) — nunca pelo auto-relato. Merge com commit de merge
-  (`--no-ff`): os commits de cada estação ficam no histórico, e reverter a feature é reverter um commit.
+  (`--no-ff`): os commits de cada etapa ficam no histórico, e reverter a feature é reverter um commit.
 - **O que o merge quebrar, o agente corrige** — um `fix:` novo, ou `git revert` do merge enquanto corrige.
 - **O humano decide, não executa**, só quando pede ou quando há risco de impacto financeiro ou de negócio (apagar ou
   quebrar algo e perder o cliente). Todo merge aparece no Control Center.
@@ -85,7 +85,11 @@ verificador passa.
    feature nova.
 
 ### O que os hooks exigem
-- **`commit-msg`:** todo commit traz uma entrada nova no `docs/log.md` (o registro da sessão); e todo commit que traz
+- **`commit-msg`:** todo commit traz uma entrada nova no `docs/log.md` (o registro da sessão) — isento só o derivado, o
+  merge, o script declarado e o arquivo que carrega o próprio histórico (`mjrp_harness.self_logged`, com item novo no
+  histórico dentro dele; [[memory-architecture]]); o commit que toca mais de um projeto (a raiz e `apps/<app>/`) deve
+  a entrada ao log do projeto **dono** — a raiz se tocar um dos `log_owner.root_paths` do contrato dela, senão o projeto
+  com mais arquivos tocados, empate para a raiz —, e os outros ficam dispensados; e todo commit que traz
   versão nova ou mudada em `design/inception/<name>-vN.html` traz o `info-arch.md` e os wireframes de todas as telas da
   versão. Ir por cima (`--no-verify`, ou o trailer `Prototype-sync: skip — <motivo>`) é decisão do humano, nunca do
   agente.
@@ -108,6 +112,9 @@ verificador passa.
 
 - **2026-10-08 17:43** · Backup recorrente do repositório (onda F de `design/proposals/pdlc-loops-migration-plan.md`; decisões do
   MJRP de 08/10): iCloud Drive, a cada commit, antes da tag `v0.0`; o push sem credencial sai do caminho — o push é dele.
+- **2026-10-11 06:39** · O `commit-msg` ganhou a isenção `self_logged` (ADR-0004 do Control Center, aceita pelo MJRP): o arquivo declarado no contrato, com item novo no histórico dentro dele, dispensa a entrada no log; o porquê em [[memory-architecture]].
+
+- **2026-10-13 17:58** · O `commit-msg` passou a cobrar a entrada só no log do projeto **dono** num commit que toca mais de um projeto (ADR-0020 D.1, aceita pelo MJRP; trilho T4.1): `mjrp_harness.log_owner.root_paths` no contrato da raiz (lido do `HEAD`) diz o que é sempre da raiz; fora disso, o projeto com mais arquivos tocados (os logs não contam), empate para a raiz. Antes o hook exigia entrada nos dois logs, e o log da raiz acumulou entradas-ponteiro ("detalhe no log do Control Center").
 
 ## Related
 [[pdlc-loops]] · [[spec-kit]] · [[requirements-graph]] · [[hooks-concept]] · [[engineering-canon]]

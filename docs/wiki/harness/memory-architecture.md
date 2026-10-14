@@ -4,10 +4,10 @@ aliases: [memory-architecture, solução de memória, memória do harness, MEMOR
 summary: onde cada coisa que persiste mora e quando entra na janela — a arquitetura da ADR-0008, o que as referências fazem, e de onde veio a escolha
 tags: [harness, memoria, fundamento]
 status: firme
-atualizado: 2026-09-10
+atualizado: 2026-10-11
 fontes: [2026-claude-code-auto-memory, 2026-04-04-karpathy-llm-wiki, 2023-10-memgpt-virtual-context, 2025-cline-memory-bank, 2023-09-coala-cognitive-architectures-language-agents, 2025-anthropic-effective-context-engineering]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-09 · fonte b065d73 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte 593c609d · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 A memória do harness é o que persiste **fora da janela** e precisa ser trazido de volta. Esta
@@ -257,7 +257,12 @@ de B é precisar de página para cada assunto; o preço de A é ter dois lugares
   não foi escrito no repositório; por isso cada decisão do MJRP vai para o log assim que ele responde,
   e o `## Now` acompanha. Quatro mecanismos guardam isso:
   - o hook git `commit-msg` (`log_entry_check.py`) recusa commit sem entrada nova no log do projeto que
-    ele toca — roda em toda sessão, local ou remota, porque o git roda onde o repositório está;
+    ele toca — roda em toda sessão, local ou remota, porque o git roda onde o repositório está; o commit
+    que toca mais de um projeto deve a entrada só ao log do projeto dono (`log_owner.root_paths` do contrato da
+    raiz; senão a maioria dos arquivos; empate, a raiz — ADR-0020);
+    a isenção por arquivo que carrega o próprio histórico: o contrato declara `mjrp_harness.self_logged`, e o
+    commit que toca, naquele projeto, só esses arquivos, cada um com item novo na lista de histórico dentro
+    dele, passa sem entrada — a edição à mão, sem linha de histórico, segue exigindo a entrada;
   - o F1 do doctor e o `check_docs` comparam a hora mais recente escrita no `## Now` com a da última
     entrada do log, e não a data do arquivo;
   - nas sessões que carregam os hooks do projeto, o `session_journal.py` grava o diário da sessão antes
@@ -347,6 +352,9 @@ de B é precisar de página para cada assunto; o preço de A é ter dois lugares
   traz entrada nova no log, menos o que só toca derivado; o `## Now` é julgado pelo conteúdo; a sessão
   remota não carrega os hooks do projeto, então nela valem o `commit-msg` e a regra da onboarding; o uso
   de skill é contado num arquivo versionado. O mecanismo está em *How MJRP uses it*.
+- **2026-10-11 06:39** · **Isenção `self_logged` no `commit-msg`** (ADR-0004 do Control Center, aceita pelo MJRP em 2026-10-11 06:28): o commit da edição pela tela levava a entrada não commitada do agente, e o commit seguinte do agente era recusado por "sem entrada nova" (auditoria de 2026-10-10, achado #6); cada edição pela tela pintaria também o F1 de vermelho. O rastro de um arquivo `self_logged` é a linha de histórico dentro dele, e o `log_entry_check.py` a confere: só isenta o commit que toca, no projeto, só os caminhos declarados (lidos do contrato no `HEAD`), cada um com item novo no histórico. Decisão grande em `apps/control-center/docs/decisions/0004-screen-edit-commit-single-writer-and-safe-timeout.md`.
+
+- **2026-10-13 17:58** · **Um commit, uma entrada: no log do projeto dono** (ADR-0020 D.1, aceita pelo MJRP; T4.1). O `log_entry_check.py` exigia entrada em cada log tocado, e o log da raiz carregava ponteiros ("detalhe no log do Control Center") só para o hook passar. Agora o dono é decidido no contrato, não na hora do commit: `mjrp_harness.log_owner.root_paths` (kernel, scripts, skills, decisões, `PRINCIPLES.md`, `AGENTS.md`) torna o dono a raiz; senão vale o projeto com mais arquivos tocados (os logs não contam), e o empate é da raiz. Entrada a mais no outro log é permitida, nunca exigida. Dois logs continuam; fundir a memória (`MEMORY.md` único) segue adiado.
 
 ## Related
 [[context-vs-memory]] · [[terms]] · [[harness-elements]] · recurring-pains · ADR-0001 · ADR-0005 · ADR-0006 · ADR-0008

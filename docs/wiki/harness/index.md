@@ -1,11 +1,11 @@
 ---
 title: Kernel do MJRP Harness
-summary: as 28 páginas do harness que este projeto carrega — o que os campos do VISION, a memória, o perfil e os sensores significam
+summary: as 29 páginas do harness que este projeto carrega — o que os campos do VISION, a memória, o perfil e os sensores significam
 ---
 
 ## Definition
 
-Cópia carimbada (versão **2026-10-09**, fonte `b065d73`) das páginas do MJRP Harness que governam como uma instância funciona. **Não se edita aqui**: edite no harness e rode `new_project.py --refresh-kernel`. O doctor (I5) avisa quando o carimbo envelhece.
+Cópia carimbada (versão **2026-10-14**, fonte `593c609d`) das páginas do MJRP Harness que governam como uma instância funciona. **Não se edita aqui**: edite no harness e rode `new_project.py --refresh-kernel`. O doctor (I5) avisa quando o carimbo envelhece.
 
 As páginas vêm achatadas nesta pasta; os grupos abaixo são os temas da fonte (no harness, `docs/wiki/kernel/<tema>/`).
 
@@ -17,9 +17,10 @@ As páginas vêm achatadas nesta pasta; os grupos abaixo são os temas da fonte 
 | [spec-kit](spec-kit.md) | as três camadas com o mesmo nome (Spec Kit do GitHub, SpecKit do MJRP, uso real por projeto), a lista única de 9 artefatos e onde cada um mora no grafo de requisitos, o que foi fundido de propósito, e as duas extensões do MJRP — PRD com o mapa dos requisitos (do BMAD) e uat.md |
 | [loop-engineering-concept](loop-engineering-concept.md) | o loop como o que roda sem você — os 4 níveis, a matemática dos erros compostos, loop fixo × criador, e por que o gargalo é o verificador, não o modelo |
 | [harness-kaizen](harness-kaizen.md) | onde o harness falhou e o que se aprendeu com isso — o erro e a correção no mesmo lugar |
-| [git-governance](git-governance.md) | como se commita, ramifica, integra e marca versão num projeto do harness — tipos e formato do commit, os commits de cada estação do Delivery, branch e PR por feature, o merge do agente e suas condições, tags, brownfield, e o que os hooks exigem |
-| [product-discovery](product-discovery.md) | o processo da estação Enquadrar da Discovery do MJRP — Rapid (cinco passos essenciais, iterativo com o LLM) e Full (o Rapid mais técnicas que o PM marca no início), os quatro riscos transformados em teste, a decisão matar · iterar · avançar e onde cada saída mora no grafo do projeto |
+| [git-governance](git-governance.md) | como se commita, ramifica, integra e marca versão num projeto do harness — tipos e formato do commit, os commits de cada etapa do Delivery, branch e PR por feature, o merge do agente e suas condições, tags, brownfield, e o que os hooks exigem |
+| [product-discovery](product-discovery.md) | o processo da etapa Enquadrar da Discovery do MJRP — Rapid (cinco passos essenciais, iterativo com o LLM) e Full (o Rapid mais técnicas que o PM marca no início), os quatro riscos transformados em teste, a decisão matar · iterar · avançar e onde cada saída mora no grafo do projeto |
 | [pdlc-loops](pdlc-loops.md) | o ciclo de vida do produto no MJRP como uma fundação e três loops — Intake com quatro trilhas, Discovery (o que construir), Delivery (construir certo) e Learn (deu certo?) —, cada um com critério de saída, verificador e regras de parada; o humano na intenção e no risco de negócio |
+| [conformance-notes](conformance-notes.md) | como a skill dona de um item do catálogo canônico executa uma nota de migração (CM-NNNN) de um filho — o check do catálogo é o juiz, o conteúdo do projeto é editado no lugar, o que é do humano é perguntado e quem registra é o modo conform da bootstrap |
 
 ### skills · o sistema de skills e de agentes — arquétipos, papéis, o que um agente é
 
@@ -50,7 +51,7 @@ As páginas vêm achatadas nesta pasta; os grupos abaixo são os temas da fonte 
 | Página | O que responde |
 |---|---|
 | [vision-document](vision-document.md) | o que entra num documento de visão, o que não entra, e o teste que separa os dois |
-| [requirements-graph](requirements-graph.md) | como requisitos e artefatos do PDLC viram nós com ID estável e arestas tipadas, legíveis no Obsidian e por script; a cardinalidade feature × requisito; como a release agrupa requisitos e épicos |
+| [requirements-graph](requirements-graph.md) | como requisitos e artefatos do PDLC viram nós com ID estável e arestas tipadas, legíveis no Obsidian e por script; a cardinalidade feature × requisito; como a release agrupa requisitos e épicos; a aresta contributes_to entre roadmaps, o estado Cancelled e a identidade de ID no repositório |
 
 ### design · o cânone de design e os padrões de saída visual — telas, planilhas, paletas
 

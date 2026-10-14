@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte b065d73 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte 593c609d · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """daily_checks.py -- rastro DATADO (aberto/resolvido) de aviso e erro, compartilhado por
 sensores informativos (SDD_chain_artifacts_check.py) e pelo proprio doctor.py.
 
@@ -76,20 +76,26 @@ def save_state(root, owner_id, filename, state):
 
 
 def update_state(state, current_items, when):
-    """current_items: lista de (identity, texto). Retorna (state, abriu_ou_fechou) -- o texto
-    de um item que continua aberto e' sempre atualizado pro mais recente, mas isso sozinho NAO
-    conta como abriu_ou_fechou (senao a mensagem oscilando reimprimiria pra sempre, o mesmo
-    problema que a identidade por texto causava)."""
+    """current_items: lista de (identity, texto) ou (identity, texto, meta). Retorna (state,
+    abriu_ou_fechou) -- o texto de um item que continua aberto e' sempre atualizado pro mais
+    recente, mas isso sozinho NAO conta como abriu_ou_fechou (senao a mensagem oscilando
+    reimprimiria pra sempre, o mesmo problema que a identidade por texto causava).
+
+    meta (optional dict: check_id, severity, file, rule) is stored on the open entry and kept
+    on the resolved one -- the Control Center reads it from the state file (S-133 R5, 2026-10-10)."""
     still_open = {}
-    for ident, text in current_items:
+    for entry in current_items:
+        ident, text = entry[0], entry[1]
+        meta = entry[2] if len(entry) > 2 and entry[2] else {}
         prev = state["open"].get(ident)
         since = prev["since"] if prev else when
-        still_open[ident] = {"since": since, "text": text}
+        still_open[ident] = {"since": since, "text": text, **meta}
     newly_resolved = [ident for ident in state["open"] if ident not in still_open]
     for ident in newly_resolved:
         prev = state["open"][ident]
+        extra = {k: v for k, v in prev.items() if k not in ("since", "text")}
         state["resolved"].insert(0, {
-            "text": prev["text"], "opened_at": prev["since"], "resolved_at": when,
+            "text": prev["text"], "opened_at": prev["since"], "resolved_at": when, **extra,
         })
     changed = set(state["open"]) != set(still_open)
     state["open"] = still_open
@@ -131,13 +137,19 @@ def write_ledger(root, filename, owner_id, section_text):
     p.write_text(text.rstrip("\n") + "\n", encoding="utf-8")  # nao deixa linha em branco acumular a cada rodada
 
 
-def report(root, owner_id, filename, title, current_items, when):
+def report(root, owner_id, filename, title, current_items, when, run_at=None):
     """current_items: lista de (identity, texto) -- ver update_state. Sempre reescreve o ledger
     (o texto de um item aberto pode ter mudado mesmo sem abrir/fechar nada), mas so' retorna
     changed=True quando algo abriu ou fechou de verdade -- e' isso que decide se vale falar no
-    stdout do chamador."""
+    stdout do chamador.
+
+    run_at (optional ISO-8601 instant with offset) is the moment of this pass, kept as
+    state["last_run_at"]: the Control Center says when the last pass ran and whether it is from
+    today (S-133, 2026-10-10); a date alone cannot say it."""
     state = load_state(root, owner_id, filename)
     state, changed = update_state(state, current_items, when)
+    if run_at:
+        state["last_run_at"] = run_at
     save_state(root, owner_id, filename, state)
     write_ledger(root, filename, owner_id, render_section(owner_id, title, state))
     return state, changed

@@ -1,4 +1,4 @@
-<!-- cópia carimbada do MJRP Harness · versão 2026-10-09 · fonte b065d73 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte 593c609d · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # PRINCIPLES — as regras que regulam a ação no MJRP
 
 > Princípio é **a regra que regula a ação e serve de base ao método**; visão é para onde se vai;
@@ -78,14 +78,21 @@ específico da linguagem ou do framework dele.
     porquê não foi culpa de ninguém.
     → [[engineering-canon]] § *The Cat Ate My Source Code*
 
-12. **Tela que muda é tela que se vê rodar — nunca por relato do agente.** Toda entrega que cria
-    ou altera uma tela roda num navegador real (MCP Playwright, `@playwright/mcp` — a conexão
-    padrão do harness, ver [[tools-catalog]]) antes de ser dada como pronta; vale para qualquer
-    projeto que declara UI no contrato (`--ui`), e é o último passo do `tasks.md` da feature.
-    Não substitui o 9 (teste automatizado F.I.R.S.T.) — cobre o que ele não alcança: como a tela
-    renderiza de verdade. *O teste:* existe verificação visual (screenshot, snapshot de DOM ou
-    assert do Playwright) datada da mesma entrega e cobrindo a tela que mudou — sem isso, a
-    tarefa não está pronta, mesmo com o código certo.
+12. **Tela que muda é tela que se compara com a referência visual aprovada — nunca por relato do
+    agente.** Toda entrega que cria ou altera uma tela roda num navegador real (MCP Playwright,
+    `@playwright/mcp` — a conexão padrão do harness, ver [[tools-catalog]]) e é **comparada com a
+    referência visual aprovada dela** antes de ser dada como pronta. Referência visual aprovada é
+    qualquer ferramenta que dê o visual de uma tela aprovada: o protótipo em HTML, o arquivo do
+    Figma ou a exportação dele, outra ferramenta de design. Vale para qualquer projeto que declara
+    UI no contrato (`--ui`), e é o último passo do `tasks.md` da feature. Não substitui o 9 (teste
+    automatizado F.I.R.S.T.) — cobre o que ele não alcança: como a tela renderiza de verdade e se
+    ela é a tela que se aprovou. *O teste:* existe, datada da mesma entrega e cobrindo a tela que
+    mudou, a comparação com a referência — o sensor de paridade visual do projeto e os pares lado a
+    lado olhados nas larguras e paletas do projeto; screenshot ou snapshot de DOM sozinho, ou os
+    critérios do spec conferidos um a um, não contam. Sem isso, a tarefa não está pronta, mesmo com
+    o código certo. *Emenda do MJRP, registrada em 2026-10-12 16:32 — antes, o teste aceitava "screenshot, snapshot
+    de DOM ou assert do Playwright", e a UI da 1.0 do Control Center chegou ao UAT longe do protótipo
+    com tudo verde ([[harness-kaizen]] 2026-10-11 12:09).*
 
 13. **Tela que se especifica é tela que se viu antes.** Spec de feature que cria ou altera tela não
     avança pro Plan sem um protótipo visual aprovado pelo humano — registrado no `info-arch.md`

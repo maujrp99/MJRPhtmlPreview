@@ -1,0 +1,945 @@
+{
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte 593c609d · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "version": "2026-10-13",
+  "default_grace_days": 30,
+  "pattern_carriers": [
+    "mjrp-skills/mjrp-sw-factory/*/*/templates/*"
+  ],
+  "not_canonical": [
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/arch.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/data-model.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/plan.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/tasks.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/designer/mjrp-coaching-pm/templates/problem-outcome-doc.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/designer/mjrp-defining-design-systems/templates/identity-specs.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/content-map.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/flow.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/inception-notes.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/prototype-record.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/designer/mjrp-writing-reqs/templates/req-ears.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/designer/mjrp-writing-reqs/templates/req-nfr.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/designer/mjrp-writing-reqs/templates/req-story-backlog.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/designer/mjrp-writing-reqs/templates/req-story-ready.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/designer/mjrp-writing-reqs/templates/req-use-case.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/fixer/mjrp-debugging/templates/log-entry.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/fixer/mjrp-syncing-docs/templates/history-section.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/guardian/mjrp-ensuring-sdd/templates/coverage-report.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/meta/mjrp-crafting-skills/templates/SKILL.template.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/meta/mjrp-crafting-skills/templates/ledger.template.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/meta/mjrp-crafting-skills/templates/removed-section.template.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/meta/mjrp-inventorying-folders/templates/folder-index.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/meta/mjrp-inventorying-folders/templates/log-entry.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/meta/mjrp-saving-context/templates/now.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/meta/mjrp-saving-context/templates/retroactive-entry.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/meta/mjrp-saving-context/templates/session-entry.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/meta/mjrp-structuring-requests/templates/brief.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/behavior.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/constitution.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/vision.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-assessing-code-quality/templates/code-quality-report.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-auditing-docs/templates/doc-audit.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-auditing-docs/templates/staleness-audit.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-critiquing-ux/templates/ux-audit.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-ensuring-quality/templates/bug-report.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-ensuring-quality/templates/quality-review.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-ensuring-quality/templates/regression-checklist.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    },
+    {
+      "path": "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-ensuring-quality/templates/test-plan.md",
+      "reason": "ainda sem item no catálogo — a triar (a semente da ADR-0019 § 6 cobre só o que custou mais caro); entra como item quando o MJRP decidir"
+    }
+  ],
+  "items": [
+    {
+      "id": "uat",
+      "version": 2,
+      "title": "uat.md no formato uat@2 (coluna Gravidade)",
+      "path": "docs/specs/uat.md",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_path:docs/specs/uat.md"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "ADR-0009 do Control Center, F12, 2026-10-12 (a gravidade virou coluna do UAT)",
+      "owner_skill": "mjrp-specifying-sdd-artifacts",
+      "check": [
+        {
+          "kind": "contains",
+          "pattern": "uat@2",
+          "label": "não declara o formato `uat@2`",
+          "path": "docs/specs/uat.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^\\|[^\\n]*\\bGravidade\\b[^\\n]*\\|",
+          "label": "sem a coluna `Gravidade` na tabela de issues",
+          "path": "docs/specs/uat.md"
+        }
+      ],
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/uat.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/uat.md": "sha256:d43f9aaf235c3b39d6e07786deca0c5508919bbaa802adf52f10c87ef446da5f"
+      },
+      "migration": "CM-0001",
+      "superseded": [
+        {
+          "version": 1,
+          "migration": null,
+          "check": {
+            "kind": "exists",
+            "paths": [
+              "docs/specs/uat.md"
+            ]
+          }
+        }
+      ],
+      "template": "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/uat.md"
+    },
+    {
+      "id": "roadmap",
+      "version": 3,
+      "title": "ROADMAP em Now/Next/Later, com resultados ^OUT-xx e tags::",
+      "path": "ROADMAP.md",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "auditoria de lacunas do fin-control, 2026-10-13 (kernel instalado, doctor verde, artefatos canônicos ausentes); o ROADMAP do fin-control era fases com checklist de TASKs",
+      "owner_skill": "mjrp-coaching-pm",
+      "check": [
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+Now\\b",
+          "label": "sem a seção Now",
+          "path": "ROADMAP.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+Next\\b",
+          "label": "sem a seção Next",
+          "path": "ROADMAP.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^##\\s+Later\\b",
+          "label": "sem a seção Later",
+          "path": "ROADMAP.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "\\^(?:[A-Z]+-)?OUT-\\d+\\s*$",
+          "label": "sem resultados `^OUT-xx` ancorados (cada um com medida; o aninhado leva o `id_prefix`: `^CC-OUT-xx`)",
+          "path": "ROADMAP.md"
+        },
+        {
+          "kind": "contains",
+          "pattern": "^tags::",
+          "label": "sem linhas `tags::`",
+          "path": "ROADMAP.md"
+        }
+      ],
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/roadmap.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/roadmap.md": "sha256:d2eb8be6e89692ccb0edbe9f81b2df2714c5af7cdd3ed9f21ec799cb63e7f431"
+      },
+      "migration": "CM-0017",
+      "superseded": [
+        {
+          "version": 1,
+          "migration": null,
+          "check": {
+            "kind": "exists",
+            "paths": [
+              "ROADMAP.md"
+            ]
+          }
+        },
+        {
+          "version": 2,
+          "migration": "CM-0002",
+          "check": [
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Now\\b",
+              "label": "sem a seção Now",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Next\\b",
+              "label": "sem a seção Next",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^##\\s+Later\\b",
+              "label": "sem a seção Later",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "\\^OUT-\\d+\\s*$",
+              "label": "sem resultados `^OUT-xx` ancorados (cada um com medida)",
+              "path": "ROADMAP.md"
+            },
+            {
+              "kind": "contains",
+              "pattern": "^tags::",
+              "label": "sem linhas `tags::`",
+              "path": "ROADMAP.md"
+            }
+          ]
+        }
+      ],
+      "template": "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/roadmap.md"
+    },
+    {
+      "id": "releases",
+      "version": 1,
+      "title": "releases ^REL-xx (no ROADMAP ou no PRD)",
+      "path": "docs/specs/prd.md",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "auditoria de lacunas do fin-control, 2026-10-13 (kernel instalado, doctor verde, artefatos canônicos ausentes)",
+      "owner_skill": "mjrp-coaching-pm",
+      "check": {
+        "kind": "contains",
+        "pattern": "\\^REL-\\d+",
+        "label": "sem nenhum release `^REL-xx`",
+        "paths": [
+          "ROADMAP.md",
+          "docs/specs/prd.md"
+        ]
+      },
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/prd.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/prd.md": "sha256:e882652f70b83f9377773ea6b022cc8c51e038118ddaee86c56a6be3ae93efdf"
+      },
+      "migration": "CM-0003",
+      "superseded": []
+    },
+    {
+      "id": "feature-track",
+      "version": 1,
+      "title": "track: no frontmatter de cada feature",
+      "path": "docs/specs/features/",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_path:docs/specs/features/*/spec.md"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "auditoria de lacunas do fin-control, 2026-10-13 (kernel instalado, doctor verde, artefatos canônicos ausentes); F11 do Control Center já declara `track: Fix`",
+      "owner_skill": "mjrp-specifying-sdd-artifacts",
+      "check": [
+        {
+          "kind": "frontmatter_key",
+          "glob": "docs/specs/features/*/spec.md",
+          "key": "track"
+        },
+        {
+          "kind": "frontmatter_key",
+          "glob": "docs/specs/features/*/spec.md",
+          "key": "fixes",
+          "if": {
+            "key": "track",
+            "equals": "Fix"
+          },
+          "min": 0
+        }
+      ],
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/spec.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/spec.md": "sha256:98807ae05c7ba673597dd3d6baec04cc9319b5e5f6a4fbb97306799041d42c8c"
+      },
+      "migration": "CM-0004",
+      "superseded": [],
+      "template": "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/templates/spec.md"
+    },
+    {
+      "id": "evidence-folder",
+      "version": 1,
+      "title": "reports/evidence/ (evidência por feature)",
+      "path": "reports/evidence/",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_path:docs/specs/features/*/spec.md"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "auditoria de lacunas do fin-control, 2026-10-13 (kernel instalado, doctor verde, artefatos canônicos ausentes)",
+      "owner_skill": "mjrp-implementing-tasks",
+      "check": {
+        "kind": "exists",
+        "paths": [
+          "reports/evidence/"
+        ]
+      },
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/reference/feature-artifacts.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/builder/mjrp-specifying-sdd-artifacts/reference/feature-artifacts.md": "sha256:1ebeb4b0ab0585e39ec599a62551c6c857a2069c9fda26bece187e579763a8b9"
+      },
+      "migration": "CM-0005",
+      "superseded": []
+    },
+    {
+      "id": "contract-screen",
+      "version": 1,
+      "title": "screen: no contrato (onde mora a tela)",
+      "path": ".mjrp-project.yml",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_screen"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "ADR-0017 do harness, 2026-10-12; auditoria de lacunas do fin-control, 2026-10-13 (kernel instalado, doctor verde, artefatos canônicos ausentes)",
+      "owner_skill": "mjrp-pdlc-bootstrap",
+      "check": {
+        "kind": "contract_key",
+        "key": "screen"
+      },
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/contract.yml"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/contract.yml": "sha256:45cf5a09529c59c3685013e39add96a90f1ef678b5c866647ca447505980544c"
+      },
+      "migration": "CM-0006",
+      "superseded": []
+    },
+    {
+      "id": "visual-sensor",
+      "version": 1,
+      "title": "sensors.visual no contrato (paridade visual)",
+      "path": ".mjrp-project.yml",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_screen"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "ADR-0017 do harness, 2026-10-12 (o Control Center 1.0 chegou ao UAT longe do protótipo, com todos os sensores verdes)",
+      "owner_skill": "mjrp-pdlc-bootstrap",
+      "check": [
+        {
+          "kind": "contract_key",
+          "key": "sensors.visual"
+        },
+        {
+          "kind": "delegated",
+          "code": "A2",
+          "requires": [
+            {
+              "kind": "contract_key",
+              "key": "screen"
+            },
+            {
+              "kind": "contains",
+              "pattern": "Aprovado por:",
+              "label": "sem referência visual aprovada (`Aprovado por:`)",
+              "path": "docs/specs/info-arch.md"
+            }
+          ]
+        }
+      ],
+      "pattern_sources": [
+        "mjrp-scripts/visual_gate.py"
+      ],
+      "pattern_digest": {
+        "mjrp-scripts/visual_gate.py": "sha256:8e6fd608c9b7669dbe9e0d4fa641a61cd9bf174096340e505ec5412d68b0dd0e"
+      },
+      "migration": "CM-0007",
+      "superseded": []
+    },
+    {
+      "id": "info-arch",
+      "version": 1,
+      "title": "info-arch.md (inventário da UI, estados com block ID)",
+      "path": "docs/specs/info-arch.md",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_screen"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "auditoria de lacunas do fin-control, 2026-10-13 (kernel instalado, doctor verde, artefatos canônicos ausentes); sem ele, cinco requisitos do fin-control (S-48, S-49, S-50, S-57, S-58) não avançam",
+      "owner_skill": "mjrp-designing-ui",
+      "check": [
+        {
+          "kind": "exists",
+          "paths": [
+            "docs/specs/info-arch.md"
+          ]
+        },
+        {
+          "kind": "contains",
+          "pattern": "^\\|\\s*UI-\\d+",
+          "label": "sem nenhuma linha de inventário `UI-xx`",
+          "path": "docs/specs/info-arch.md"
+        }
+      ],
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/info-arch.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/info-arch.md": "sha256:6ee98c0e3ed4397c7627c415ac7e8c463f564ed139c019a4f09ff62a40cf566e"
+      },
+      "migration": "CM-0008",
+      "superseded": []
+    },
+    {
+      "id": "wireframes",
+      "version": 1,
+      "title": "design/wireframes/ (wireframes por tela)",
+      "path": "design/wireframes/",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_screen"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "MJRP, 2026-10-09: protótipo, info-arch e wireframes andam juntos; auditoria de lacunas do fin-control, 2026-10-13 (kernel instalado, doctor verde, artefatos canônicos ausentes)",
+      "owner_skill": "mjrp-designing-ui",
+      "check": [
+        {
+          "kind": "glob",
+          "pattern": "design/wireframes/**/*.png",
+          "min": 1
+        },
+        {
+          "kind": "delegated",
+          "code": "W14",
+          "requires": {
+            "kind": "exists",
+            "paths": [
+              "docs/specs/info-arch.md"
+            ]
+          }
+        }
+      ],
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/prototype-inventory.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/prototype-inventory.md": "sha256:99a7aea57fc7968f47c6d8093428ba6c15640343c31e321c38fa68d8cd8e50ee"
+      },
+      "migration": "CM-0009",
+      "superseded": []
+    },
+    {
+      "id": "design-system",
+      "version": 2,
+      "title": "design-system.md que declara os temas",
+      "path": "docs/specs/design-system.md",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_screen"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "Control Center: o produto troca de paleta; auditoria de lacunas do fin-control, 2026-10-13 (kernel instalado, doctor verde, artefatos canônicos ausentes)",
+      "owner_skill": "mjrp-defining-design-systems",
+      "check": {
+        "kind": "contains",
+        "pattern": "^##\\s+Themes?\\b",
+        "label": "não declara os temas (seção `## Themes`)",
+        "path": "docs/specs/design-system.md"
+      },
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-defining-design-systems/templates/design-system.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-defining-design-systems/templates/design-system.md": "sha256:4ca86f99b06b986d1e7d3919238a2ce2a64c99c8d1f1b025a1094ddd98370724"
+      },
+      "migration": "CM-0010",
+      "superseded": [
+        {
+          "version": 1,
+          "migration": null,
+          "check": {
+            "kind": "exists",
+            "paths": [
+              "docs/specs/design-system.md"
+            ]
+          }
+        }
+      ],
+      "template": "mjrp-skills/mjrp-sw-factory/designer/mjrp-defining-design-systems/templates/design-system.md"
+    },
+    {
+      "id": "arch-critique",
+      "version": 1,
+      "title": "crítica de arquitetura (relatório de auditoria)",
+      "path": "reports/audits/",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "standard",
+          "full"
+        ],
+        "when": "has_path:docs/decisions"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "a regra da ADR no AGENTS.md (crítica antes do aceite); auditoria de lacunas do fin-control, 2026-10-13 (kernel instalado, doctor verde, artefatos canônicos ausentes)",
+      "owner_skill": "mjrp-critiquing-architecture",
+      "check": {
+        "kind": "glob",
+        "pattern": "reports/audits/*architecture-audit*.md",
+        "min": 1
+      },
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-critiquing-architecture/templates/architecture-audit.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-critiquing-architecture/templates/architecture-audit.md": "sha256:768c998394ea0a2d9b401907fbbdef2bfd59bc8ee413a01837d95c19d2b481b1"
+      },
+      "migration": "CM-0011",
+      "superseded": []
+    },
+    {
+      "id": "adr-names",
+      "version": 1,
+      "title": "ADRs com nome NNNN-kebab em inglês",
+      "path": "docs/decisions/",
+      "applies_to": {
+        "profiles": [
+          "code-app",
+          "content"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_path:docs/decisions"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "a regra de nomes do CLAUDE.md (2026-09-09); auditoria de lacunas do fin-control, 2026-10-13 (kernel instalado, doctor verde, artefatos canônicos ausentes)",
+      "owner_skill": "mjrp-recording-decisions",
+      "check": {
+        "kind": "name_pattern",
+        "glob": "docs/decisions/*.md",
+        "regex": "^\\d{4}-[a-z0-9]+(-[a-z0-9]+)*\\.md$",
+        "skip": [
+          "folder-index.md"
+        ]
+      },
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/meta/mjrp-recording-decisions/templates/decision-record.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/meta/mjrp-recording-decisions/templates/decision-record.md": "sha256:f2e824170d7eb573a5e8405bc77459295439ff0394f22c2a3c3baec3308d0389"
+      },
+      "migration": "CM-0012",
+      "superseded": []
+    },
+    {
+      "id": "english-names",
+      "version": 1,
+      "title": "arquivos de docs/wiki com nome em inglês",
+      "path": "docs/wiki/",
+      "applies_to": {
+        "profiles": [
+          "code-app",
+          "content"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "a regra de nomes do CLAUDE.md; auditoria de lacunas do fin-control, 2026-10-13 (kernel instalado, doctor verde, artefatos canônicos ausentes)",
+      "owner_skill": "mjrp-syncing-docs",
+      "check": {
+        "kind": "name_pattern",
+        "glob": "docs/wiki/*.md",
+        "skip": [
+          "index.md",
+          "folder-index.md"
+        ],
+        "deny_words": [
+          "assinaturas",
+          "assinatura",
+          "cartao",
+          "cartoes",
+          "esteira",
+          "metodologia",
+          "taxonomia",
+          "despesas",
+          "despesa",
+          "receitas",
+          "receita",
+          "reserva",
+          "caixinhas",
+          "caixinha",
+          "glossario",
+          "nomenclatura",
+          "modularizacao",
+          "controle",
+          "independente",
+          "decisao",
+          "decisoes",
+          "visao",
+          "arquitetura",
+          "requisitos",
+          "orcamento",
+          "fatura",
+          "faturas",
+          "gestao",
+          "politica",
+          "regras",
+          "relatorio",
+          "usuario",
+          "projeto",
+          "projetos",
+          "padrao",
+          "padroes",
+          "estrategia",
+          "definicao",
+          "analise",
+          "migracao",
+          "ajuste",
+          "paleta",
+          "temas"
+        ]
+      },
+      "pattern_sources": [
+        "CLAUDE.md#Nomes — arquivo, pasta e código"
+      ],
+      "pattern_digest": {
+        "CLAUDE.md#Nomes — arquivo, pasta e código": "sha256:0dd5672b0a9b0650365691376d55abb3c9ac16752013c680e6852fa1d149d371"
+      },
+      "migration": "CM-0013",
+      "superseded": [],
+      "max_severity": "warning"
+    },
+    {
+      "id": "purpose",
+      "version": 1,
+      "title": "propósito declarado (VISION.md ou Core/PROJECT_CONTEXT.md)",
+      "path": "VISION.md",
+      "applies_to": {
+        "profiles": [
+          "content"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "a onboarding abre pelo propósito (perfil content da bootstrap)",
+      "owner_skill": "mjrp-pdlc-bootstrap",
+      "check": {
+        "kind": "exists",
+        "paths": [
+          "VISION.md",
+          "Core/PROJECT_CONTEXT.md"
+        ]
+      },
+      "pattern_sources": [
+        "docs/wiki/kernel/roadmap/vision-document.md"
+      ],
+      "pattern_digest": {
+        "docs/wiki/kernel/roadmap/vision-document.md": "sha256:c2d6122eccfc82c069b13b26334cffda8c5361736fa05dc32a3a5c4db1869d80"
+      },
+      "migration": "CM-0014",
+      "superseded": []
+    },
+    {
+      "id": "content-map",
+      "version": 1,
+      "title": "CONTENT_MAP.md (mapa do conteúdo)",
+      "path": "CONTENT_MAP.md",
+      "applies_to": {
+        "profiles": [
+          "content"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "o scaffold do perfil content (new_project.py)",
+      "owner_skill": "mjrp-pdlc-bootstrap",
+      "check": {
+        "kind": "exists",
+        "paths": [
+          "CONTENT_MAP.md"
+        ]
+      },
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/contract.yml"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/contract.yml": "sha256:45cf5a09529c59c3685013e39add96a90f1ef678b5c866647ca447505980544c"
+      },
+      "migration": "CM-0015",
+      "superseded": []
+    },
+    {
+      "id": "report-names",
+      "version": 1,
+      "title": "relatórios com nome AAAA-MM-DD-<projeto>-<tipo>",
+      "path": "reports/audits/",
+      "applies_to": {
+        "profiles": [
+          "code-app",
+          "content"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "has_path:reports/audits"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "born_of": "decisão do MJRP (2026-10-13, aceite da ADR-0019): a data vem primeiro, como os modelos das skills do harness já prescrevem; o fin-control usava tipo primeiro",
+      "owner_skill": "mjrp-syncing-docs",
+      "check": {
+        "kind": "name_pattern",
+        "glob": "reports/audits/*.md",
+        "regex": "^\\d{4}-\\d{2}-\\d{2}-[a-z0-9]+([-.][a-z0-9]+)*\\.md$",
+        "skip": [
+          "folder-index.md"
+        ]
+      },
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-critiquing-architecture/templates/architecture-audit.md"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/reviewer/mjrp-critiquing-architecture/templates/architecture-audit.md": "sha256:768c998394ea0a2d9b401907fbbdef2bfd59bc8ee413a01837d95c19d2b481b1"
+      },
+      "migration": "CM-0016",
+      "superseded": []
+    }
+  ],
+  "history": [
+    {
+      "at": "2026-10-13 12:39",
+      "change": "catálogo criado (ADR-0019)"
+    },
+    {
+      "at": "2026-10-13 20:55",
+      "change": "roadmap@3: o resultado ancorado aceita o prefixo do projeto (^CC-OUT-xx, id_prefix do contrato — ADR-0020 D.3)"
+    },
+    {
+      "at": "2026-10-13 23:20",
+      "change": "visual-sensor: owner_skill passa de mjrp-designing-ui para mjrp-pdlc-bootstrap — quem declara sensors.visual é a bootstrap, no modo conform (a CM-0007 já dizia isso); mudança só de dado, sem versão nova"
+    }
+  ]
+}
