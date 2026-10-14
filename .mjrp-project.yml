@@ -3,6 +3,9 @@ mjrp_harness:
   profile: code-app          # code-app | content | meta
   process_level: standard     # minimal | standard | full
   context: lazy              # eager | lazy
+  project_palette:         # 2026-10-14 (ADR-0022 do harness): a cor deste projeto no Control Center (par da biblioteca de paletas); não é a pele do produto
+    light: L6
+    dark: D1
   orchestration: assisted    # assisted | autonomous
   gates: [tasks]
   gate_sla_days: 14

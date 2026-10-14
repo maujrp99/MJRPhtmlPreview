@@ -2,6 +2,12 @@
 
 > **Append-only.** Uma entrada por bloco de trabalho, mais recente no topo, com prefixo parseável: `## [AAAA-MM-DD HH:MM] <tipo> — título`. Tipos: `session`, `decision` (o conteúdo mora na página do assunto em `docs/wiki/`, seção `## History`), `ingest`, `inventory`. Hora de Brasília, sempre. Ninguém lê este arquivo inteiro — consulta-se por data ou `grep`. Aqui fica só o **quando**; o que é verdade mora na wiki, o estado no `MEMORY.md`.
 
+## [2026-10-14 16:30] session — par de paletas do projeto no contrato (`project_palette`, ADR-0022 do harness)
+
+> Participantes: MJRP + Claude (Claude Code, sessão do harness) · Branch: main
+
+- O MJRP escolheu o par deste projeto (claro L6 · escuro D1); o Control Center pinta o cabeçalho do projeto com ele. Só o contrato muda.
+
 ## [2026-10-09 21:43] session — requisitos com o título no nome do arquivo (<ID>-<slug>.md)
 
 > Participantes: MJRP + Claude (Claude Code) · Branch: main
