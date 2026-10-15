@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-10-09
 fontes: [agentic-lab-claude-code-hooks-explained, don-woodlock-what-is-harness-engineering, quintanilha-o-que-e-harness, austin-marchese-karpathy-method, pasquadev-harness-e-loop-engineering, fernanda-kipper-harness-alem-do-claude-md]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte 593c609d · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte b714d244 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 Um **hook** é um evento que dispara um script: **o evento responde *quando* o código roda; o
@@ -146,7 +146,7 @@ complexity for you. Engineering is not dead; you're just abstracting up a layer.
   `PostToolUse` (Skill) → `session_journal`. **Git** (`mjrp-scripts/hooks/`, `core.hooksPath`): `pre-commit` →
   estrutura por natureza + contradição do grafo nos nós tocados; `commit-msg` → entrada nova no log + protótipo ×
   info-arch × wireframes (`Prototype-sync: skip — <motivo>` é do humano); `post-commit` → `backup_repo.py` (nunca
-  bloqueia). O `Stop` de critério de saída é o que torna o princípio II.4 **executável**, não só escrito; o
+  bloqueia, e **não faz o commit esperar**: roda em segundo plano — o bundle cresce com o repositório). O `Stop` de critério de saída é o que torna o princípio II.4 **executável**, não só escrito; o
   `SessionStart` é o que faz o aviso de arquivo sem commit (W4) chegar sozinho.
 - **O limite** (S-61, 04/10): hook de AI Platform só roda onde a plataforma
   carrega as configurações do projeto. A sessão remota que alcança o repo por ponte não carrega — prova:
@@ -166,6 +166,7 @@ hook é o ponto de encaixe dos dois.
 
 ## History
 
+- **2026-10-14 14:05** · O `post-commit` deixou de esperar o backup. Medido num clone do harness com os hooks reais: o `git bundle --all` levava ~5,8 s de ~6,5 s por commit (o `.git` foi de 119 MB para 422 MB, 84 refs, o bundle de 147 MB em 11/10 para 299 MB), contra ~0,7 s de `pre-commit` + `commit-msg`; o orçamento de commit do Control Center reprovava na `main` por isso, e o commit pela tela (teto de 15 s) esperava o mesmo bundle. Agora o hook lança `backup_repo.py` com `nohup` e descritores fechados (linha em `.git/mjrp-backup.log`); dois backups simultâneos se serializam por um `flock` no destino (o atrasado, vendo o `HEAD` já feito, não faz nada) e o `freshness` (W13) não acusa atraso enquanto o lock está preso. `MJRP_BACKUP_DIR` apontando para um caminho que não existe passou a significar "sem destino" (antes caía no iCloud real: os clones de teste do app gravaram ~5 GB de bundles lá).
 - **2026-10-09 20:55** · Revisão geral de 2026-10-09: o texto contava dois hooks e depois "mais cinco"; passou a trazer o inventário de hoje, conferido no `.claude/settings.json` e em `mjrp-scripts/hooks/` (inclusive `path_guard`, `requirements_graph_check`, `pre-commit`, o guarda do protótipo no `commit-msg` e o `post-commit`).
 - **2026-09-11** · Página criada a partir da mineração do acervo, a pedido do MJRP, no meio do
   brief do playbook de conceitos. Fonte canônica: Agentic Lab; complementos de Woodlock,

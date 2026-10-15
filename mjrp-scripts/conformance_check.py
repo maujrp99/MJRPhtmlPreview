@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte 593c609d · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte b714d244 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 conformance_check.py - the canonical conformance of the children (ADR-0019): catalog x child project.
 
@@ -15,7 +15,10 @@ Pieces (names fixed by ADR-0019 § Nomes), all stdlib:
     born_of, owner_skill, check, migration, template, pattern_sources, pattern_digest, superseded), pattern_carriers,
     not_canonical, history. `title` (the Portuguese label of the message) is the one key added to the ADR's list;
   - the CHECK: one clause, a list of clauses (all), or {"any": [...]} (some); nestable. Clause kinds are a closed set
-    with closed parameters: exists, glob, contains, frontmatter_key, contract_key, name_pattern, delegated;
+    with closed parameters: exists, glob, contains, frontmatter_key, contract_key, name_pattern, delegated, script
+    (2026-10-14 19:57, decision of the MJRP: the fin-control Board came out empty and no declarative clause can say
+    "the Control Center renders this product" - `script` runs a stdlib sensor that lives next to this file, vendored
+    with it, on the project: exit 0 passes, 1 is a gap with its first lines, 2 is "não avaliável");
   - the MIGRATION NOTES, mjrp-scripts/migrations/CM-NNNN-<slug>.md: one per version step (from -> to), a chain, immutable;
     frontmatter only id, item, from, to;
   - the child's contract `conformance:` -> applied: [CM-...], received: {"<item>@<version>": date} (stamped only by
@@ -70,11 +73,21 @@ CLAUSES = {
     "contract_key": ({"key"}, set()),
     "name_pattern": ({"glob"}, {"regex", "deny_words", "skip", "label"}),
     "delegated": ({"code", "requires"}, set()),
+    "script": ({"script"}, {"label"}),
 }
+SCRIPT_NAME = re.compile(r"^[a-z0-9_]+\.py$")      # a file next to this one, never a path: the clause cannot reach outside
+SCRIPT_TIMEOUT = 120
+SCRIPT_LINES = 3
 
 
 class Unknown(Exception):
     """A check that cannot tell. Reported as "não avaliável" - an unknown is never a pass."""
+
+
+class ScriptUnknown(Unknown):
+    """A `script` clause that could not run (script missing, crashed, timed out, exit 2): the child cannot tell whether it
+    conforms. Unlike the other unknowns this one is a WARNING in the I6 - the obligation is real and unjudged, and a note
+    would leave the child silent for as long as the script stays broken (verification 2026-10-14 P2-4)."""
 
 
 class CatalogError(Exception):
@@ -118,6 +131,8 @@ def validate_check(check, where="check"):
                 re.compile(rx)
             except re.error as e:
                 raise CatalogError(f"{where}: regex não compila ({e})")
+    if kind == "script" and not SCRIPT_NAME.match(str(check["script"])):
+        raise CatalogError(f"{where}: script é o nome de um arquivo .py ao lado do conformance_check.py, não um caminho")
     if kind == "delegated":
         if not check["requires"]:
             raise CatalogError(f"{where}: delegated sem `requires`")
@@ -305,8 +320,30 @@ def c_name_pattern(root, cfg, c):
     return [f"{len(bad)} arquivo(s) com nome fora do padrão ou que não está em inglês: {', '.join(bad[:4])}{'...' if len(bad) > 4 else ''}"]
 
 
+def c_script(root, cfg, c):
+    """The sensor `c["script"]`, next to this file (vendored with it), run on the project: 0 passes; 1 is a gap - its
+    first lines and the command for the whole list; 2, a crash or a missing script are Unknown (never a pass)."""
+    path = HERE / c["script"]
+    if not path.is_file():
+        raise ScriptUnknown(f"{c['script']} ausente ao lado do conformance_check.py — rode `new_project.py <filho> --refresh-kernel`")
+    try:
+        p = subprocess.run([sys.executable, str(path), str(root), "--quiet"], capture_output=True, text=True,
+                           timeout=SCRIPT_TIMEOUT)
+    except (OSError, subprocess.TimeoutExpired) as e:
+        raise ScriptUnknown(f"{c['script']} não rodou ({e.__class__.__name__})")
+    if p.returncode == 0:
+        return []
+    if p.returncode == 1:
+        lines = [l.strip() for l in p.stdout.splitlines() if l.strip()]
+        head, detail = (lines[0] if lines else c["script"]), [l for l in lines[1:] if l.startswith("[")][:SCRIPT_LINES]
+        more = f"; lista inteira: `python3 mjrp-scripts/{c['script']} .`"
+        return [f"{c.get('label') or head}: " + " | ".join(detail or [head]) + more]
+    why = (p.stderr or p.stdout).strip().splitlines()
+    raise ScriptUnknown(f"{c['script']} saiu {p.returncode}: {why[0] if why else 'sem mensagem'}")
+
+
 LEAVES = {"exists": c_exists, "glob": c_glob, "contains": c_contains, "frontmatter_key": c_frontmatter_key,
-          "contract_key": c_contract_key, "name_pattern": c_name_pattern}
+          "contract_key": c_contract_key, "name_pattern": c_name_pattern, "script": c_script}
 
 
 def run_check(check, root, cfg, delegated=None):
@@ -476,7 +513,8 @@ def waiver_for(item, cfg, today, root, commits=None):
 
 
 def evaluate(root, cfg, today, items=None, has_screen=None, notes_dir=None, trailer_commits=None):
-    """One result per applicable item: {id, status: ok|gap|unknown|waived, severity, reasons, delegated, item, no_stamp}.
+    """One result per applicable item: {id, status: ok|gap|unknown|waived, severity, reasons, delegated, item, no_stamp}
+    (an `unknown` caused by a `script` clause that could not run also carries `warn: True`: the I6 warns on it).
     Plus, for an item whose applied note targeted an OLDER version, a gap judged by that version's own check (error).
     Nothing is written. `has_screen`: True/False from the one definition of "has a screen" (visual_gate.screen_on_disk),
     None when the caller cannot tell - then screen items come back `unknown`."""
@@ -497,7 +535,11 @@ def evaluate(root, cfg, today, items=None, has_screen=None, notes_dir=None, trai
         if honored:
             out.append({**res, "status": "waived", "reasons": [f"dispensado até {waiver.get('until')}: {waiver.get('reason')}"]})
             continue
-        res["reasons"] = list(dict.fromkeys(run_check(it["check"], root, cfg, res["delegated"])))
+        try:
+            res["reasons"] = list(dict.fromkeys(run_check(it["check"], root, cfg, res["delegated"])))
+        except Unknown as e:
+            out.append({**res, "status": "unknown", "reasons": [str(e)], "warn": isinstance(e, ScriptUnknown)})
+            continue
         status = "gap" if res["reasons"] else "ok"
         if status == "gap" and why_not:
             res["reasons"].append(why_not)
@@ -514,7 +556,10 @@ def evaluate(root, cfg, today, items=None, has_screen=None, notes_dir=None, trai
                 if old is None:
                     out.append({**res, "status": "gap", "severity": "warning" if it.get("max_severity") == "warning" else "error", "reasons": [f"{last['id']} aplicada, mas o catálogo não guarda o check de {it['id']}@{last['to']} (superseded)"]})
                 else:
-                    why = run_check(old, root, cfg)
+                    try:
+                        why = run_check(old, root, cfg)
+                    except Unknown as e:
+                        why = [f"não avaliável ({e})"]
                     if why:
                         out.append({**res, "status": "gap", "severity": "warning" if it.get("max_severity") == "warning" else "error",
                                     "reasons": [f"{last['id']} consta em `conformance.applied` e a checagem de {it['id']}@{last['to']} reprova: " + "; ".join(why)]})
@@ -558,10 +603,16 @@ def check_note(root, cfg, note_id, items, notes):
     chk = check_of_version(it, n["to"]) if it else None
     if chk is None:
         return 2, f"conformance_check: {note_id}: o catálogo não guarda o check de {n['item']}@{n['to']}"
-    why = run_check(chk, root, cfg)
+    try:
+        why = run_check(chk, root, cfg)
+    except Unknown as e:
+        return 2, f"{note_id} ({it['id']}@{n['from']}→{n['to']}): não avaliável — {e}"
     lines = [f"{note_id} ({it['id']}@{n['from']}→{n['to']}): " + ("passou" if not why else "reprovou — " + "; ".join(why))]
     if n["to"] != it["version"]:
-        cur = run_check(it["check"], root, cfg)
+        try:
+            cur = run_check(it["check"], root, cfg)
+        except Unknown as e:
+            cur = [f"não avaliável ({e})"]
         lines.append(f"versão atual ({it['id']}@{it['version']}): " + ("passou" if not cur else "reprovou — " + "; ".join(cur)))
     return (1 if why else 0), "\n".join(lines)
 
@@ -697,6 +748,17 @@ def git_digest_changes(base, item_id):
     return out
 
 
+def _scripts_of(check):
+    """The `script` names a check runs, at any depth."""
+    if isinstance(check, list):
+        return [n for c in check for n in _scripts_of(c)]
+    if "any" in check:
+        return _scripts_of(check["any"])
+    if check.get("kind") == "delegated":
+        return _scripts_of(check["requires"])
+    return [check["script"]] if check.get("kind") == "script" else []
+
+
 def learn_gate(items=None, notes_dir=None, base=None, doc=None, use_git=True):
     """The source-side gate (ADR-0019 § 4), a sensor of the harness contract. Returns the problems:
       1. every pattern carrier (a template in `pattern_carriers`) is a `template` or pattern source of some item, or is in
@@ -761,6 +823,17 @@ def learn_gate(items=None, notes_dir=None, base=None, doc=None, use_git=True):
                 for s in NOTE_SECTIONS:
                     if s not in n["text"]:
                         problems.append(f"{it['id']}: a nota {n['path'].name} não tem a seção `{s}`")
+        for name in _scripts_of(it["check"]):
+            # the clause runs in the CHILD: the script must exist here, travel with the kernel, and be a pattern source
+            # (what it demands of the children changes only with a note, like any other standard)
+            rel = f"mjrp-scripts/{name}"
+            if not (base / rel).is_file():
+                problems.append(f"{it['id']}: a cláusula script aponta para {rel}, que não existe")
+            if rel not in it["pattern_sources"]:
+                problems.append(f"{it['id']}: {rel} roda no filho e não está em `pattern_sources` — mudar o que ele cobra passaria sem nota")
+            np_text = (base / "mjrp-scripts" / "new_project.py").read_text(encoding="utf-8") if (base / "mjrp-scripts" / "new_project.py").is_file() else ""
+            if np_text and f'"{name}"' not in np_text:
+                problems.append(f"{it['id']}: {rel} não está nos VENDORED_FILES do new_project.py — no filho a cláusula fica não avaliável")
         if not _skill_exists(base, it["owner_skill"]):
             problems.append(f"{it['id']}: owner_skill '{it['owner_skill']}' não existe em mjrp-skills/")
     for n in notes:

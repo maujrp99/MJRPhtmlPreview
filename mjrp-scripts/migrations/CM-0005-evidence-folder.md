@@ -4,7 +4,7 @@ item: evidence-folder
 from: 0
 to: 1
 ---
-<!-- cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte 593c609d · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte b714d244 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # CM-0005 · evidence-folder@0 → evidence-folder@1
 
 ## Por que

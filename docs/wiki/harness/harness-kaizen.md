@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-10-12
 fontes: [2026-claude-code-auto-memory]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte 593c609d · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte b714d244 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O registro do que o harness **não pegou** e do que se aprendeu com isso. Achado e lição moram
@@ -38,6 +38,17 @@ deixando o ponteiro. Lição que só mora aqui é lição que ninguém aplica.
 > próprio harness`.
 
 ## Findings
+
+- **2026-10-14 20:19** · **A "cópia descartável" de um filho era um link para o filho real, e o teste escreveu nele.** No teste
+  da `mjrp-organizing-product-structure` o agente criou a cópia do fin-control com `mkdir -p <scratchpad>/portfolio && rsync
+  … <scratchpad>/portfolio/mjrp-fin-control-2026-27/`: a pasta `portfolio/` do scratchpad (que é da sessão inteira, não do
+  agente) já existia, criada por outro agente às 15:24, com **links simbólicos** para os projetos reais. O `rsync` foi para
+  o próprio repositório e as três rodadas (ROADMAP, 70 `planned_for`, dois `tasks.md`, uma entrada no log) caíram no
+  fin-control real. Percebido no `ls` do portfólio do Control Center; desfeito em minutos, linha por linha, conferindo cada
+  arquivo contra a cópia feita antes de cada edição (`git status` do filho igual ao de antes; nada commitado). **Por quê:**
+  `mkdir -p` aceita pasta que já existe, e o nome "cópia" não prova nada. **Lição:** cópia de projeto real nasce numa pasta
+  **nova** (`mkdir` sem `-p`), e o script que escreve nela recusa o caminho cujo `realpath` cai na pasta dos projetos —
+  a mesma conferência vale para qualquer teste "numa cópia" (o protocolo dos evals da skill a cita).
 
 - **2026-10-11 12:09** · **O Delivery entregou tela que não bate com o protótipo aprovado, com todos os sensores verdes.** No UAT
   do Control Center 1.0 o MJRP abriu a tela e achou, de cara: os componentes de UI padronizados do protótipo ausentes, o

@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-10-13
 fontes: [design/proposals/requirements-knowledge-graph-proposal.md, decisions/0020-control-center-as-product-contributes-to, kernel/architecture/knowledge-graph-concept, kernel/architecture/linked-notes-concept, kernel/architecture/graph-engineering-concept, kernel/ways-of-working/spec-kit]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte 593c609d · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte b714d244 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **grafo de requisitos** é a documentação do PDLC tratada como grafo de conhecimento: cada requisito, épico,
@@ -108,6 +108,10 @@ Decisão do MJRP, 2026-10-04, nas palavras dele — **limitar:**
   sempre declarada liga `mjrp_harness.requirements.release_required: true` no contrato: então todo requisito a tem a partir de
   `Prioritized` (um Backlog pode ainda não ter) — na própria story **ou no épico dela**, que cumpre pelo atalho. Wave, milestone e
   release são o mesmo nó, com um campo `kind` se o projeto quiser nomear diferente; milestone é release com data.
+  **Desde 2026-10-14 19:57 (decisão do MJRP), o produto tem de aparecer no Control Center:** num `code-app` em `standard`
+  ou `full`, o item `product-structure` do catálogo canônico cobra ao menos uma release no `ROADMAP.md` e, em toda story
+  que não é `Deferred` nem `Cancelled`, o **próprio** `planned_for` — o atalho do épico vale para este sensor, mas não
+  chega ao Board da tela. O juiz é `mjrp-scripts/product_structure_check.py`; o processo, a `mjrp-organizing-product-structure`.
 - **A unidade planejada é o requisito** (`planned_for`); a feature herda a release dos requisitos que importa, e o
   sensor acusa feature que importa requisitos de releases diferentes.
 - **Uma release pode conter épicos inteiros** — o épico não atravessa necessariamente a release. `planned_for` no
@@ -211,6 +215,7 @@ que executa a reconciliação por conta própria é do EP-03 (brief do MJRP).
 - **Julga o conteúdo:** `mjrp-ensuring-quality` (Reviewer) — a aresta existir não prova que o teste prova o REQ.
 
 ## History
+- **2026-10-14 19:57** · **O produto tem de aparecer no Control Center** (MJRP, crítico; o Board do fin-control saiu vazio: 11 épicos e 70 stories certos, nenhuma release, nenhum `planned_for`). O item `product-structure@1` do catálogo canônico (nota CM-0019) roda `product_structure_check.py`, que lê o projeto como a tela lê: release no `ROADMAP.md` (a do PRD não chega), o `planned_for` da própria story (o do épico não chega), a medida do resultado como `- **Medida:**` na seção dele. A `release_required` e o atalho do épico continuam valendo para o sensor do grafo; a skill `mjrp-organizing-product-structure` roda o laço até a tela.
 - **2026-10-13 19:00** · **ADR-0020 (T1)**: a seção *Subprojeto do harness* e as exceções nas arestas `epic` e `planned_for` saem — o app é um projeto como os outros, com épicos próprios, e `parent_epic` sai do contrato; entra a aresta `contributes_to` (resultado → resultado de outro roadmap, 0..1, alvo existente, sem ciclo; resolvido / inexistente / fora de alcance; o filho não segura o pai); `planned_for` obrigatório vira a opção de projeto `requirements.release_required` (a release do épico cumpre); entra o estado **`Cancelled`**, fora do andamento; entra a identidade de ID no repositório (`id_prefix`, `id_unique`). Sensor, `doctor.py`, `gen_prd_status.py` e as skills mudaram no mesmo trilho.
 - **2026-10-09 20:55** · Revisão geral de 2026-10-09: nome do nó `<ID>-<slug>.md` (slug do título em inglês, até 50 caracteres, congelado ao nascer; `aliases: [<ID>]`; link com o nome inteiro e o ID como texto; renomear com `req_file_names.py --reslug`); exceções do subprojeto do harness nas arestas `epic` e `planned_for`; regra `design_system_exists` no Ready com tela; sensor `requirements_graph_check.py` no lugar do aposentado; S-63 fechada.
 - **2026-10-09 15:13** · Subprojeto do harness (decisão do MJRP): épico só no harness; o subprojeto declara `parent_epic` no contrato e organiza as stories por release; o sensor reprova épico no subprojeto, `epic:` em story dele e story `Prioritized` sem release. O Control Center é o primeiro (EP-08).

@@ -7,7 +7,7 @@ status: vivo
 atualizado: 2026-09-18
 fontes: []
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte 593c609d · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte b714d244 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 
@@ -26,6 +26,10 @@ mesma regra que mantém ADR fora de skill vale aqui. Antes desta página, a libr
 copiada dentro de `mjrp-defining-design-systems/SKILL.md`; cada nova paleta ou reordenação exigia editar a
 skill (e reempacotar/republicar no Cowork). Agora a skill só aponta pra cá — atualizar a paleta é
 editar esta página, sem tocar em nenhuma skill.
+
+**A biblioteca também dá a cor do projeto no portfólio.** O Control Center mostra cada projeto em uma cor fixa, um par desta
+biblioteca (uma paleta clara e uma escura) declarado no contrato do projeto como `project_palette: {light, dark}`; não é a pele
+do produto, que o `design-system.md` do projeto decide.
 
 ## Quem consome esta página
 

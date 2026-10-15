@@ -6,7 +6,7 @@ tags: [harness, sensores, verificacao]
 status: em formação
 atualizado: 2026-10-12
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte 593c609d · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte b714d244 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **doctor** é o sensor do harness: um script que lê a instância e devolve verde,
@@ -21,7 +21,7 @@ Erro (vermelho) nas letras C, I, F e A (I6 é a 12ª e última vaga de erro do t
 | ID | O que confere |
 |---|---|
 | C1 | skills instaladas × fonte |
-| I1 | schema do contrato e `environment` |
+| I1 | schema do contrato e `environment`; de `project_palette` (e `control_center.portfolio_palette`) confere só a forma — um dicionário com `light` e/ou `dark` —, nunca os IDs, que a biblioteca de paletas julga |
 | I2 | caminhos declarados existem |
 | I3 | links relativos e wikilinks |
 | I4 | `AGENTS.md` canônico |
@@ -49,7 +49,10 @@ Erro (vermelho) nas letras C, I, F e A (I6 é a 12ª e última vaga de erro do t
 | W15 | branch de correção × status do UAT na `main` |
 
 ## History
+- **2026-10-14 21:04** · **A cláusula `script` que não consegue rodar é AVISO na I6, não nota** (verificação da `mjrp-organizing-product-structure`, P2-4; mesma regra lean de 19:20). Script ausente ao lado do `conformance_check.py`, que quebrou, estourou o tempo ou saiu 2 deixa o item "não avaliável" — e o filho ficaria mudo pelo tempo que fosse. Só esse tipo de não avaliável sobe a aviso (`warn: True` no resultado do `evaluate`); os demais continuam nota. Nenhuma checagem nova: é a I6 que já existe. Junto: o `releases@1` mudou só a **mensagem** (título, `path` e `label` apontam o `ROADMAP.md`, de onde a tela lê releases) — o check não mudou, não sobe a versão nem pede nota; o `product-structure@1` (ainda fora da `main`) teve o `pattern_digest` reestampado porque o script ganhou regras (release sem story, `contributes_to` como a tela resolve, UTF-8 inválido como lacuna).
+- **2026-10-14 19:57** · **Cláusula `script` no catálogo canônico; nenhuma checagem nova no doctor** (decisão do MJRP: o Board do fin-control saiu vazio e o catálogo não via). Nenhuma cláusula declarativa diz "o Control Center mostra este produto": a cláusula `script{script, label?}` roda um sensor stdlib que mora ao lado do `conformance_check.py` (um nome de arquivo, nunca um caminho) e viaja com ele no kernel — sai 0 passa, 1 é lacuna com as primeiras linhas do sensor, 2 / saída estranha / script ausente é "não avaliável" (nunca aprovação). O portão do Learn exige o script na fonte, em `pattern_sources` (mudar o que ele cobra pede nota) e nos `VENDORED_FILES`. Emenda o conjunto fechado de cláusulas do ADR-0019 § 3 sem nova ADR (e o cabeçalho da ADR aponta para cá, desde 2026-10-14 20:50) (regra de 2026-10-14 19:20: pedido direto do MJRP vira decisão dele, registrada). O primeiro item é `product-structure@1` (CM-0019), carregado pela I6 que já existe.
 
+- **2026-10-13 23:01** · **I1 e o par de paletas do projeto** (ADR-0022, aceita pelo MJRP em 2026-10-13 21:23). `project_palette` e `control_center` entraram no schema do contrato; a I1 confere só a **forma** do par (`light`/`dark` escalares), porque a lista de IDs mora numa fonte só, a biblioteca de paletas, que o Control Center lê. Nenhuma checagem nova no doctor (ADR-0002); a ausência do campo é aviso do catálogo (item `project-palette`, I6), nunca erro.
 - **2026-10-13 13:20** · **I6 — conformidade canônica dos filhos** (ADR-0019, aceita pelo MJRP em 1ª iteração; 12ª e última vaga de erro). Incidente: a auditoria do
   fin-control — kernel instalado, doctor verde, artefatos canônicos nunca construídos. O mecanismo: `canonical_catalog.json` (checagens declarativas, cláusulas e
   parâmetros fechados; composição lista = todas, `any`, `if`, `requires`), `conformance_check.py` (leitor único, vendorizado), uma nota `CM-NNNN` por passo de versão

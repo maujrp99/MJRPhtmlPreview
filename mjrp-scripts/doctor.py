@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte 593c609d · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte b714d244 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 doctor.py - the computational sensor of the harness.
 
@@ -391,6 +391,10 @@ SCHEMA = {
     "locale": dict,        # 10/09: timezone, labels, content - what skills and sensors read instead of assuming
     "memory": dict,        # 10/09: pending_expiry_days, layer0_budget_chars - the form of ## Now (F1)
     "kernel": dict,        # 14/09: version, source, pages - the wiki kernel this project carries (I5)
+    # 13/10 (ADR-0022): the project's colour in the Control Center - {light, dark}, IDs of the palette library.
+    # The doctor checks only the SHAPE (_i1_palette_pair); whether the IDs exist is the Control Center's call.
+    "project_palette": dict,
+    "control_center": dict,  # 13/10 (ADR-0022): the app's own keys; `portfolio_palette` ("Todos os projetos") is checked
     "tools": dict,         # 14/09: category -> tool, one per category (docs/wiki/tools-catalog.md)
     # 16/09-05/10: "sdd_chain" (read by SDD_chain_artifacts_check.py) retired with it in S-77 - the
     # requirements graph (requirements_graph_check.py) replaced the chain.
@@ -471,9 +475,24 @@ def i1_contract(cfg, rep):
         elif k in ENUMS and v not in ENUMS[k]:
             rep.fail("I1", f"contrato: '{k}: {v}' fora do domínio {sorted(ENUMS[k])}", inc)
     _i1_environment(cfg, rep)
+    _i1_palette_pair("project_palette", cfg.get("project_palette"), rep, inc)
+    app = cfg.get("control_center")
+    if isinstance(app, dict) and "portfolio_palette" in app:
+        _i1_palette_pair("control_center.portfolio_palette", app["portfolio_palette"], rep, inc)
     w6_stack_sense(cfg, rep)
     if not rep.errors:
         rep.note("I1", "contrato válido contra o schema")
+
+
+def _i1_palette_pair(name, value, rep, inc):
+    """ADR-0022: `{light, dark}` as one or two scalars; only the shape. The IDs are judged by the Control Center
+    against the palette library (one source for the list), so a new palette never needs a change here."""
+    if value is None:
+        return
+    if not isinstance(value, dict) or not value or set(value) - {"light", "dark"}:
+        rep.fail("I1", f"contrato: '{name}' deve ser um dicionário com `light` e/ou `dark` (IDs da biblioteca de paletas)", inc)
+    elif not all(isinstance(v, str) and v for v in value.values()):
+        rep.fail("I1", f"contrato: '{name}.light'/'{name}.dark' devem ser um ID de paleta (texto)", inc)
 
 
 def _i1_environment(cfg, rep):
@@ -1584,7 +1603,7 @@ def a2_visual_sensor(root, cfg, rep):
 # It compares the project with the catalog of what is canonical today (conformance_check.py + canonical_catalog.json,
 # vendored with the kernel): warning until max(since, received) + grace_days, error after; a note in `applied` whose check
 # fails is an error at once; a missing or invalid catalog is an error with the fix command; "não avaliável" is a note,
-# never a pass.
+# never a pass - except a `script` clause that could not run (script missing, crash, timeout, exit 2), which is a warning.
 def i6_conformance(root, cfg, rep):
     """I6 - canonical conformance of a child (code-app, content)."""
     if cfg.get("profile") not in ("code-app", "content"):
@@ -1617,7 +1636,10 @@ def i6_conformance(root, cfg, rep):
     gaps, unstamped = 0, False
     for r in results:
         text = cc.describe(r)
-        if r["status"] == "unknown":
+        if r["status"] == "unknown" and r.get("warn"):
+            # a `script` clause that could not run (script missing, crashed, timed out): the obligation is real and unjudged
+            rep.warn("I6", text, r["item"]["born_of"], file=".mjrp-project.yml")
+        elif r["status"] == "unknown":
             rep.note("I6", text)
         elif r["status"] == "waived":
             rep.note("I6", f"{r['item']['title']}: {r['reasons'][0]}")

@@ -1,6 +1,6 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte 593c609d · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
-  "version": "2026-10-13",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte b714d244 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "version": "2026-10-14",
   "default_grace_days": 30,
   "pattern_carriers": [
     "mjrp-skills/mjrp-sw-factory/*/*/templates/*"
@@ -327,8 +327,8 @@
     {
       "id": "releases",
       "version": 1,
-      "title": "releases ^REL-xx (no ROADMAP ou no PRD)",
-      "path": "docs/specs/prd.md",
+      "title": "releases ^REL-xx (no ROADMAP.md, de onde o Control Center os lê)",
+      "path": "ROADMAP.md",
       "applies_to": {
         "profiles": [
           "code-app"
@@ -346,7 +346,7 @@
       "check": {
         "kind": "contains",
         "pattern": "\\^REL-\\d+",
-        "label": "sem nenhum release `^REL-xx`",
+        "label": "sem nenhum release `^REL-xx` — escreva-os no ROADMAP.md, de onde o Control Center os lê (um `^REL` só no PRD nunca chega à tela)",
         "paths": [
           "ROADMAP.md",
           "docs/specs/prd.md"
@@ -471,7 +471,7 @@
         "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/contract.yml"
       ],
       "pattern_digest": {
-        "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/contract.yml": "sha256:45cf5a09529c59c3685013e39add96a90f1ef678b5c866647ca447505980544c"
+        "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/contract.yml": "sha256:e575f15517e3e6b00eab7dd15d8fbc54ed66684b0887222337fe963007053561"
       },
       "migration": "CM-0006",
       "superseded": []
@@ -565,7 +565,7 @@
         "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/info-arch.md"
       ],
       "pattern_digest": {
-        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/info-arch.md": "sha256:6ee98c0e3ed4397c7627c415ac7e8c463f564ed139c019a4f09ff62a40cf566e"
+        "mjrp-skills/mjrp-sw-factory/designer/mjrp-designing-ui/templates/info-arch.md": "sha256:b05466ad71c95a8f3eddca3c94ad5bda3be69d91c55c8aa8a285d6b0408b72e0"
       },
       "migration": "CM-0008",
       "superseded": []
@@ -729,7 +729,7 @@
         "mjrp-skills/mjrp-sw-factory/meta/mjrp-recording-decisions/templates/decision-record.md"
       ],
       "pattern_digest": {
-        "mjrp-skills/mjrp-sw-factory/meta/mjrp-recording-decisions/templates/decision-record.md": "sha256:f2e824170d7eb573a5e8405bc77459295439ff0394f22c2a3c3baec3308d0389"
+        "mjrp-skills/mjrp-sw-factory/meta/mjrp-recording-decisions/templates/decision-record.md": "sha256:6fb77ab8a692060e173ff314d06b2682f595dbcf8e3e0148cc58c93cbd23dcc7"
       },
       "migration": "CM-0012",
       "superseded": []
@@ -884,7 +884,7 @@
         "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/contract.yml"
       ],
       "pattern_digest": {
-        "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/contract.yml": "sha256:45cf5a09529c59c3685013e39add96a90f1ef678b5c866647ca447505980544c"
+        "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/contract.yml": "sha256:e575f15517e3e6b00eab7dd15d8fbc54ed66684b0887222337fe963007053561"
       },
       "migration": "CM-0015",
       "superseded": []
@@ -926,6 +926,74 @@
       },
       "migration": "CM-0016",
       "superseded": []
+    },
+    {
+      "id": "project-palette",
+      "version": 1,
+      "title": "project_palette: no contrato (a cor do projeto no portfólio)",
+      "path": ".mjrp-project.yml",
+      "applies_to": {
+        "profiles": [
+          "code-app",
+          "content"
+        ],
+        "process_levels": [
+          "minimal",
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-13",
+      "grace_days": 30,
+      "max_severity": "warning",
+      "born_of": "ADR-0022 do harness; UAT-107 do Control Center, 2026-10-13 20:42 (os pares escolhidos pelo MJRP)",
+      "owner_skill": "mjrp-pdlc-bootstrap",
+      "check": {
+        "kind": "contract_key",
+        "key": "project_palette"
+      },
+      "pattern_sources": [
+        "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/contract.yml"
+      ],
+      "pattern_digest": {
+        "mjrp-skills/mjrp-sw-factory/orchestrator/mjrp-pdlc-bootstrap/templates/contract.yml": "sha256:e575f15517e3e6b00eab7dd15d8fbc54ed66684b0887222337fe963007053561"
+      },
+      "migration": "CM-0018",
+      "superseded": []
+    },
+    {
+      "id": "product-structure",
+      "version": 1,
+      "title": "a estrutura de produto que o Control Center mostra (resultados, épicos, releases, stories no Board, features e UAT)",
+      "path": "ROADMAP.md",
+      "applies_to": {
+        "profiles": [
+          "code-app"
+        ],
+        "process_levels": [
+          "standard",
+          "full"
+        ],
+        "when": "always"
+      },
+      "since": "2026-10-14",
+      "grace_days": 30,
+      "born_of": "o Board vazio do fin-control, 2026-10-14 19:57 (épicos certos, nenhum ^REL nem planned_for; o releases@1 só pedia algum ^REL)",
+      "owner_skill": "mjrp-organizing-product-structure",
+      "check": {
+        "kind": "script",
+        "script": "product_structure_check.py",
+        "label": "o Control Center não mostra o produto inteiro"
+      },
+      "pattern_sources": [
+        "mjrp-scripts/product_structure_check.py"
+      ],
+      "pattern_digest": {
+        "mjrp-scripts/product_structure_check.py": "sha256:a4c8e782b1222eadd96a97f676ad647b123e2a26b662af53fe569daef84747b2"
+      },
+      "migration": "CM-0019",
+      "superseded": []
     }
   ],
   "history": [
@@ -938,8 +1006,36 @@
       "change": "roadmap@3: o resultado ancorado aceita o prefixo do projeto (^CC-OUT-xx, id_prefix do contrato — ADR-0020 D.3)"
     },
     {
+      "at": "2026-10-13 23:00",
+      "change": "project-palette@1: o par de paletas do projeto (project_palette) no contrato, a cor dele no Control Center — aviso, nunca erro (ADR-0022; nota CM-0018)"
+    },
+    {
       "at": "2026-10-13 23:20",
       "change": "visual-sensor: owner_skill passa de mjrp-designing-ui para mjrp-pdlc-bootstrap — quem declara sensors.visual é a bootstrap, no modo conform (a CM-0007 já dizia isso); mudança só de dado, sem versão nova"
+    },
+    {
+      "at": "2026-10-14 13:27",
+      "change": "contract-screen: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-14 13:27",
+      "change": "info-arch: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-14 13:27",
+      "change": "adr-names: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-14 13:27",
+      "change": "content-map: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-14 14:37",
+      "change": "project-palette: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-14 20:55",
+      "change": "product-structure: pattern_digest reestampado"
     }
   ]
 }
