@@ -4,10 +4,10 @@ aliases: [conformance-notes, nota de migração, nota CM, executar nota de confo
 summary: como a skill dona de um item do catálogo canônico executa uma nota de migração (CM-NNNN) de um filho — o check do catálogo é o juiz, o conteúdo do projeto é editado no lugar, o que é do humano é perguntado e quem registra é o modo conform da bootstrap
 tags: [harness, conformidade, catalogo, skills]
 status: vivo
-atualizado: 2026-10-13
+atualizado: 2026-10-14
 fontes: []
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte b714d244 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte d3f64f76 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 
@@ -46,7 +46,20 @@ dela; **esta página é o que vale para todas**.
 | o humano | as decisões que são dele, `waived`, os trailers `Conformance-waiver:` e `Catalog-editorial:` |
 | o script (`conformance_check.py`) | o juiz — `--pending`, `--gaps`, `--check-note CM-NNNN` |
 
+**Item de várias donas.** Quando o artefato de um item é feito por várias skills, o dono é o próprio modo *conform*,
+que roda o laço e roteia cada lacuna à skill dona dela. É o caso do `product-structure` (CM-0019): o
+`product_structure_check.py` lista cada lacuna com a dona (`mjrp-coaching-pm`, `mjrp-writing-reqs`,
+`mjrp-specifying-sdd-artifacts`); as decisões de produto vão ao humano em lotes, com recomendação; a parada é por falta de
+progresso (duas rodadas sem a contagem cair), não por três rodadas — uma exceção ao § 2 da
+ADR-0019, que a ADR aponta aqui no cabeçalho; e a saída é o script
+em 0 **e** a tela conferida.
+
 ## History
+
+- **2026-10-14 22:08** · **Nota publicada não se reescreve — agora um sensor vê** (P1-3 e P2-3 da verificação dos donos): a CM-0019 e a CM-0003 tinham sido reescritas num ramo depois de publicadas; voltaram aos bytes publicados. O portão do Learn passou a conferir, para toda nota que já está na `main`, que os bytes são os do commit em que ela chegou lá (`published_note_problems`; rascunho de ramo é livre; não há válvula). A mudança que a CM-0019 não podia dizer (a dona agora é a bootstrap; story em Backlog não precisa de release) foi dita pela **CM-0020** (`product-structure` 1→2). O § 2 da ADR-0019 aponta para a exceção da parada em duas rodadas (cabeçalho, nos dois sentidos).
+
+- **2026-10-14 21:21** · O `product-structure` (CM-0019) passa a ser do modo *conform* da `mjrp-pdlc-bootstrap` (decisão
+  do MJRP): a skill que rodava o laço sozinha é aposentada, e a regra do item de várias donas entra aqui.
 
 - **2026-10-13** · Nasce da duplicação: o mesmo preâmbulo estava copiado, idêntico, nas oito `reference/conformance-notes.md`
   das skills donas (reconferência do EP-13). Vira uma página do kernel — as skills ficam com a tabela dos itens delas e

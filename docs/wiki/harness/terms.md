@@ -7,7 +7,7 @@ status: firme
 atualizado: 2026-10-09
 fontes: []
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte b714d244 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte d3f64f76 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # Termos — o glossário
 

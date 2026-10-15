@@ -4,10 +4,10 @@ aliases: [requirements-graph, grafo de requisitos, knowledge graph, rastreabilid
 summary: como requisitos e artefatos do PDLC viram nós com ID estável e arestas tipadas, legíveis no Obsidian e por script; a cardinalidade feature × requisito; como a release agrupa requisitos e épicos; a aresta contributes_to entre roadmaps, o estado Cancelled e a identidade de ID no repositório
 tags: [kernel, sdd, requisitos, grafo, release]
 status: em formação
-atualizado: 2026-10-13
+atualizado: 2026-10-14
 fontes: [design/proposals/requirements-knowledge-graph-proposal.md, decisions/0020-control-center-as-product-contributes-to, kernel/architecture/knowledge-graph-concept, kernel/architecture/linked-notes-concept, kernel/architecture/graph-engineering-concept, kernel/ways-of-working/spec-kit]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte b714d244 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte d3f64f76 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O **grafo de requisitos** é a documentação do PDLC tratada como grafo de conhecimento: cada requisito, épico,
@@ -110,8 +110,14 @@ Decisão do MJRP, 2026-10-04, nas palavras dele — **limitar:**
   release são o mesmo nó, com um campo `kind` se o projeto quiser nomear diferente; milestone é release com data.
   **Desde 2026-10-14 19:57 (decisão do MJRP), o produto tem de aparecer no Control Center:** num `code-app` em `standard`
   ou `full`, o item `product-structure` do catálogo canônico cobra ao menos uma release no `ROADMAP.md` e, em toda story
-  que não é `Deferred` nem `Cancelled`, o **próprio** `planned_for` — o atalho do épico vale para este sensor, mas não
-  chega ao Board da tela. O juiz é `mjrp-scripts/product_structure_check.py`; o processo, a `mjrp-organizing-product-structure`.
+  que não é `Deferred` nem `Cancelled`, o `epic:`; e o **próprio** `planned_for` **a partir de `Prioritized`** (`product-structure@2`: só uma story em
+  `Backlog` pode ficar sem release; é a mesma régua do sensor do grafo com `release_required` ligado) — o atalho do épico vale
+  para este sensor, mas não chega ao Board da tela. O NFR transversal (`type: nfr` ou ID `NFR-nn`/`<PFX>-NFR-nn`) não tem épico nem
+  release por regra: não entra em "sem release" nem no "n de m" de nenhuma release (o mesmo que o núcleo do Control Center, F22). O juiz é `mjrp-scripts/product_structure_check.py`. **Desde 2026-10-14 21:21 (decisão do
+  MJRP), a estrutura é exigida na criação e conferida nos donos:** uma story só fica `Ready` com `epic:` e o próprio
+  `planned_for:` resolvendo (`mjrp-writing-reqs`); só entra em Delivery se o script, filtrado para ela, não acusa
+  lacuna (o portão da `mjrp-pdlc`, [[pdlc-loops]] §4); o Learn roda o script inteiro; e um filho antigo se arruma de
+  uma vez pelo modo *conform* da `mjrp-pdlc-bootstrap` (dona da nota CM-0019).
 - **A unidade planejada é o requisito** (`planned_for`); a feature herda a release dos requisitos que importa, e o
   sensor acusa feature que importa requisitos de releases diferentes.
 - **Uma release pode conter épicos inteiros** — o épico não atravessa necessariamente a release. `planned_for` no
@@ -215,6 +221,9 @@ que executa a reconciliação por conta própria é do EP-03 (brief do MJRP).
 - **Julga o conteúdo:** `mjrp-ensuring-quality` (Reviewer) — a aresta existir não prova que o teste prova o REQ.
 
 ## History
+- **2026-10-14 22:29** · **Uma régua só para o `Prioritized`, e o NFR fora da conta** (decisão do orquestrador sob a delegação lean do MJRP; a `product-structure@2` e a CM-0020 ainda não estão na `main`, então se corrigem sem versão nova): o `product_structure_check.py` passa a cobrar `planned_for:` **a partir de `Prioritized`** (só `Backlog` fica isento), alinhado ao sensor do grafo com `release_required`; antes a `@2` isentava também o `Prioritized`, e o MJRP tinha ficado com a escolha de reverter. O NFR transversal deixa de ser contado em "sem release" e no "n de m" das releases (espelha `is_transversal` do núcleo do Control Center, F22); o teste-pino do app compara o script com o app lendo o mesmo produto sem os NFRs, e fica verde antes e depois do merge da F22. `mjrp-writing-reqs`, a referência da `mjrp-pdlc-bootstrap` e a CM-0020 dizem o mesmo.
+- **2026-10-14 22:08** · **A release se escolhe no Ready** (decisão do MJRP, delegada, regra lean; P1-4 da verificação dos donos): o `product_structure_check.py` deixa de cobrar `planned_for:` de story em `Backlog`/`Prioritized` — o `epic:` segue cobrado desde o primeiro nó e a release vale a partir de `Ready`; a story sem release continua contada em "sem release". O item sobe a `product-structure@2` (CM-0020, que também diz aos filhos que a dona é a `mjrp-pdlc-bootstrap`). Junto: cada lacuna do `--json` ganha um `code` estável e o portão da `mjrp-pdlc` passa a ser o `--story` do próprio script (seleciona por `code`, normaliza o caminho, caminho inexistente é exit 2).
+- **2026-10-14 21:21** · **A estrutura de produto desmontada nos donos** (decisão do MJRP): o `product_structure_check.py` fica como sensor — o item `product-structure@1` (I6) e o portão Discovery→Delivery por story na `mjrp-pdlc`; o laço de arrumar um filho antigo vai para o modo *conform* da `mjrp-pdlc-bootstrap`, agora dona da CM-0019; `Ready` passa a exigir o `planned_for` da própria story; a skill que fazia o laço sozinha é aposentada.
 - **2026-10-14 19:57** · **O produto tem de aparecer no Control Center** (MJRP, crítico; o Board do fin-control saiu vazio: 11 épicos e 70 stories certos, nenhuma release, nenhum `planned_for`). O item `product-structure@1` do catálogo canônico (nota CM-0019) roda `product_structure_check.py`, que lê o projeto como a tela lê: release no `ROADMAP.md` (a do PRD não chega), o `planned_for` da própria story (o do épico não chega), a medida do resultado como `- **Medida:**` na seção dele. A `release_required` e o atalho do épico continuam valendo para o sensor do grafo; a skill `mjrp-organizing-product-structure` roda o laço até a tela.
 - **2026-10-13 19:00** · **ADR-0020 (T1)**: a seção *Subprojeto do harness* e as exceções nas arestas `epic` e `planned_for` saem — o app é um projeto como os outros, com épicos próprios, e `parent_epic` sai do contrato; entra a aresta `contributes_to` (resultado → resultado de outro roadmap, 0..1, alvo existente, sem ciclo; resolvido / inexistente / fora de alcance; o filho não segura o pai); `planned_for` obrigatório vira a opção de projeto `requirements.release_required` (a release do épico cumpre); entra o estado **`Cancelled`**, fora do andamento; entra a identidade de ID no repositório (`id_prefix`, `id_unique`). Sensor, `doctor.py`, `gen_prd_status.py` e as skills mudaram no mesmo trilho.
 - **2026-10-09 20:55** · Revisão geral de 2026-10-09: nome do nó `<ID>-<slug>.md` (slug do título em inglês, até 50 caracteres, congelado ao nascer; `aliases: [<ID>]`; link com o nome inteiro e o ID como texto; renomear com `req_file_names.py --reslug`); exceções do subprojeto do harness nas arestas `epic` e `planned_for`; regra `design_system_exists` no Ready com tela; sensor `requirements_graph_check.py` no lugar do aposentado; S-63 fechada.

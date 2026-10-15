@@ -4,7 +4,7 @@ item: project-palette
 from: 0
 to: 1
 ---
-<!-- cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte b714d244 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte d3f64f76 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 # CM-0018 · project-palette@0 → project-palette@1
 
 ## Por que

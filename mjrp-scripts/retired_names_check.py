@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte b714d244 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte d3f64f76 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """retired_names_check.py - no live document sends the agent to a skill that no longer exists.
 
 The skill bodies are checked by build_plugin.py --check (S-56). This script checks the rest: the documents an agent
@@ -11,7 +11,7 @@ had escaped a sweep that covered only the skills.
 What it does not judge - records keep the name of their time: sections ## History / ## Histórico / ## Findings /
 ## Lições; dated entries ("- **2026-..."); a done task ("- [x]"); a line that says the skill was retired or renamed;
 the folders of records (_archive, _backups, reports, docs/originals, docs/wiki/sources, docs/decisions, design/proposals,
-docs/specs/requirements, the feedback folder, evals) and the logs. The vendored kernel (docs/wiki/harness/) is fixed
+docs/specs/requirements, the feedback folder, evals, the published migration notes) and the logs. The vendored kernel (docs/wiki/harness/) is fixed
 at its source in the harness.
 
 The list of retired names is mjrp-scripts/retired_skills.json (single source, shared with build_plugin.py).
@@ -29,6 +29,7 @@ EXTS = {".md", ".yml", ".yaml"}
 SKIP_DIRS = ("_archive/", "_backups/", "dist/", "node_modules/", "reports/", "docs/originals/", "docs/wiki/sources/",
              "docs/decisions/", "design/proposals/", "docs/specs/requirements/", "docs/wiki/harness/",
              "docs/wiki/feedback-from-other-projects/", "mjrp-skills/", "daily-checks/", ".mjrp/")
+NOTES_DIR = "mjrp-scripts/migrations/"   # only the notes already published on main are immutable records (ADR-0019 § 2): they keep the name of their day
 SKIP_NAMES = ("log.md", "SESSION_HISTORY.md", "harness-kaizen.md", "folder-index.md")
 RECORD_SECTION = re.compile(r"^##\s+(History|Histórico|Historico|Findings|Lições|Licoes|De onde veio)", re.I)
 RECORD_LINE = re.compile(r"retired|aposentad|renomead|renamed|formerly|origin:|\bex-`|\(ex-|\bantes `", re.I)
@@ -43,7 +44,25 @@ def load_retired():
         return {}
 
 
+def published_notes(root):
+    """The migration notes already on the principal branch (`main`, else HEAD): immutable records, exempt from the check.
+    A draft note (not on main yet) is live text and is checked - it is still being written (P2-6, 2026-10-14: the whole
+    folder was exempt, so a draft sending the child to a retired skill went unseen). None when git cannot say: then the
+    whole folder stays exempt, as before (a warning never invents a finding it cannot ground). Outside the harness source
+    (no `mjrp-skills/`) the notes are vendored kernel, authored elsewhere: all of them are records there."""
+    if not (Path(root) / "mjrp-skills").is_dir():
+        return None
+    try:
+        ok_main = subprocess.run(["git", "rev-parse", "--verify", "-q", "main"], cwd=root, capture_output=True, timeout=30).returncode == 0
+        ls = subprocess.run(["git", "ls-tree", "-r", "--name-only", "main" if ok_main else "HEAD", "--", NOTES_DIR], cwd=root,
+                            capture_output=True, text=True, timeout=30)
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    return set(ls.stdout.splitlines()) if ls.returncode == 0 else None
+
+
 def candidate_files(root):
+    published = published_notes(root)
     try:
         out = subprocess.run(["git", "ls-files"], cwd=root, capture_output=True, text=True, timeout=30)
         files = out.stdout.splitlines() if out.returncode == 0 else []
@@ -56,6 +75,8 @@ def candidate_files(root):
         if Path(rp).suffix.lower() not in EXTS or Path(rp).name in SKIP_NAMES:
             continue
         if any(rp.startswith(d) or f"/{d}" in rp for d in SKIP_DIRS) or "/evals/" in rp:
+            continue
+        if rp.startswith(NOTES_DIR) and (published is None or rp in published):
             continue
         yield rp
 

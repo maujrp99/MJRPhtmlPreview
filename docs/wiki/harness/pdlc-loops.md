@@ -4,10 +4,10 @@ aliases: [pdlc-loops, PDLC, ciclo de vida, lifecycle, loops do PDLC, Intake, tri
 summary: o ciclo de vida do produto no MJRP como uma fundação e três loops — Intake com quatro trilhas, Discovery (o que construir), Delivery (construir certo) e Learn (deu certo?) —, cada um com critério de saída, verificador e regras de parada; o humano na intenção e no risco de negócio
 tags: [kernel, pdlc, loop, discovery, delivery, processo]
 status: em formação
-atualizado: 2026-10-12
+atualizado: 2026-10-14
 fontes: [kernel/ways-of-working/product-discovery, kernel/ways-of-working/loop-engineering-concept, kernel/design/sketch-vs-prototype, kernel/roadmap/requirements-graph, wiki/sources/2026-10-07-mjrp-product-discovery-handbook.md, wiki/sources/2026-10-07-mjrp-loop-engineering-handbook.md, wiki/sources/2026-10-07-mjrp-agentic-ai-handbook.md]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte b714d244 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte d3f64f76 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 # PDLC em loops — Intake, Discovery, Delivery, Learn
 
@@ -98,6 +98,12 @@ O ponto único entre Discovery e Delivery: os requisitos Ready, com os critério
 decisão de intenção do humano — um erro aqui o loop repete dezenas de vezes antes de alguém ver. Aprovar a spec e as
 tasks é **opção do contrato** (`gates:`), não padrão.
 
+**O portão Discovery → Delivery, por story.** Uma story Ready só entra em Delivery se o Control Center consegue
+colocá-la: o `epic:` dela é um épico do PRD e o `planned_for:` **dela** é uma release do `ROADMAP.md` (o atalho do épico
+não chega ao Board). O juiz é o `product_structure_check.py --story <arquivo>` (o comando está na `mjrp-pdlc`; seleciona as lacunas por `code`, caminho que não existe é exit 2); com
+lacuna, a story volta à dona — e qual release é decisão do humano, no contrato. Num `code-app`, a release é parte do
+contrato: o Ready já nasce com ela (`mjrp-writing-reqs`).
+
 ## 5. Loop Delivery — construir certo, por feature
 
 Goal-based (nível 2 da escada da Anthropic); o verificador é determinístico.
@@ -149,6 +155,10 @@ Fix ou Standard). Junto dele, a fronteira irreversível (publicar, deploy).
 
 Agendado ou por evento; roda sem o humano. Operar e observar (sensores diários, Control Center) → medir o resultado (a
 medida do `ROADMAP.md` mexeu?) → kaizen ([[harness-kaizen]]: a lição vai para a fundação). O que aprende volta pelo Intake.
+
+- **O produto na tela:** o Learn roda o `product_structure_check.py` inteiro, todas as vistas; cada lacuna é uma demanda
+  com a dona na linha. Um projeto longe do verde (um filho antigo) se arruma de uma vez pelo modo *conform* da
+  `mjrp-pdlc-bootstrap`, a nota `product-structure` (CM-0019).
 
 - **Documento que envelheceu:** a auditoria (`mjrp-auditing-docs`) marca quem decide cada achado. O agente aplica
   (`mjrp-syncing-docs`) o que a evidência prova e está fora do contrato; o humano decide só o que é dele — o contrato
@@ -210,7 +220,9 @@ concluída**.
 | EP-90 · Intake (triagem do harness) | Intake, em todo projeto |
 
 ## History
+- **2026-10-14 22:08** · O portão Discovery → Delivery deixa de ser um filtro de texto na `mjrp-pdlc` e vira o `--story` do `product_structure_check.py`: escolhe as lacunas pelo `code` (nunca pela palavra da mensagem — uma lacuna de formato de resultado não trava mais a story boa), normaliza o caminho e sai 2 quando a story não existe (verificação dos donos, P1-1 e P1-2). E a release só é cobrada de `Ready` em diante (`product-structure@2`, CM-0020; ver [[requirements-graph]]).
 
+- **2026-10-14 21:21** · Decisão do MJRP: a estrutura de produto que o Control Center mostra deixa de ter uma skill própria e é desmontada nos donos — **portão Discovery → Delivery por story** (§4: `epic:` e o `planned_for:` da própria story resolvendo, juiz `product_structure_check.py` filtrado), o check inteiro no **Learn** (§7), a exigência **na criação** (`mjrp-writing-reqs`, `mjrp-coaching-pm`, `mjrp-specifying-sdd-artifacts`) e o laço de arrumar um filho antigo no modo *conform* da `mjrp-pdlc-bootstrap` (CM-0019). A tela v4.6 é a vista humana do mesmo sensor.
 - **2026-10-13 19:00** · O Discovery perde a exceção do subprojeto do harness (ADR-0020): o `prd.md` carrega os épicos em todo projeto.
 - **2026-10-13 09:58** · Decisão do MJRP: o teto do Execute ⇄ Verify cai de 5 para **3 rodadas por task** (a parada por 2 passadas sem progresso segue); toda task do `tasks.md` leva `model:: sonnet|opus` (mecânica em Sonnet, sem padrão); a task fechada leva `rounds:: N`, para medir em vez de estimar. `loop.py` com `--max` 3, `--check-tasks` e `--task/--tasks-file`.
 

@@ -7,7 +7,7 @@ status: em formação
 atualizado: 2026-10-12
 fontes: [2026-claude-code-auto-memory]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte b714d244 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte d3f64f76 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 O registro do que o harness **não pegou** e do que se aprendeu com isso. Achado e lição moram
@@ -49,6 +49,20 @@ deixando o ponteiro. Lição que só mora aqui é lição que ninguém aplica.
   `mkdir -p` aceita pasta que já existe, e o nome "cópia" não prova nada. **Lição:** cópia de projeto real nasce numa pasta
   **nova** (`mkdir` sem `-p`), e o script que escreve nela recusa o caminho cujo `realpath` cai na pasta dos projetos —
   a mesma conferência vale para qualquer teste "numa cópia" (o protocolo dos evals da skill a cita).
+
+- **2026-10-14 20:16** · **Metade de um card fora do produto desde a F09, e o juiz visual verde em toda passada.** No Control
+  Center, "O harness, em camadas" nunca desenhou as cinco capacidades (UI-65) que o protótipo traz do v3.5 ao v4.6, e o MJRP
+  achou no site (UAT-140). **Por quê:** (1) o juiz de paridade compara o card pelo **título** (e pela contagem, a ordem e um
+  catálogo fixo de componentes da casca) — nenhum fato descreve o que o card contém, então o card com metade do conteúdo dá
+  os mesmos fatos; (2) a reconferência de 2026-10-11 viu a falta e a chamou de "fora da 1.0", porque o `data-model.md` dizia
+  isso — um corte **do agente**, de 2026-10-09, que nunca passou pela tabela de "diferenças pretendidas" do juiz, a única que
+  exige a decisão datada do MJRP; (3) seis protótipos aprovados depois mostravam o card inteiro, sem marca do corte. **Lição:**
+  um corte de escopo que deixa a tela diferente do protótipo aprovado **é** uma diferença pretendida e só vale entrando na lista
+  do juiz com a decisão datada do MJRP — corte que mora só no `data-model.md` ou numa story é invisível para quem aprova a tela;
+  e um juiz que compara cards só pelo título deixa passar o card vazio. O juiz ganhou a regra 13 (a anatomia do card,
+  `apps/control-center/web/visual/anatomy.mjs`), provada pela mutação (o card antigo: P1 8 em 8 condições; o juiz de antes: 0).
+  **Aberto:** a regra cobre só o card declarado; levar a anatomia a todo card com partes, e a checagem "todo corte de escopo
+  visível está na tabela de diferenças pretendidas", é decisão do MJRP (F21, `apps/control-center/docs/specs/features/F21-layers-card/`).
 
 - **2026-10-11 12:09** · **O Delivery entregou tela que não bate com o protótipo aprovado, com todos os sensores verdes.** No UAT
   do Control Center 1.0 o MJRP abriu a tela e achou, de cara: os componentes de UI padronizados do protótipo ausentes, o

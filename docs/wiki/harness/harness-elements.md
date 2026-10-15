@@ -4,10 +4,10 @@ aliases: [as onze peças, onze elementos, componentes do harness, harness-elemen
 summary: os harness elements — as onze peças de um sistema agêntico, o domínio de cada uma, e onde o MJRP está
 tags: [harness, fundamento, mapa]
 status: firme
-atualizado: 2026-10-09
+atualizado: 2026-10-14
 fontes: [pasquadev-loop-engineering, anthropic-context-engineering, ibm-skills-mcp-rag-memory, fowler-guides-sensors]
 ---
-<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte b714d244 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
+<!-- kernel do MJRP Harness · versão 2026-10-14 · fonte d3f64f76 · cópia derivada: não edite aqui — edite no harness e rode `new_project.py --refresh-kernel` -->
 
 ## Definition
 As **onze peças** que compõem o entorno de um modelo de linguagem para que ele produza trabalho
@@ -135,6 +135,22 @@ avisa que quebrou. Que skill disparou, que ferramenta foi chamada, quanto custou
 leitura, não por código. **Entre fases, grafo** (o fluxo é conhecido de antemão); **dentro de cada
 fase, loop** (o trabalho do papel é exploratório).
 
+## Capabilities
+
+As onze peças, vistas pelo que **entregam juntas**: as cinco capacidades que o MJRP nomeou em 2026-10-09
+(o card "O harness, em camadas" do Control Center, UI-65). Cada uma com o que existe hoje, o que falta e um
+status — `rodando`, `parcial` ou `por construir`. **Esta tabela é a fonte do card**: o Control Center a lê
+(formato `capabilities@1`: estas seis colunas, nesta ordem; a página é o nome de uma página da wiki) e não
+inventa status. Mudou o estado de uma capacidade, mude aqui, com data no `## History`.
+
+| Capacidade | Lente | Status | O que existe | O que falta | Página |
+|---|---|---|---|---|---|
+| Observabilidade | sensores | parcial | doctor e daily checks com ledger datado; o System Monitor mostra | o rastro de cada agente | [[harness-elements]] |
+| Contexto e memória | context engineering | rodando | ## Now, log, wiki e kernel; carga sob demanda; custo fixo medido no Token/Cost | medir o que o agente lê | [[context-vs-memory]] |
+| Segurança e guardrails | sandbox | parcial | hooks: pre-commit, commit-msg, PreToolUse; nenhum segredo em disco | o sandbox do agente (EP-04) | [[hooks-concept]] |
+| Orquestração e ferramentas | tooling | por construir | mjrp-pdlc roteia cada etapa à skill dona; catálogo de ferramentas | agentes por papel (EP-03) | [[agents-agentic-concepts]] |
+| Loops | PDLC | rodando | Discovery · Delivery · Learn com critério de saída; loop.py com teto, orçamento e sem-progresso | o loop da tarefa, autônomo | [[pdlc-loops]] |
+
 ## How MJRP uses it
 
 - **O domínio de cada peça é campo do contrato**, não linha do documento de visão: num stack que
@@ -146,6 +162,10 @@ fase, loop** (o trabalho do papel é exploratório).
 
 ## History
 
+- **2026-10-14 19:52** · Seção `## Capabilities`: as cinco capacidades com status, transcritas do protótipo aprovado
+  pelo MJRP (v3.5, 2026-10-09 16:19; o mesmo texto no v4.5), para o Control Center lê-las em vez de deixá-las de fora
+  (UAT-140, F21). Única mudança: o "custo fixo medido: 16.348 tokens" virou "custo fixo medido no Token/Cost" — um
+  número fixo numa tabela envelhece; o medido de hoje está na aba. Os status são os de 2026-10-09: o MJRP revisa.
 - **2026-10-09 20:55** · Revisão geral de 2026-10-09: o loop da tarefa existe (`loop.py`, nível 2, quatro regras de parada); os sensores são as checagens do `doctor` (C1, I1–I5, F1–F3, A1, W1–W14) mais as do contrato; a governança ficou parcialmente mecanizada pelos hooks que recusam. A tabela dizia o estado de setembro.
 
 > A decisão mora na página do assunto que ela muda, com data (ADR-0008). As entradas abaixo

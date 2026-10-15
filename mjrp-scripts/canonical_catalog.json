@@ -1,5 +1,5 @@
 {
-  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte b714d244 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
+  "_vendored": "cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte d3f64f76 · não edite aqui — edite no harness e rode new_project.py --refresh-kernel",
   "version": "2026-10-14",
   "default_grace_days": 30,
   "pattern_carriers": [
@@ -964,7 +964,7 @@
     },
     {
       "id": "product-structure",
-      "version": 1,
+      "version": 2,
       "title": "a estrutura de produto que o Control Center mostra (resultados, épicos, releases, stories no Board, features e UAT)",
       "path": "ROADMAP.md",
       "applies_to": {
@@ -980,7 +980,7 @@
       "since": "2026-10-14",
       "grace_days": 30,
       "born_of": "o Board vazio do fin-control, 2026-10-14 19:57 (épicos certos, nenhum ^REL nem planned_for; o releases@1 só pedia algum ^REL)",
-      "owner_skill": "mjrp-organizing-product-structure",
+      "owner_skill": "mjrp-pdlc-bootstrap",
       "check": {
         "kind": "script",
         "script": "product_structure_check.py",
@@ -990,10 +990,20 @@
         "mjrp-scripts/product_structure_check.py"
       ],
       "pattern_digest": {
-        "mjrp-scripts/product_structure_check.py": "sha256:a4c8e782b1222eadd96a97f676ad647b123e2a26b662af53fe569daef84747b2"
+        "mjrp-scripts/product_structure_check.py": "sha256:bafc1d29dd8cbbff5beb601deb4b730d5b3196c3211a10a9f72ee82514fa0603"
       },
-      "migration": "CM-0019",
-      "superseded": []
+      "migration": "CM-0020",
+      "superseded": [
+        {
+          "version": 1,
+          "migration": "CM-0019",
+          "check": {
+            "kind": "script",
+            "script": "product_structure_check.py",
+            "label": "o Control Center não mostra o produto inteiro"
+          }
+        }
+      ]
     }
   ],
   "history": [
@@ -1035,6 +1045,22 @@
     },
     {
       "at": "2026-10-14 20:55",
+      "change": "product-structure: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-14 21:31",
+      "change": "product-structure: owner_skill → mjrp-pdlc-bootstrap (a mjrp-organizing-product-structure aposentada; decisão do MJRP de 2026-10-14 21:21)"
+    },
+    {
+      "at": "2026-10-14 21:59",
+      "change": "product-structure: v2 (CM-0020) — só a story em Backlog não precisa de release (a régua do sensor do grafo: a partir de Prioritized), o NFR transversal fora das contagens; o script ganha `code` por lacuna e `--story` (o portão); v1 em superseded"
+    },
+    {
+      "at": "2026-10-14 21:59",
+      "change": "product-structure: pattern_digest reestampado"
+    },
+    {
+      "at": "2026-10-14 22:28",
       "change": "product-structure: pattern_digest reestampado"
     }
   ]

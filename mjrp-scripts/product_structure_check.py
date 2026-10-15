@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte b714d244 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte d3f64f76 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 product_structure_check.py - can the Control Center show this product? Reads a project the way the Control Center
 reads it and says, per screen, what it cannot render: the judge of the `product-structure` catalog item.
@@ -28,9 +28,13 @@ What is a gap (each with file:line and the owner skill):
     release yet - the human's call);
   - epics (docs/specs/prd.md): the file, its format, at least one epic, each serving (`serves::`) an outcome that exists;
   - stories (docs/specs/requirements/): every node readable; every story that is not Deferred or Cancelled has an
-    `epic:` that is an epic of the PRD and a `planned_for:` that is a release of ROADMAP.md (the epic's own
-    `planned_for` does not reach the screen); a transversal NFR (`type: nfr`, `NFR-xx`) has neither, by the
-    requirements-graph rule, and is only counted;
+    `epic:` that is an epic of the PRD; from Prioritized on it also has a `planned_for:` that is a release of ROADMAP.md (the
+    epic's own `planned_for` does not reach the screen) - the same ruler as the requirements-graph sensor with
+    `release_required` on (`product-structure@2`). Only a Backlog story without a release is legitimate (the release is
+    chosen when the story is prioritized); it is counted in "sem release", and a `planned_for:` it does declare must still
+    resolve. A transversal NFR (`type: nfr`, or an `NFR-nn` / `<PFX>-NFR-nn` id) binds every feature and has neither epic
+    nor release, by the requirements-graph rule: it raises no gap and is NOT counted in "sem release" nor in any release's
+    "n de m" (the Control Center core, rules/graph.py `is_transversal`, F22 - UAT-150); it is only reported apart;
   - features (docs/specs/features/Fxx-*/): spec.md and tasks.md readable; a normal feature imports stories that exist
     and land in a release, a Fix feature (`track: Fix`) names UAT issues (`fixes:`) whose round lands in a release (a
     feature with no `track:` is read as normal - listed in the counts; the `feature-track` item asks for the key);
@@ -38,9 +42,17 @@ What is a gap (each with file:line and the owner skill):
 A file that is not valid UTF-8 is a gap naming the file (the screen cannot read it), never an exit 2.
 It also prints the counts the screen shows ("n de m" per release, epic and outcome; "sem release").
 
+Every gap in `--json` carries a stable `code` (snake_case); the messages are prose and may be reworded, the codes may not
+(the structure gate and the tests select on them).
+
 Usage:
   python3 mjrp-scripts/product_structure_check.py <project> [--json] [--quiet]
+  python3 mjrp-scripts/product_structure_check.py <project> --story <story file> [--json]
 Exit: 0 every view renders · 1 gaps (listed) · 2 not evaluable (no project, no contract, not a code-app).
+`--story` is the Discovery -> Delivery gate of `mjrp-pdlc`: only the gaps on that story's file plus the ones that stop the
+screen from reading ROADMAP.md, the PRD or the requirements (GATE_BLOCKING); the rest of the project's gaps do not block it.
+The path may be relative to the working directory or to the project, `./`-prefixed or absolute; a path that is not a
+requirement node of the project is exit 2 (not evaluable is never a pass).
 A feature with an open branch is read in the working tree here (the screen reads it at the branch head).
 """
 import json
@@ -315,7 +327,7 @@ _KEY = re.compile(r"^(?P<key>[A-Za-z_][\w-]*):(?:[ \t]+(?P<value>.*))?$")
 _COMMENT = re.compile(r"\s+#.*$")
 _EPIC = re.compile(rf"\^({_PREFIX}EP-\d+)")
 _RELEASE = re.compile(rf"\^({_PREFIX}REL-\d+)")
-_NFR_ID = re.compile(r"^(?:[A-Z]{2,}-)?NFR-\d+$")   # a transversal NFR: no epic, no release (the requirements-graph rule)
+_NFR_ID = re.compile(r"^(?:[A-Z]+-)?NFR-\d+$")   # a transversal NFR: no epic, no release (rules/graph.py is_transversal)
 
 
 def _scalar(raw):
@@ -397,6 +409,7 @@ _STORY_WORDS = {
     "cancelled": "cancelled", "canceled": "cancelled",
 }
 OFF_TRACK = ("deferred", "cancelled")
+PRE_RELEASE = ("backlog",)      # product-structure@2: no `planned_for:` required in Backlog only; from Prioritized on it is (epic: always)
 
 
 def story_status(raw):
@@ -562,14 +575,16 @@ class Report:
     def __init__(self, root):
         self.root, self.gaps, self.counts = Path(root), [], {}
 
-    def gap(self, view, file, line, message, owner):
-        self.gaps.append({"view": view, "file": file, "line": line, "message": message, "owner": owner})
+    def gap(self, view, file, line, message, owner, code):
+        """`code` is the gap's stable name (snake_case, English): what the structure gate and the tests select on. The
+        message is prose for the human and may be reworded freely; the code never is without a catalog note."""
+        self.gaps.append({"code": code, "view": view, "file": file, "line": line, "message": message, "owner": owner})
 
 
 BAD = object()      # a file that is there but is not valid UTF-8 (the gap is already reported; callers skip it)
 
 
-def _read(root, rel, report=None, view="", owner=""):
+def _read(root, rel, report=None, view="", owner="", code="file_not_utf8"):
     """The text of a project file; None when absent; BAD (plus a gap, when a report is given) when it is not valid UTF-8."""
     p = Path(root) / rel
     if not p.is_file():
@@ -578,7 +593,7 @@ def _read(root, rel, report=None, view="", owner=""):
         return p.read_text(encoding="utf-8")
     except UnicodeDecodeError:
         if report is not None:
-            report.gap(view, rel, 1, "o arquivo não é UTF-8 válido: a tela não o lê (regrave-o em UTF-8)", owner)
+            report.gap(view, rel, 1, "o arquivo não é UTF-8 válido: a tela não o lê (regrave-o em UTF-8)", owner, code)
         return BAD
 
 
@@ -676,69 +691,69 @@ def check(root):
 
     # ---- ROADMAP: outcomes and releases (Product, Release pages)
     outcomes, releases, road_ok = [], [], False
-    road_text = _read(root, ROADMAP_FILE, r, "Produto", OWNER_PM)
+    road_text = _read(root, ROADMAP_FILE, r, "Produto", OWNER_PM, "roadmap_not_utf8")
     if road_text is BAD:
         pass
     elif road_text is None:
-        r.gap("Produto", ROADMAP_FILE, 0, "ROADMAP.md ausente: a tela não tem resultados nem releases", OWNER_PM)
+        r.gap("Produto", ROADMAP_FILE, 0, "ROADMAP.md ausente: a tela não tem resultados nem releases", OWNER_PM, code="roadmap_missing")
     else:
         try:
             road = parse_roadmap(road_text)
             outcomes, releases, road_ok = road["outcomes"], road["releases"], True
         except FormatError as e:
-            r.gap("Produto", ROADMAP_FILE, e.line, f"a tela não lê o ROADMAP ({e.reason})", OWNER_PM)
+            r.gap("Produto", ROADMAP_FILE, e.line, f"a tela não lê o ROADMAP ({e.reason})", OWNER_PM, code="roadmap_unreadable")
     if road_ok:
         if not outcomes:
-            r.gap("Produto", ROADMAP_FILE, 1, "nenhum resultado `^OUT-xx` no fim de uma linha", OWNER_PM)
+            r.gap("Produto", ROADMAP_FILE, 1, "nenhum resultado `^OUT-xx` no fim de uma linha", OWNER_PM, code="outcomes_none")
         for o in outcomes:
             where = f"{o['id']} ({o['title'][:60]})"
             if o["horizon"] is None:
-                r.gap("Produto", ROADMAP_FILE, o["line"], f"{where} fora de `## Now`/`## Next`/`## Later`: aparece em \"sem horizonte\"", OWNER_PM)
+                r.gap("Produto", ROADMAP_FILE, o["line"], f"{where} fora de `## Now`/`## Next`/`## Later`: aparece em \"sem horizonte\"", OWNER_PM, code="outcome_no_horizon")
             if not o["single"]:
-                r.gap("Produto", ROADMAP_FILE, o["line"], f"{where} não está sozinho numa seção `###`: a tela não lê a medida nem as tags dele", OWNER_PM)
+                r.gap("Produto", ROADMAP_FILE, o["line"], f"{where} não está sozinho numa seção `###`: a tela não lê a medida nem as tags dele", OWNER_PM, code="outcome_not_alone")
                 continue
             if not o["measure"]:
-                r.gap("Produto", ROADMAP_FILE, o["line"], f"{where} sem medida: escreva `- **Medida:** <hoje → alvo> ^{o['id']}` na seção dele", OWNER_PM)
+                r.gap("Produto", ROADMAP_FILE, o["line"], f"{where} sem medida: escreva `- **Medida:** <hoje → alvo> ^{o['id']}` na seção dele", OWNER_PM, code="outcome_no_measure")
             if not o["tags"]:
-                r.gap("Produto", ROADMAP_FILE, o["line"], f"{where} sem `tags::` (1 a 3) na seção dele", OWNER_PM)
+                r.gap("Produto", ROADMAP_FILE, o["line"], f"{where} sem `tags::` (1 a 3) na seção dele", OWNER_PM, code="outcome_no_tags")
             if o["contributes_to"]:
                 kind, why, _target = resolve_contribution(root / ROADMAP_FILE, o["contributes_to"])
                 if kind == "resolved" and contribution_in_cycle(root / ROADMAP_FILE, o["id"]):
                     kind, why = "missing", "cycle"
                 if kind != "resolved":
-                    r.gap("Produto", ROADMAP_FILE, o["line"], f"{where}: `contributes_to::` não chega ao alvo — {_CONTRIBUTION_WHY[why]}", OWNER_PM)
+                    r.gap("Produto", ROADMAP_FILE, o["line"], f"{where}: `contributes_to::` não chega ao alvo — {_CONTRIBUTION_WHY[why]}", OWNER_PM, code="contribution_unresolved")
         if not releases:
             prd_peek = _read(root, PRD_FILE)
             in_prd = re.search(rf"\^{_PREFIX}REL-\d+", prd_peek if isinstance(prd_peek, str) else "")
             r.gap("Releases", ROADMAP_FILE, 1, "nenhum release `^REL-xx` no ROADMAP.md" +
                   (" (há `^REL` no PRD, mas a tela lê releases só do ROADMAP.md)" if in_prd else "") +
-                  ": o Board por release fica vazio", OWNER_PM)
+                  ": o Board por release fica vazio", OWNER_PM, code="releases_none")
     rel_ids = {x["id"] for x in releases}
     out_ids = {x["id"] for x in outcomes}
 
     # ---- PRD: epics (Product, Epic pages)
     epics, prd_ok = [], False
-    prd_text = _read(root, PRD_FILE, r, "Épicos", OWNER_PM)
+    prd_text = _read(root, PRD_FILE, r, "Épicos", OWNER_PM, "prd_not_utf8")
     if prd_text is BAD:
         prd_text = None
     elif prd_text is None:
-        r.gap("Épicos", PRD_FILE, 0, "docs/specs/prd.md ausente: a tela não tem épicos", OWNER_PM)
+        r.gap("Épicos", PRD_FILE, 0, "docs/specs/prd.md ausente: a tela não tem épicos", OWNER_PM, code="prd_missing")
     else:
         try:
             epics, prd_ok = parse_prd(prd_text)["epics"], True
         except FormatError as e:
-            r.gap("Épicos", PRD_FILE, e.line, f"a tela não lê o PRD ({e.reason})", OWNER_PM)
+            r.gap("Épicos", PRD_FILE, e.line, f"a tela não lê o PRD ({e.reason})", OWNER_PM, code="prd_unreadable")
     if prd_ok:
         if not epics:
-            r.gap("Épicos", PRD_FILE, 1, "nenhum épico (`### EP-xx · nome` com `serves::`)", OWNER_PM)
+            r.gap("Épicos", PRD_FILE, 1, "nenhum épico (`### EP-xx · nome` com `serves::`)", OWNER_PM, code="epics_none")
         for e in epics:
             if not e["outcomes"]:
                 why = "sem a seção `### " + e["id"] + " · nome`" if not e["has_section"] else "sem `serves:: [[ROADMAP#^OUT-xx]]`"
-                r.gap("Épicos", PRD_FILE, e["line"], f"{e['id']} {why}: aparece solto, fora de todo resultado", OWNER_PM)
+                r.gap("Épicos", PRD_FILE, e["line"], f"{e['id']} {why}: aparece solto, fora de todo resultado", OWNER_PM, code="epic_not_serving")
             elif road_ok:
                 for o in e["outcomes"]:
                     if o not in out_ids:
-                        r.gap("Épicos", PRD_FILE, e["line"], f"{e['id']} serve {o}, que não existe no ROADMAP.md", OWNER_PM)
+                        r.gap("Épicos", PRD_FILE, e["line"], f"{e['id']} serve {o}, que não existe no ROADMAP.md", OWNER_PM, code="epic_outcome_dangling")
     epic_ids = {e["id"] for e in epics}
 
     # ---- requirements: the stories (Board, Release, Epic pages)
@@ -746,11 +761,11 @@ def check(root):
     try:
         nodes = read_nodes(root)
         if nodes is None:
-            r.gap("Board", REQUIREMENTS_DIR, 0, "sem grafo de requisitos (`docs/specs/requirements/`): a tela mostra o projeto \"sem grafo\"", OWNER_REQS)
+            r.gap("Board", REQUIREMENTS_DIR, 0, "sem grafo de requisitos (`docs/specs/requirements/`): a tela mostra o projeto \"sem grafo\"", OWNER_REQS, code="requirements_missing")
         elif not nodes:
-            r.gap("Board", REQUIREMENTS_DIR, 0, "nenhum requisito em `docs/specs/requirements/`", OWNER_REQS)
+            r.gap("Board", REQUIREMENTS_DIR, 0, "nenhum requisito em `docs/specs/requirements/`", OWNER_REQS, code="requirements_empty")
     except FormatError as e:
-        r.gap("Board", e.file, e.line, f"a tela não lê os requisitos: {e.reason} (um nó ilegível derruba a leitura inteira)", OWNER_REQS)
+        r.gap("Board", e.file, e.line, f"a tela não lê os requisitos: {e.reason} (um nó ilegível derruba a leitura inteira)", OWNER_REQS, code="requirements_unreadable")
         nodes = None
     epic_planned = set()
     if prd_text:
@@ -761,25 +776,27 @@ def check(root):
         if st in OFF_TRACK or n["nfr"]:
             continue
         if n["epic"] is None:
-            r.gap("Board", n["path"], n["epic_line"], f"{n['id']} sem `epic: \"[[prd#^EP-xx]]\"`: fica fora de todo épico", OWNER_REQS)
+            r.gap("Board", n["path"], n["epic_line"], f"{n['id']} sem `epic: \"[[prd#^EP-xx]]\"`: fica fora de todo épico", OWNER_REQS, code="story_epic_missing")
         elif prd_ok and n["epic"] not in epic_ids:
-            r.gap("Board", n["path"], n["epic_line"], f"{n['id']}: o épico {n['epic']} não existe no PRD", OWNER_REQS)
-        if n["release"] is None:
+            r.gap("Board", n["path"], n["epic_line"], f"{n['id']}: o épico {n['epic']} não existe no PRD", OWNER_REQS, code="story_epic_dangling")
+        if n["release"] is None and st in PRE_RELEASE:
+            pass          # the release is chosen when the story is prioritized (writing-reqs): Backlog without one is legitimate
+        elif n["release"] is None:
             hint = " (o `planned_for` do épico não chega à tela)" if n["epic"] in epic_planned else ""
-            r.gap("Board", n["path"], n["planned_line"], f"{n['id']} sem `planned_for: \"[[ROADMAP#^REL-xx]]\"`: cai em \"sem release\", fora do Board{hint} — que release é decisão do humano", OWNER_REQS)
+            r.gap("Board", n["path"], n["planned_line"], f"{n['id']} sem `planned_for: \"[[ROADMAP#^REL-xx]]\"`: cai em \"sem release\", fora do Board{hint} — que release é decisão do humano", OWNER_REQS, code="story_release_missing")
         elif road_ok and n["release"] not in rel_ids:
-            r.gap("Board", n["path"], n["planned_line"], f"{n['id']}: o release {n['release']} não existe no ROADMAP.md: a story some do Board", OWNER_REQS)
+            r.gap("Board", n["path"], n["planned_line"], f"{n['id']}: o release {n['release']} não existe no ROADMAP.md: a story some do Board", OWNER_REQS, code="story_release_dangling")
 
     # ---- features (Delivery board)
     by_id = {n["id"]: n for n in nodes or ()}
     uat_rows, uat = {}, None
-    uat_text = _read(root, UAT_FILE, r, "Delivery", OWNER_SDD)
+    uat_text = _read(root, UAT_FILE, r, "Delivery", OWNER_SDD, "uat_not_utf8")
     if isinstance(uat_text, str):
         try:
             uat = parse_uat(uat_text)
             uat_rows = {x["id"]: x for x in uat["rows"]}
         except FormatError as e:
-            r.gap("Delivery", UAT_FILE, e.line, f"a tela não lê o uat.md ({e.reason})", OWNER_SDD)
+            r.gap("Delivery", UAT_FILE, e.line, f"a tela não lê o uat.md ({e.reason})", OWNER_SDD, code="uat_unreadable")
     fdir = root / FEATURES_DIR
     folders = sorted(p.name for p in fdir.iterdir() if p.is_dir() and _FOLDER.match(p.name)) if fdir.is_dir() else []
     no_track, landed = [], {}
@@ -787,61 +804,62 @@ def check(root):
         try:
             f = read_feature(root, folder)
         except FormatError as e:
-            r.gap("Delivery", e.file, e.line, f"{folder}: o card mostra a falha — {e.reason}", OWNER_SDD)
+            r.gap("Delivery", e.file, e.line, f"{folder}: o card mostra a falha — {e.reason}", OWNER_SDD, code="feature_unreadable")
             continue
         except (OSError, UnicodeDecodeError):
-            r.gap("Delivery", f"{FEATURES_DIR}/{folder}", 0, f"{folder}: não foi possível ler", OWNER_SDD)
+            r.gap("Delivery", f"{FEATURES_DIR}/{folder}", 0, f"{folder}: não foi possível ler", OWNER_SDD, code="feature_unreadable")
             continue
         if not f["spec_exists"]:
-            r.gap("Delivery", f["spec"], 0, f"{f['id']} sem spec.md: o card não tem stories nem trilha", OWNER_SDD)
+            r.gap("Delivery", f["spec"], 0, f"{f['id']} sem spec.md: o card não tem stories nem trilha", OWNER_SDD, code="feature_no_spec")
             continue
         if not f["has_track"]:
             no_track.append(f["id"])       # the screen reads it as a normal feature: the `feature-track` item asks for it
         if f["track"] == "fix":
             if not f["fixes"]:
-                r.gap("Delivery", f["spec"], f["fixes_line"], f"{f['id']} é Fix e não diz que issues corrige (`fixes: [UAT-xx]`)", OWNER_SDD)
+                r.gap("Delivery", f["spec"], f["fixes_line"], f"{f['id']} é Fix e não diz que issues corrige (`fixes: [UAT-xx]`)", OWNER_SDD, code="feature_fix_no_fixes")
             found = []
             for i in f["fixes"]:
                 if uat is not None and i not in uat_rows:
-                    r.gap("Delivery", f["spec"], f["fixes_line"], f"{f['id']}: {i} não está no uat.md", OWNER_SDD)
+                    r.gap("Delivery", f["spec"], f["fixes_line"], f"{f['id']}: {i} não está no uat.md", OWNER_SDD, code="feature_fix_issue_dangling")
                 elif i in uat_rows:
                     found.append(release_id(uat_rows[i]["release_name"], releases))
         else:
             if not f["imports"]:
-                r.gap("Delivery", f["spec"], f["imports_line"], f"{f['id']} não importa nenhuma story (`imports: [\"[[S-xx-slug]]\"]`): o card fica sem release", OWNER_SDD)
+                r.gap("Delivery", f["spec"], f["imports_line"], f"{f['id']} não importa nenhuma story (`imports: [\"[[S-xx-slug]]\"]`): o card fica sem release", OWNER_SDD, code="feature_no_imports")
             missing = [s for s in f["imports"] if s not in by_id]
             if nodes is not None and missing:
-                r.gap("Delivery", f["spec"], f["imports_line"], f"{f['id']} importa story que não existe: {', '.join(missing[:5])}", OWNER_SDD)
+                r.gap("Delivery", f["spec"], f["imports_line"], f"{f['id']} importa story que não existe: {', '.join(missing[:5])}", OWNER_SDD, code="feature_import_dangling")
             found = [by_id[s]["release"] for s in f["imports"] if s in by_id]
         landed[f["id"]] = feature_release(f, by_id, uat_rows, releases)
         known = [x for x in found if x and x in rel_ids]
         judged = nodes is not None if f["track"] == "normal" else uat is not None
         if (f["imports"] if f["track"] == "normal" else f["fixes"]) and judged and not known and road_ok:
             r.gap("Delivery", f["spec"], f["fixes_line"] if f["track"] == "fix" else f["imports_line"],
-                  f"{f['id']}: nenhuma das stories ou issues dela está num release: o card cai no quadro sem release", OWNER_SDD)
+                  f"{f['id']}: nenhuma das stories ou issues dela está num release: o card cai no quadro sem release", OWNER_SDD, code="feature_no_release")
     if uat is not None:
         if uat["header"] and uat["format"] == "uat@1":
-            r.gap("Delivery", UAT_FILE, 1, "uat.md em uat@1 (sem a coluna Gravidade): a tela não mostra a gravidade", OWNER_SDD)
+            r.gap("Delivery", UAT_FILE, 1, "uat.md em uat@1 (sem a coluna Gravidade): a tela não mostra a gravidade", OWNER_SDD, code="uat_old_format")
         lost = {}
         for row in uat["rows"]:
             if release_id(row["release_name"], releases) is None:
                 lost.setdefault((row["round_line"], row["release_name"]), []).append(row["id"])
         for (line, name), ids in lost.items():
             what = f"a rodada \"{name}\" não é o nome de um release do ROADMAP.md" if name else "issues fora de uma `## Rodada <n> — <release>`"
-            r.gap("Delivery", UAT_FILE, line or 1, f"{what}: {len(ids)} issue(s) no quadro sem release ({', '.join(ids[:4])})", OWNER_SDD)
+            r.gap("Delivery", UAT_FILE, line or 1, f"{what}: {len(ids)} issue(s) no quadro sem release ({', '.join(ids[:4])})", OWNER_SDD, code="uat_round_no_release")
 
     # ---- the counts the screen shows
     if nodes is not None:
         statuses = {n["id"]: story_status(n["status"]) for n in nodes}
+        counted = [n for n in nodes if not n["nfr"]]       # a transversal NFR is in no release and not in "sem release" (F22)
         rel_counts = []
         for x in releases:
-            mine = [statuses[n["id"]] for n in nodes if n["release"] == x["id"]]
+            mine = [statuses[n["id"]] for n in counted if n["release"] == x["id"]]
             d, live = tally(mine)
             rel_counts.append({"id": x["id"], "name": x["name"], "done": d, "of": live})
             if not live:
                 r.gap("Releases", ROADMAP_FILE, x["line"], f"{x['id']} ({x['name']}) sem nenhuma story que conte: o Board e a tela da release ficam \"sem stories\" — "
-                      "ou ela ganha stories (`planned_for:`), ou ainda não é release (decisão do humano)", OWNER_PM)
-        loose = [statuses[n["id"]] for n in nodes if n["release"] is None]
+                      "ou ela ganha stories (`planned_for:`), ou ainda não é release (decisão do humano)", OWNER_PM, code="release_empty")
+        loose = [statuses[n["id"]] for n in counted if n["release"] is None]
         d, live = tally(loose)
         epic_counts = []
         for e in epics:
@@ -896,9 +914,62 @@ def render(r, name):
     return "\n".join([head, *out])
 
 
+# Gaps that stop the screen from reading the files a story's edges point to (ROADMAP.md, the PRD, the requirements folder):
+# they block every story. Selected by `code`, never by the words of the message (the messages are prose and get reworded).
+GATE_BLOCKING = frozenset({
+    "roadmap_missing", "roadmap_unreadable", "roadmap_not_utf8",
+    "prd_missing", "prd_unreadable", "prd_not_utf8",
+    "requirements_missing", "requirements_empty", "requirements_unreadable",
+})
+USAGE = ("uso: product_structure_check.py <projeto> [--json] [--quiet]\n"
+         "     product_structure_check.py <projeto> --story <arquivo da story> [--json]   (o portão Discovery→Delivery)")
+
+
+def resolve_story(root, arg):
+    """The story's path relative to the project root (posix), or None when `arg` is not a file inside the project.
+    `arg` may be relative to the working directory (also the repository root of a nested app), relative to the project,
+    absolute, or start with `./` - all normalised through the real path before anything is compared."""
+    base = Path(os.path.realpath(root))
+    p = Path(arg)
+    for cand in ([p] if p.is_absolute() else [Path.cwd() / p, base / p]):
+        real = Path(os.path.realpath(cand))
+        if real.is_file():
+            try:
+                return real.relative_to(base).as_posix()
+            except ValueError:
+                continue
+    return None
+
+
+def gate(root, report, story_rel):
+    """The structure gate for one story: the gaps on its own file plus the blocking ones. Exit 2 (never a pass) when the
+    path is not a requirement file of the project."""
+    if not story_rel.startswith(REQUIREMENTS_DIR + "/") or Path(story_rel).name == INDEX_NAME:
+        return None
+    try:
+        nodes = read_nodes(root)
+    except (FormatError, OSError, UnicodeDecodeError):
+        nodes = None                  # an unreadable graph is itself a blocking gap
+    if nodes is not None and story_rel not in {n["path"] for n in nodes}:
+        return None
+    return [g for g in report.gaps if g["file"] == story_rel or g["code"] in GATE_BLOCKING]
+
+
 def main(argv):
+    argv = list(argv)
+    story_arg = None
+    if "--story" in argv:
+        i = argv.index("--story")
+        if i + 1 >= len(argv) or argv[i + 1].startswith("--"):
+            print("product_structure_check: --story pede o arquivo da story\n" + USAGE, file=sys.stderr)
+            return 2
+        story_arg = argv[i + 1]
+        del argv[i:i + 2]
     args = [a for a in argv if not a.startswith("--")]
     as_json, quiet = "--json" in argv, "--quiet" in argv
+    if story_arg is None and any(a.startswith("--") and a not in ("--json", "--quiet") for a in argv):
+        print(USAGE, file=sys.stderr)
+        return 2
     root = Path(args[0] if args else ".").resolve()
     if not root.is_dir():
         print(f"product_structure_check: {root} não é uma pasta — não avaliável", file=sys.stderr)
@@ -910,11 +981,32 @@ def main(argv):
     if profile != "code-app":
         print(f"product_structure_check: {root.name} tem perfil `{profile or '?'}` — só um code-app tem produto na tela; não avaliável", file=sys.stderr)
         return 2
+    story_rel = None
+    if story_arg is not None:
+        story_rel = resolve_story(root, story_arg)
+        if story_rel is None:
+            print(f"product_structure_check: {story_arg} não é um arquivo dentro de {root.name} — o portão não avalia (exit 2 não é aprovação)\n"
+                  "  passe o caminho da story como o `--json` o imprime (relativo à pasta do projeto), ou absoluto", file=sys.stderr)
+            return 2
     try:
         r = check(root)
     except (OSError, UnicodeDecodeError) as e:
         print(f"product_structure_check: {root.name}: leitura falhou ({e}) — não avaliável", file=sys.stderr)
         return 2
+    if story_rel is not None:
+        picked = gate(root, r, story_rel)
+        if picked is None:
+            print(f"product_structure_check: {story_rel} não é um nó de `{REQUIREMENTS_DIR}/` deste projeto — o portão não avalia "
+                  "(exit 2 não é aprovação)", file=sys.stderr)
+            return 2
+        if as_json:
+            print(json.dumps({"project": root.name, "story": story_rel, "ok": not picked, "gaps": picked}, ensure_ascii=False, indent=2))
+        else:
+            print(f"product_structure_check: portão de {story_rel} — " + ("VERDE: a tela coloca a story" if not picked else f"VERMELHO: {len(picked)} lacuna(s)"))
+            for g in picked:
+                loc = f"{g['file']}:{g['line']}" if g["line"] else g["file"]
+                print(f"  [{g['view']}] {loc}: {g['message']} → {g['owner']}")
+        return 1 if picked else 0
     if as_json:
         print(json.dumps({"project": root.name, "ok": not r.gaps, "gaps": r.gaps, "counts": r.counts},
                          ensure_ascii=False, indent=2))

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte b714d244 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
+# cópia carimbada do MJRP Harness · versão 2026-10-14 · fonte d3f64f76 · não edite aqui — edite no harness e rode `new_project.py --refresh-kernel`
 """
 conformance_check.py - the canonical conformance of the children (ADR-0019): catalog x child project.
 
@@ -748,6 +748,75 @@ def git_digest_changes(base, item_id):
     return out
 
 
+def _published_paths_by_id(base, ref, folders):
+    """{note id: [path on `ref`]} for every CM-*.md under `folders` (relative to base) at `ref`; None if git cannot say."""
+    by_id = {}
+    for folder in sorted(folders):
+        ls = subprocess.run(["git", "ls-tree", "-r", "--name-only", ref, "--", folder], cwd=str(base), capture_output=True, text=True, timeout=60)
+        if ls.returncode != 0:
+            return None
+        for rel in ls.stdout.splitlines():
+            if not re.match(r"CM-.*\.md$", Path(rel).name):
+                continue
+            shown = subprocess.run(["git", "show", f"{ref}:{rel}"], cwd=str(base), capture_output=True, timeout=60)
+            if shown.returncode == 0:
+                nid = _note_fields(shown.stdout.decode("utf-8", "replace")).get("id")
+                by_id.setdefault(nid, []).append(rel)
+    return by_id
+
+
+def published_note_problems(notes, base):
+    """ADR-0019 § 2: a published note is not rewritten. A note is published when it is on the principal branch (the same
+    `main`/`--first-parent` reading as the digest rule above - an unmerged branch may still write its own drafts); its bytes
+    must equal the bytes of the commit that first brought it there. There is no valve for a note (the editorial trailer is
+    the digest's): correcting a wrong note is a new note. Born of the incident of 2026-10-14, when CM-0019 and CM-0003 were
+    reworded on a branch after the refresh had already carried them to nine children (P1-3 of
+    reports/audits/2026-10-14-product-structure-in-owners-verification.md).
+    The note is found by its `id`, not by its path (P2-5 of the second verification, 2026-10-14): a published note renamed and
+    edited on a branch is a new path to git, which would read as a draft and let the edit through; matched by `id` it is still
+    the published note, and its bytes are judged against the ones published under its old name."""
+    problems = []
+    ok_main = subprocess.run(["git", "rev-parse", "--verify", "-q", "main"], cwd=str(base), capture_output=True).returncode == 0
+    ref = "main" if ok_main else "HEAD"
+    rels = {}
+    for n in notes:
+        try:
+            rels[n["path"]] = Path(n["path"]).resolve().relative_to(Path(base).resolve()).as_posix()
+        except ValueError:
+            continue
+    try:
+        by_id = _published_paths_by_id(base, ref, {Path(r).parent.as_posix() for r in rels.values()})
+    except Exception:
+        by_id = None
+    if by_id is None:
+        return [f"sem git não há como conferir se as notas publicadas mudaram (ADR-0019 § 2)"]
+    on_main = {r for paths in by_id.values() for r in paths}
+    for n in notes:
+        rel = rels.get(n["path"])
+        if rel is None:
+            continue
+        candidates = list(dict.fromkeys(by_id.get(n["id"], []) + ([rel] if rel in on_main else [])))
+        for pub in candidates:
+            try:
+                log = subprocess.run(["git", "log", ref, "--first-parent", "--diff-filter=A", "--format=%H", "--reverse", "--", pub],
+                                     cwd=str(base), capture_output=True, text=True, timeout=60)
+                first = (log.stdout.split() or [None])[0] if log.returncode == 0 else None
+                shown = subprocess.run(["git", "show", f"{first}:{pub}"], cwd=str(base), capture_output=True, timeout=60) if first else None
+            except Exception:
+                return [f"sem git não há como conferir se as notas publicadas mudaram (ADR-0019 § 2)"]
+            if log.returncode != 0:
+                return [f"sem git não há como conferir se as notas publicadas mudaram (ADR-0019 § 2)"]
+            if shown is None or shown.returncode != 0:
+                continue                            # never reached the principal branch: still a draft
+            if shown.stdout != Path(n["path"]).read_bytes():
+                moved = f" (publicada como {Path(pub).name}, hoje {Path(n['path']).name})" if pub != rel else ""
+                problems.append(f"{Path(n['path']).name}: a nota já foi publicada na main ({first[:8]}){moved} e os bytes mudaram — uma nota publicada não se reescreve "
+                                f"(ADR-0019 § 2; não há válvula para nota). Volte aos bytes publicados com `git checkout {first[:8]} -- {pub}` e diga a mudança "
+                                f"numa nota nova (um passo de versão do item)")
+                break
+    return problems
+
+
 def _scripts_of(check):
     """The `script` names a check runs, at any depth."""
     if isinstance(check, list):
@@ -767,7 +836,8 @@ def learn_gate(items=None, notes_dir=None, base=None, doc=None, use_git=True):
       3. each pattern source WITHOUT a template matches its `pattern_digest`; a re-stamp without a version bump needs the
          human's `Catalog-editorial: <item> — <motivo>` trailer in the commit that changed the digest (git log);
       4. the catalog is whole: valid clauses (the loader), notes chain without hole or duplicate up to `version`, every
-         older note's version has its `check` in `superseded`, `migration` is the last note, `owner_skill` exists."""
+         older note's version has its `check` in `superseded`, `migration` is the last note, `owner_skill` exists;
+      5. a published note's bytes never change (`published_note_problems`: equal to the commit that first brought it to main)."""
     if items is None:
         items, doc = load_catalog(with_meta=True)
     doc = doc or {}
@@ -836,6 +906,8 @@ def learn_gate(items=None, notes_dir=None, base=None, doc=None, use_git=True):
                 problems.append(f"{it['id']}: {rel} não está nos VENDORED_FILES do new_project.py — no filho a cláusula fica não avaliável")
         if not _skill_exists(base, it["owner_skill"]):
             problems.append(f"{it['id']}: owner_skill '{it['owner_skill']}' não existe em mjrp-skills/")
+    if use_git:
+        problems += published_note_problems(notes, base)
     for n in notes:
         if n["id"] not in ids:
             problems.append(f"{n['path'].name}: nota sem item no catálogo")
